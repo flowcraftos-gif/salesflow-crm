@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SalesFlow CRM — Impeccable</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── OKLCH color system (blue-tinted neutrals, Restrained strategy) ── */
+:root {
+  --bg:      oklch(98.2% 0.006 254);
+  --surface: oklch(99.6% 0.003 254);
+  --panel:   oklch(97.0% 0.010 254);
+  --border:  oklch(90.0% 0.014 254);
+  --border2: oklch(84.0% 0.018 254);
+
+  --t1: oklch(18% 0.012 254);
+  --t2: oklch(46% 0.022 254);
+  --t3: oklch(68% 0.016 254);
+  --t4: oklch(82% 0.012 254);
+
+  --blue:    oklch(52% 0.245 265);
+  --blue-h:  oklch(46% 0.245 265);
+  --blue-l:  oklch(92% 0.040 265);
+  --blue-xl: oklch(96% 0.020 265);
+
+  --red:    oklch(54% 0.215 25);
+  --red-l:  oklch(95% 0.040 25);
+  --green:  oklch(52% 0.175 160);
+  --green-l:oklch(95% 0.038 160);
+  --amber:  oklch(66% 0.175 68);
+  --amber-l:oklch(96% 0.042 80);
+
+  --r: 8px;
+  --sidebar: 224px;
+  --header: 52px;
+  --font: system-ui, -apple-system, 'Segoe UI', 'Sarabun', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: var(--font); background: var(--bg); color: var(--t1); font-size: 14px; line-height: 1.5; }
+button { font-family: inherit; cursor: pointer; }
+input { font-family: inherit; }
+
+/* ── Layout ── */
+.app { display: flex; height: 100vh; overflow: hidden; }
+
+/* ── Sidebar ── */
+.sidebar {
+  width: var(--sidebar);
+  flex-shrink: 0;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.logo {
+  display: flex; align-items: center; gap: 9px;
+  padding: 16px 16px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.logo-mark {
+  width: 28px; height: 28px;
+  background: var(--blue);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+}
+.logo-name { font-size: 14px; font-weight: 700; color: var(--t1); letter-spacing: -.2px; }
+.logo-plan {
+  margin-left: auto;
+  font-size: 10px; font-weight: 600;
+  color: var(--blue);
+  background: var(--blue-l);
+  padding: 2px 7px; border-radius: 100px;
+}
+
+.nav { padding: 10px 8px; flex: 1; }
+.nav-group { margin-bottom: 18px; }
+.nav-group-label {
+  font-size: 10px; font-weight: 700;
+  color: var(--t4); text-transform: uppercase;
+  letter-spacing: .8px;
+  padding: 0 8px; margin-bottom: 3px;
+}
+.ni {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 8px;
+  border-radius: 6px;
+  font-size: 13px; font-weight: 500;
+  color: var(--t2);
+  cursor: pointer; transition: background .1s, color .1s;
+  position: relative;
+  text-decoration: none;
+}
+.ni:hover { background: var(--border); color: var(--t1); }
+.ni.on { background: var(--blue-l); color: var(--blue); font-weight: 600; }
+.ni svg { flex-shrink: 0; width: 16px; height: 16px; }
+.ni-count {
+  margin-left: auto;
+  font-size: 11px; font-weight: 700;
+  color: var(--red);
+  background: var(--red-l);
+  padding: 1px 6px; border-radius: 100px;
+}
+
+.sidebar-foot {
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 9px;
+}
+.user-av {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: var(--blue);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.user-name { font-size: 12px; font-weight: 600; color: var(--t1); }
+.user-role { font-size: 11px; color: var(--t3); }
+
+/* ── Main ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+/* ── Topbar ── */
+.topbar {
+  height: var(--header);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 20px; gap: 12px;
+  flex-shrink: 0;
+}
+.page-title { font-size: 15px; font-weight: 700; color: var(--t1); flex-shrink: 0; }
+.search-wrap { position: relative; flex: 1; max-width: 320px; margin-left: 12px; }
+.search-inp {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 12px 7px 32px;
+  font-size: 13px; color: var(--t1);
+  outline: none; transition: border-color .15s, box-shadow .15s;
+}
+.search-inp::placeholder { color: var(--t3); }
+.search-inp:focus { border-color: var(--blue); box-shadow: 0 0 0 2px var(--blue-l); }
+.search-ico { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--t3); }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: none; border-radius: 6px;
+  padding: 7px 13px;
+  font-size: 13px; font-weight: 600;
+  transition: all .12s;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-primary:hover { background: var(--blue-h); }
+.btn-secondary {
+  background: var(--surface);
+  color: var(--t2);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--border2); color: var(--t1); }
+.btn-icon {
+  width: 32px; height: 32px; padding: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--t2);
+}
+.btn-icon:hover { border-color: var(--border2); color: var(--t1); }
+.notif-wrap { position: relative; }
+.notif-dot {
+  position: absolute; top: 5px; right: 5px;
+  width: 6px; height: 6px;
+  background: var(--red); border-radius: 50%;
+  border: 1.5px solid var(--surface);
+}
+
+/* ── Content ── */
+.content { flex: 1; overflow-y: auto; }
+.content::-webkit-scrollbar { width: 5px; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
+
+/* ── Pages ── */
+.page { display: none; }
+.page.on { display: block; }
+
+/* ── Contacts page ── */
+.page-contacts { padding: 20px; }
+
+.filter-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.tabs { display: flex; gap: 1px; background: var(--border); border-radius: 7px; padding: 2px; }
+.tab {
+  padding: 5px 12px; border-radius: 5px; border: none;
+  background: transparent; color: var(--t2);
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  transition: all .12s;
+}
+.tab.on { background: var(--surface); color: var(--t1); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.filter-right { margin-left: auto; display: flex; gap: 6px; }
+
+/* Table */
+.tbl-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead { background: var(--bg); }
+th {
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 11px; font-weight: 700; color: var(--t3);
+  text-transform: uppercase; letter-spacing: .5px;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+td { padding: 0; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+.td-inner { padding: 11px 16px; display: flex; align-items: center; }
+
+/* Urgency row highlight — background tint instead of badge clutter */
+tr.urgent td { background: oklch(97.5% 0.020 25); }
+tr.urgent:hover td { background: oklch(96% 0.028 25); }
+tr:not(.urgent):hover td { background: var(--bg); }
+tr { cursor: pointer; transition: none; }
+
+.td-name { display: flex; align-items: center; gap: 10px; }
+.av {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.av1 { background: oklch(52% 0.24 265); }
+.av2 { background: oklch(52% 0.22 220); }
+.av3 { background: oklch(52% 0.17 160); }
+.av4 { background: oklch(60% 0.20 68); }
+.av5 { background: oklch(52% 0.22 340); }
+
+.n { font-weight: 600; color: var(--t1); font-size: 13px; }
+.ns { font-size: 11px; color: var(--t3); margin-top: 1px; }
+
+/* Status badges — minimal, semantic */
+.st {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600;
+  padding: 3px 8px; border-radius: 4px;
+  white-space: nowrap;
+}
+.st::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.st-lead    { background: var(--bg); color: var(--t2); }
+.st-lead::before { background: var(--t4); }
+.st-prospect{ background: var(--blue-xl); color: var(--blue); }
+.st-prospect::before { background: var(--blue); }
+.st-appt    { background: var(--amber-l); color: var(--amber); }
+.st-appt::before { background: var(--amber); }
+.st-client  { background: var(--green-l); color: var(--green); }
+.st-client::before { background: var(--green); }
+.st-lost    { background: var(--red-l); color: var(--red); }
+.st-lost::before { background: var(--red); }
+
+.overdue-label { font-size: 11px; font-weight: 600; color: var(--red); }
+.date-label { font-size: 12px; color: var(--t3); }
+
+.row-acts {
+  display: flex; gap: 5px; opacity: 0;
+  transition: opacity .1s;
+}
+tr:hover .row-acts { opacity: 1; }
+.ra {
+  padding: 4px 9px; border-radius: 5px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 11px; font-weight: 600; color: var(--t2);
+  display: flex; align-items: center; gap: 4px;
+  transition: all .1s;
+}
+.ra:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-xl); }
+.ra-call { border-color: oklch(85% 0.06 160); color: var(--green); }
+.ra-call:hover { background: var(--green-l); border-color: var(--green); }
+
+/* ── Dashboard page ── */
+.page-dash { padding: 20px; max-width: 1100px; }
+
+/* Summary strip — replaces hero-metric card grid */
+.summary-strip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.sm-cell {
+  padding: 16px 20px;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+.sm-cell:last-child { border-right: none; }
+.sm-label { font-size: 11px; font-weight: 600; color: var(--t3); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+.sm-val { font-size: 22px; font-weight: 800; color: var(--t1); line-height: 1; letter-spacing: -.5px; }
+.sm-val .denom { font-size: 14px; font-weight: 500; color: var(--t3); }
+.sm-sub { font-size: 11px; color: var(--t3); margin-top: 5px; }
+.sm-urgent { color: var(--red); }
+.sm-good { color: var(--green); }
+.sm-progress {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px; background: var(--border);
+  border-radius: 0 0 0 0;
+}
+.sm-progress-fill { height: 100%; border-radius: 0; background: var(--blue); }
+
+/* Month control */
+.month-bar {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 16px;
+}
+.month-label { font-size: 16px; font-weight: 700; color: var(--t1); flex: 1; letter-spacing: -.2px; }
+.month-sub { font-size: 12px; color: var(--t3); font-weight: 400; }
+
+/* Dashboard grid */
+.dash-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 16px; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.panel-head {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: baseline; justify-content: space-between;
+}
+.panel-title { font-size: 13px; font-weight: 700; color: var(--t1); }
+.panel-meta { font-size: 11px; color: var(--t3); }
+.panel-body { padding: 0; }
+
+/* Follow-up rows — inline list, not cards */
+.fu-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 18px;
+  border-bottom: 1px solid var(--border);
+  transition: background .1s;
+}
+.fu-row:last-child { border-bottom: none; }
+.fu-row:hover { background: var(--bg); }
+.fu-row.overdue-row { background: oklch(98.5% 0.018 25); }
+.fu-row.overdue-row:hover { background: oklch(97% 0.025 25); }
+.fu-info { flex: 1; min-width: 0; }
+.fu-name { font-size: 13px; font-weight: 600; color: var(--t1); }
+.fu-status { font-size: 11px; color: var(--t3); margin-top: 1px; }
+.fu-overdue { font-size: 11px; color: var(--red); font-weight: 600; margin-top: 1px; }
+.fu-acts { display: flex; gap: 5px; }
+.fa {
+  padding: 5px 9px; border-radius: 5px;
+  border: 1px solid var(--border);
+  background: transparent; font-size: 11px; font-weight: 600;
+  color: var(--t2); display: flex; align-items: center; gap: 4px;
+  transition: all .1s;
+}
+.fa:hover { border-color: var(--border2); color: var(--t1); background: var(--bg); }
+.fa-call { color: var(--green); border-color: oklch(85% 0.06 160); }
+.fa-call:hover { background: var(--green-l); border-color: var(--green); }
+.fa-done { color: var(--blue); border-color: var(--blue-l); }
+.fa-done:hover { background: var(--blue-xl); border-color: var(--blue); }
+.see-more { padding: 10px 18px; font-size: 12px; font-weight: 600; color: var(--blue); cursor: pointer; }
+
+/* Pipeline — narrative table, not bar chart */
+.pipe-table { width: 100%; border-collapse: collapse; }
+.pipe-table th {
+  padding: 10px 18px;
+  text-align: left; font-size: 11px; font-weight: 700;
+  color: var(--t3); text-transform: uppercase; letter-spacing: .5px;
+  border-bottom: 1px solid var(--border);
+}
+.pipe-table td { padding: 12px 18px; border-bottom: 1px solid var(--border); font-size: 13px; }
+.pipe-table tr:last-child td { border-bottom: none; }
+.pipe-stage-dot {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-weight: 600; color: var(--t1);
+}
+.pipe-count { font-size: 18px; font-weight: 800; color: var(--t1); }
+.pipe-conv { font-size: 12px; color: var(--green); font-weight: 600; }
+.pipe-bar-inline {
+  height: 4px; background: var(--border); border-radius: 2px; margin-top: 5px;
+  overflow: hidden;
+}
+.pipe-fill { height: 100%; border-radius: 2px; }
+
+/* ── Detail page ── */
+.page-detail { padding: 20px; }
+.back-link {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 13px; font-weight: 600; color: var(--blue);
+  border: none; background: none; padding: 0; margin-bottom: 18px;
+  cursor: pointer;
+}
+.detail-layout { display: grid; grid-template-columns: 300px 1fr; gap: 16px; align-items: start; }
+
+.det-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.det-head {
+  padding: 18px 18px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.det-av-lg {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: oklch(52% 0.24 265);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 12px;
+}
+.det-name { font-size: 20px; font-weight: 800; color: var(--t1); letter-spacing: -.3px; margin-bottom: 6px; }
+.det-row { display: flex; align-items: center; gap: 8px; }
+
+/* Overdue alert — inline, not modal, no side-stripe */
+.overdue-inline {
+  margin: 12px 18px 0;
+  padding: 9px 12px;
+  background: var(--red-l);
+  border: 1px solid oklch(88% 0.06 25);
+  border-radius: 6px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 600; color: var(--red);
+}
+
+/* Action bar — horizontal, not card grid */
+.act-bar {
+  display: flex; gap: 8px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.act-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 8px 12px; border-radius: 6px;
+  border: 1px solid var(--border); background: var(--bg);
+  font-size: 12px; font-weight: 600; color: var(--t2);
+  transition: all .12s;
+}
+.act-btn:hover { border-color: var(--border2); background: var(--surface); color: var(--t1); }
+.act-btn-call { border-color: oklch(85% 0.06 160); color: var(--green); background: var(--green-l); }
+.act-btn-call:hover { background: oklch(92% 0.055 160); }
+.act-btn-appt { border-color: var(--blue-l); color: var(--blue); background: var(--blue-xl); }
+.act-btn-appt:hover { background: var(--blue-l); }
+
+/* Info field rows */
+.field-row { display: flex; align-items: center; gap: 12px; padding: 10px 18px; border-bottom: 1px solid var(--border); }
+.field-row:last-child { border-bottom: none; }
+.field-ico { width: 28px; height: 28px; border-radius: 7px; background: var(--bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--t3); }
+.field-lbl { font-size: 11px; color: var(--t3); font-weight: 500; margin-bottom: 1px; }
+.field-val { font-size: 13px; font-weight: 500; color: var(--t1); }
+.field-val-red { color: var(--red); font-weight: 600; }
+.change-btn { margin-left: auto; font-size: 11px; font-weight: 600; color: var(--blue); border: 1px solid var(--blue-l); background: var(--blue-xl); padding: 3px 9px; border-radius: 5px; }
+
+/* Activity log — timeline */
+.tl-row { display: flex; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--border); }
+.tl-row:last-child { border-bottom: none; }
+.tl-left { display: flex; flex-direction: column; align-items: center; width: 14px; }
+.tl-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 3px; flex-shrink: 0; }
+.tl-line { width: 1px; flex: 1; background: var(--border); margin: 5px 0; min-height: 14px; }
+.tl-t { font-size: 13px; font-weight: 500; color: var(--t1); }
+.tl-m { font-size: 11px; color: var(--t3); margin-top: 2px; }
+
+/* Status history */
+.sh-row { display: flex; align-items: center; gap: 12px; padding: 10px 18px; border-bottom: 1px solid var(--border); }
+.sh-row:last-child { border-bottom: none; }
+.sh-badge { font-size: 9px; font-weight: 800; color: var(--t3); background: var(--bg); padding: 3px 7px; border-radius: 4px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- SVG icon defs -->
+<svg style="display:none">
+  <symbol id="ic-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></symbol>
+  <symbol id="ic-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+  <symbol id="ic-board" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="10" rx="1"/><rect x="14" y="17" width="7" height="4" rx="1"/></symbol>
+  <symbol id="ic-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></symbol>
+  <symbol id="ic-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42 2 2 0 0 1 3.58 1.25h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="ic-plus-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="15" x2="12" y2="19"/><line x1="10" y1="17" x2="14" y2="17"/></symbol>
+  <symbol id="ic-task-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+  <symbol id="ic-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="ic-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="ic-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+  <symbol id="ic-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+  <symbol id="ic-chev-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="ic-chev-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+  <symbol id="ic-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="ic-money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol>
+  <symbol id="ic-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="ic-line" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.105.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></symbol>
+  <symbol id="ic-setting" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+  <symbol id="ic-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></symbol>
+</svg>
+
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg width="15" height="15" fill="none" stroke="#fff" stroke-width="1.75" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      </div>
+      <div class="logo-name">SalesFlow</div>
+      <div class="logo-plan">Pro</div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-label">หลัก</div>
+        <div class="ni on" onclick="showPage('pg-contacts')">
+          <svg><use href="#ic-users"/></svg>Contacts
+          <span class="ni-count">7</span>
+        </div>
+        <div class="ni" onclick="showPage('pg-tasks')">
+          <svg><use href="#ic-check"/></svg>Tasks
+        </div>
+        <div class="ni">
+          <svg><use href="#ic-cal"/></svg>Calendar
+        </div>
+        <div class="ni">
+          <svg><use href="#ic-board"/></svg>Board
+        </div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">วิเคราะห์</div>
+        <div class="ni" onclick="showPage('pg-dash')">
+          <svg><use href="#ic-chart"/></svg>Dashboard
+        </div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">ระบบ</div>
+        <div class="ni">
+          <svg><use href="#ic-setting"/></svg>Settings
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="user-av">พย</div>
+      <div>
+        <div class="user-name">พิยวัฒน์</div>
+        <div class="user-role">AIA Agent</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title" id="page-title">Contacts</div>
+      <div class="search-wrap">
+        <svg class="search-ico" width="14" height="14"><use href="#ic-search"/></svg>
+        <input class="search-inp" placeholder="ชื่อ, เบอร์, LINE ID...">
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap">
+          <button class="btn-icon"><svg width="15" height="15"><use href="#ic-bell"/></svg></button>
+          <div class="notif-dot"></div>
+        </div>
+        <button class="btn btn-secondary">
+          <svg width="13" height="13"><use href="#ic-upload"/></svg>Import
+        </button>
+        <button class="btn btn-primary" onclick="showPage('pg-detail')">
+          <svg width="13" height="13"><use href="#ic-plus"/></svg>เพิ่ม Contact
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ════ CONTACTS ════ -->
+      <div class="page on page-contacts" id="pg-contacts">
+        <div class="filter-row">
+          <div class="tabs">
+            <button class="tab on">ทั้งหมด</button>
+            <button class="tab">Follow-up (7)</button>
+            <button class="tab">Prospect</button>
+            <button class="tab">Appointment</button>
+            <button class="tab">Client</button>
+          </div>
+          <div class="filter-right">
+            <button class="btn btn-secondary" style="font-size:12px;padding:5px 11px">Sort: Follow-up</button>
+          </div>
+        </div>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ชื่อ</th>
+                <th>เบอร์โทร</th>
+                <th>Status</th>
+                <th>สินค้าที่สนใจ</th>
+                <th>มูลค่า/ปี</th>
+                <th>Follow-up</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Overdue rows first, row-tinted -->
+              <tr class="urgent" onclick="showPage('pg-detail')">
+                <td><div class="td-inner td-name"><div class="av av1">กม</div><div><div class="n">กมล สมใจ</div><div class="ns">Facebook</div></div></div></td>
+                <td><div class="td-inner" style="flex-direction:column;align-items:flex-start;gap:1px"><div style="font-size:13px;font-weight:500">081-234-5678</div><div style="font-size:11px;color:var(--t3)">LINE: kamol99</div></div></td>
+                <td><div class="td-inner"><span class="st st-prospect">Prospect</span></div></td>
+                <td><div class="td-inner" style="font-size:13px;color:var(--t1)">AIA H&S Extra</div></td>
+                <td><div class="td-inner" style="font-size:13px;font-weight:600">฿18,000</div></td>
+                <td><div class="td-inner"><span class="overdue-label">ค้าง 3 วัน</span></div></td>
+                <td><div class="td-inner"><div class="row-acts"><button class="ra ra-call" onclick="e=>e.stopPropagation()"><svg width="11" height="11"><use href="#ic-phone"/></svg>โทร</button><button class="ra">นัด</button></div></div></td>
+              </tr>
+              <tr class="urgent">
+                <td><div class="td-inner td-name"><div class="av av4">จน</div><div><div class="n">จันทร์ มั่นคง</div><div class="ns">Facebook</div></div></div></td>
+                <td><div class="td-inner"><div style="font-size:13px;font-weight:500">091-555-6666</div></div></td>
+                <td><div class="td-inner"><span class="st st-prospect">Prospect</span></div></td>
+                <td><div class="td-inner" style="font-size:13px;color:var(--t1)">PA Basic</div></td>
+                <td><div class="td-inner" style="font-size:13px;font-weight:600">฿4,500</div></td>
+                <td><div class="td-inner"><span class="overdue-label">ค้าง 1 วัน</span></div></td>
+                <td><div class="td-inner"><div class="row-acts"><button class="ra ra-call"><svg width="11" height="11"><use href="#ic-phone"/></svg>โทร</button><button class="ra">นัด</button></div></div></td>
+              </tr>
+              <!-- Normal rows -->
+              <tr>
+                <td><div class="td-inner td-name"><div class="av av2">ขว</div><div><div class="n">ขวัญใจ ดีงาม</div><div class="ns">Referral</div></div></div></td>
+                <td><div class="td-inner"><div style="font-size:13px;font-weight:500">089-111-2222</div></div></td>
+                <td><div class="td-inner"><span class="st st-appt">Appointment</span></div></td>
+                <td><div class="td-inner" style="font-size:13px;color:var(--t1)">AIA Whole Life</div></td>
+                <td><div class="td-inner" style="font-size:13px;font-weight:600">฿24,000</div></td>
+                <td><div class="td-inner"><span class="date-label">20 พ.ค. 2569</span></div></td>
+                <td><div class="td-inner"><div class="row-acts"><button class="ra ra-call"><svg width="11" height="11"><use href="#ic-phone"/></svg>โทร</button><button class="ra">นัด</button></div></div></td>
+              </tr>
+              <tr>
+                <td><div class="td-inner td-name"><div class="av av3">คณ</div><div><div class="n">คณิต วิจิตร</div><div class="ns">Referral</div></div></div></td>
+                <td><div class="td-inner"><div style="font-size:13px;font-weight:500">062-333-4444</div></div></td>
+                <td><div class="td-inner"><span class="st st-client">Client</span></div></td>
+                <td><div class="td-inner" style="font-size:13px;color:var(--t1)">AIA Motor</div></td>
+                <td><div class="td-inner" style="font-size:13px;font-weight:600">฿9,500</div></td>
+                <td><div class="td-inner"><span class="date-label">1 มิ.ย. 2569</span></div></td>
+                <td><div class="td-inner"><div class="row-acts"><button class="ra ra-call"><svg width="11" height="11"><use href="#ic-phone"/></svg>โทร</button><button class="ra">Policy</button></div></div></td>
+              </tr>
+              <tr>
+                <td><div class="td-inner td-name"><div class="av av5">ฉร</div><div><div class="n">เฉลิม รุ่งเรือง</div><div class="ns">Walk-in</div></div></div></td>
+                <td><div class="td-inner"><div style="font-size:13px;font-weight:500">095-777-8888</div></div></td>
+                <td><div class="td-inner"><span class="st st-lead">Lead</span></div></td>
+                <td><div class="td-inner" style="font-size:13px;color:var(--t3)">ยังไม่ระบุ</div></td>
+                <td><div class="td-inner" style="font-size:13px;color:var(--t3)">—</div></td>
+                <td><div class="td-inner"><span class="date-label">วันนี้</span></div></td>
+                <td><div class="td-inner"><div class="row-acts"><button class="ra ra-call"><svg width="11" height="11"><use href="#ic-phone"/></svg>โทร</button><button class="ra">นัด</button></div></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ════ DASHBOARD ════ -->
+      <div class="page page-dash" id="pg-dash">
+        <div class="month-bar">
+          <div>
+            <div class="month-label">พฤษภาคม 2569 <span class="month-sub">เป้า: นัด 20 · Client 2 คน</span></div>
+          </div>
+          <button class="btn-icon" style="margin-left:auto"><svg width="14" height="14"><use href="#ic-chev-l"/></svg></button>
+          <button class="btn-icon"><svg width="14" height="14"><use href="#ic-chev-r"/></svg></button>
+          <button class="btn btn-secondary" style="font-size:12px;padding:5px 11px">ตั้งเป้า</button>
+        </div>
+
+        <!-- Summary strip — NOT a hero-metric card grid -->
+        <div class="summary-strip">
+          <div class="sm-cell">
+            <div class="sm-label">นัดเดือนนี้</div>
+            <div class="sm-val">12 <span class="denom">/ 20</span></div>
+            <div class="sm-sub">ขาดอีก 8 นัด</div>
+            <div class="sm-progress"><div class="sm-progress-fill" style="width:60%"></div></div>
+          </div>
+          <div class="sm-cell">
+            <div class="sm-label">Follow-up วันนี้</div>
+            <div class="sm-val sm-urgent">7</div>
+            <div class="sm-sub">รอการติดตาม</div>
+          </div>
+          <div class="sm-cell">
+            <div class="sm-label">Client ใหม่</div>
+            <div class="sm-val sm-good">2 <span class="denom">/ 2</span></div>
+            <div class="sm-sub">ครบเป้าแล้ว</div>
+          </div>
+          <div class="sm-cell">
+            <div class="sm-label">Conversion</div>
+            <div class="sm-val">4.4<span class="denom">%</span></div>
+            <div class="sm-sub">Lead ถึง Client</div>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+          <!-- Follow-up list -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Follow-up วันนี้</div>
+              <div class="panel-meta">7 คน</div>
+            </div>
+            <div class="panel-body">
+              <div class="fu-row overdue-row">
+                <div class="av av1" style="width:30px;height:30px;border-radius:7px;font-size:10px;flex-shrink:0">กม</div>
+                <div class="fu-info">
+                  <div class="fu-name">กมล สมใจ</div>
+                  <div class="fu-overdue">ค้าง 3 วัน · Prospect</div>
+                </div>
+                <div class="fu-acts">
+                  <button class="fa fa-call"><svg width="11" height="11"><use href="#ic-phone"/></svg>โทร</button>
+                  <button class="fa">+1 วัน</button>
+                  <button class="fa fa-done">Done</button>
+                </div>
+              </div>
+              <div class="fu-row overdue-row">
+                <div class="av av4" style="width:30px;height:30px;border-radius:7px;font-size:10px;flex-shrink:0">จน</div>
+                <div class="fu-info">
+                  <div class="fu-name">จันทร์ มั่นคง</div>
+                  <div class="fu-overdue">ค้าง 1 วัน · Prospect</div>
+                </div>
+                <div class="fu-acts">
+                  <button class="fa fa-call"><svg width="11" height="11"><use href="#ic-phone"/></svg>โทร</button>
+                  <button class="fa">+1 วัน</button>
+                  <button class="fa fa-done">Done</button>
+                </div>
+              </div>
+              <div class="fu-row">
+                <div class="av av5" style="width:30px;height:30px;border-radius:7px;font-size:10px;flex-shrink:0">ฉร</div>
+                <div class="fu-info">
+                  <div class="fu-name">เฉลิม รุ่งเรือง</div>
+                  <div class="fu-status">วันนี้ · Lead</div>
+                </div>
+                <div class="fu-acts">
+                  <button class="fa fa-call"><svg width="11" height="11"><use href="#ic-phone"/></svg>โทร</button>
+                  <button class="fa">+1 วัน</button>
+                  <button class="fa fa-done">Done</button>
+                </div>
+              </div>
+              <div class="fu-row">
+                <div class="av av2" style="width:30px;height:30px;border-radius:7px;font-size:10px;flex-shrink:0">สม</div>
+                <div class="fu-info">
+                  <div class="fu-name">สมชาย ใจดี</div>
+                  <div class="fu-status">วันนี้ · Appointment</div>
+                </div>
+                <div class="fu-acts">
+                  <button class="fa fa-call"><svg width="11" height="11"><use href="#ic-phone"/></svg>โทร</button>
+                  <button class="fa">+1 วัน</button>
+                  <button class="fa fa-done">Done</button>
+                </div>
+              </div>
+              <div class="see-more">ดูทั้งหมด 7 คน →</div>
+            </div>
+          </div>
+
+          <!-- Pipeline — as table, not bar -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Pipeline พ.ค. 2569</div>
+              <div class="panel-meta">75 contacts ทั้งหมด</div>
+            </div>
+            <div class="panel-body">
+              <table class="pipe-table">
+                <thead>
+                  <tr>
+                    <th>Stage</th>
+                    <th>จำนวน</th>
+                    <th>Conversion</th>
+                    <th>สัดส่วน</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="pipe-stage-dot"><span style="width:7px;height:7px;border-radius:50%;background:var(--t4);flex-shrink:0;display:inline-block"></span>Lead</span></td>
+                    <td><span class="pipe-count">15</span></td>
+                    <td><span style="font-size:12px;color:var(--t3)">—</span></td>
+                    <td style="width:160px"><div class="pipe-bar-inline"><div class="pipe-fill" style="width:20%;background:var(--t4)"></div></div></td>
+                  </tr>
+                  <tr>
+                    <td><span class="pipe-stage-dot"><span style="width:7px;height:7px;border-radius:50%;background:var(--blue);flex-shrink:0;display:inline-block"></span>Prospect</span></td>
+                    <td><span class="pipe-count">45</span></td>
+                    <td><span class="pipe-conv">75% จาก Lead</span></td>
+                    <td><div class="pipe-bar-inline"><div class="pipe-fill" style="width:60%;background:var(--blue)"></div></div></td>
+                  </tr>
+                  <tr>
+                    <td><span class="pipe-stage-dot"><span style="width:7px;height:7px;border-radius:50%;background:var(--amber);flex-shrink:0;display:inline-block"></span>Appointment</span></td>
+                    <td><span class="pipe-count">10</span></td>
+                    <td><span class="pipe-conv">22% จาก Prospect</span></td>
+                    <td><div class="pipe-bar-inline"><div class="pipe-fill" style="width:13%;background:var(--amber)"></div></div></td>
+                  </tr>
+                  <tr>
+                    <td><span class="pipe-stage-dot"><span style="width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;display:inline-block"></span>Client</span></td>
+                    <td><span class="pipe-count" style="color:var(--green)">2</span></td>
+                    <td><span class="pipe-conv">20% จาก Appointment</span></td>
+                    <td><div class="pipe-bar-inline"><div class="pipe-fill" style="width:3%;background:var(--green)"></div></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ DETAIL ════ -->
+      <div class="page page-detail" id="pg-detail">
+        <button class="back-link" onclick="showPage('pg-contacts')">
+          <svg width="16" height="16"><use href="#ic-back"/></svg>กลับ Contacts
+        </button>
+
+        <div class="detail-layout">
+          <div>
+            <div class="det-panel">
+              <div class="det-head">
+                <div class="det-av-lg">กม</div>
+                <div class="det-name">กมล สมใจ</div>
+                <div class="det-row">
+                  <span class="st st-prospect">Prospect</span>
+                  <button class="change-btn">เปลี่ยน</button>
+                </div>
+              </div>
+
+              <div class="overdue-inline">
+                <svg width="14" height="14"><use href="#ic-alert"/></svg>
+                เลย Follow-up 3 วัน — กำหนด 13 พ.ค. 2569
+              </div>
+
+              <div class="act-bar">
+                <button class="act-btn act-btn-call">
+                  <svg width="14" height="14"><use href="#ic-phone"/></svg>โทร
+                </button>
+                <button class="act-btn act-btn-appt">
+                  <svg width="14" height="14"><use href="#ic-plus-cal"/></svg>สร้างนัด
+                </button>
+                <button class="act-btn">
+                  <svg width="14" height="14"><use href="#ic-task-plus"/></svg>เพิ่ม Task
+                </button>
+              </div>
+
+              <div class="field-row">
+                <div class="field-ico"><svg width="13" height="13"><use href="#ic-phone"/></svg></div>
+                <div><div class="field-lbl">เบอร์โทร</div><div class="field-val">081-234-5678</div></div>
+              </div>
+              <div class="field-row">
+                <div class="field-ico"><svg width="13" height="13"><use href="#ic-line"/></svg></div>
+                <div><div class="field-lbl">LINE ID</div><div class="field-val">kamol99</div></div>
+              </div>
+              <div class="field-row">
+                <div class="field-ico"><svg width="13" height="13"><use href="#ic-shield"/></svg></div>
+                <div><div class="field-lbl">สินค้าที่สนใจ</div><div class="field-val">AIA H&S Extra</div></div>
+              </div>
+              <div class="field-row">
+                <div class="field-ico"><svg width="13" height="13"><use href="#ic-money"/></svg></div>
+                <div><div class="field-lbl">มูลค่าประมาณการ</div><div class="field-val">฿18,000 / ปี</div></div>
+              </div>
+              <div class="field-row">
+                <div class="field-ico"><svg width="13" height="13"><use href="#ic-clock"/></svg></div>
+                <div><div class="field-lbl">Follow-up ถัดไป</div><div class="field-val field-val-red">เลยกำหนด (13 พ.ค.)</div></div>
+              </div>
+            </div>
+
+            <div class="det-panel" style="margin-top:12px">
+              <div class="panel-head">
+                <div class="panel-title">ประวัติ Status</div>
+              </div>
+              <div class="sh-row">
+                <div class="sh-badge">PRO</div>
+                <div style="flex:1"><div style="font-size:13px;font-weight:500">Prospect</div><div style="font-size:11px;color:var(--t3)">5 พ.ค. 2569</div></div>
+                <span class="st st-prospect">ปัจจุบัน</span>
+              </div>
+              <div class="sh-row">
+                <div class="sh-badge">LEA</div>
+                <div><div style="font-size:13px;font-weight:500">Lead</div><div style="font-size:11px;color:var(--t3)">1 พ.ค. 2569</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity panel -->
+          <div class="det-panel">
+            <div class="panel-head"><div class="panel-title">กิจกรรม</div></div>
+            <div class="tl-row">
+              <div class="tl-left"><div class="tl-dot" style="background:var(--amber)"></div><div class="tl-line"></div></div>
+              <div><div class="tl-t">ส่ง proposal แผนสุขภาพ</div><div class="tl-m">Task · 12 พ.ค. 2569</div></div>
+            </div>
+            <div class="tl-row">
+              <div class="tl-left"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-line"></div></div>
+              <div><div class="tl-t">นัดพบ รพ.กรุงเทพ 10:00 น.</div><div class="tl-m">Calendar · 8 พ.ค. 2569</div></div>
+            </div>
+            <div class="tl-row">
+              <div class="tl-left"><div class="tl-dot" style="background:var(--green)"></div><div class="tl-line"></div></div>
+              <div><div class="tl-t">โทรแนะนำแผน — ติดต่อได้</div><div class="tl-m">Log · 5 พ.ค. 2569</div></div>
+            </div>
+            <div class="tl-row">
+              <div class="tl-left"><div class="tl-dot" style="background:var(--border2)"></div></div>
+              <div><div class="tl-t">เพิ่ม Contact</div><div class="tl-m">System · 1 พ.ค. 2569</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tasks placeholder -->
+      <div class="page" id="pg-tasks">
+        <div style="display:flex;align-items:center;justify-content:center;height:60vh;flex-direction:column;gap:12px">
+          <div style="width:44px;height:44px;border-radius:10px;background:var(--blue-xl);display:flex;align-items:center;justify-content:center;color:var(--blue)"><svg width="22" height="22"><use href="#ic-check"/></svg></div>
+          <div style="font-size:15px;font-weight:700;color:var(--t1)">Tasks</div>
+          <div style="font-size:12px;color:var(--t3)">Phase 1</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const titles = { 'pg-contacts':'Contacts', 'pg-detail':'กมล สมใจ', 'pg-dash':'Dashboard', 'pg-tasks':'Tasks' };
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.getElementById('page-title').textContent = titles[id] || '';
+  document.querySelectorAll('.sidebar .ni').forEach(n => n.classList.remove('on'));
+  const map = { 'pg-contacts': 0, 'pg-tasks': 1, 'pg-dash': 4 };
+  if (map[id] !== undefined) document.querySelectorAll('.sidebar .ni')[map[id]]?.classList.add('on');
+}
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', function() {
+    this.closest('.tabs').querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
+    this.classList.add('on');
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+import { currentUser } from '@clerk/nextjs/server'
+import { redirect } from 'next/navigation'
+import Link from 'next/link'
+import { checkContactLimit } from '@/lib/tier'
+import { ensureUserExists } from '@/lib/auth'
+
+const NAV = [
+  { href: '/dashboard/contacts', label: 'Contacts', icon: 'users' },
+  { href: '/dashboard/tasks', label: 'Tasks', icon: 'check' },
+  { href: '/dashboard/calendar', label: 'Calendar', icon: 'cal' },
+  { href: '/dashboard/board', label: 'Board', icon: 'board' },
+  { href: '/dashboard/crm', label: 'Dashboard', icon: 'chart' },
+]
+
+function Icon({ name }: { name: string }) {
+  const icons: Record<string, React.ReactNode> = {
+    users: <><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></>,
+    check: <><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></>,
+    cal:   <><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></>,
+    board: <><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="10" rx="1"/><rect x="14" y="17" width="7" height="4" rx="1"/></>,
+    chart: <><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></>,
+    setting: <><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></>,
+  }
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      {icons[name]}
+    </svg>
+  )
+}
+
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const user = await currentUser()
+  if (!user) redirect('/sign-in')
+
+  // Ensure user row exists before checking limit
+  await ensureUserExists()
+  const { count: contactCount, limit, allowed } = await checkContactLimit(user.id)
+
+  // Show banner when free user has > 40 contacts (approaching limit)
+  const showApproachingBanner = limit !== null && contactCount > 40
+
+  const initials = `${user.firstName?.[0] ?? ''}${user.lastName?.[0] ?? ''}` || user.emailAddresses[0]?.emailAddress?.[0]?.toUpperCase() || '?'
+
+  return (
+    <div className="flex h-screen overflow-hidden bg-[oklch(98.2%_0.006_254)] font-[system-ui,-apple-system,'Segoe_UI',sans-serif]">
+      {/* Sidebar */}
+      <aside className="flex w-56 flex-shrink-0 flex-col border-r border-[oklch(90%_0.014_254)] bg-[oklch(97%_0.010_254)]">
+        {/* Logo */}
+        <div className="flex items-center gap-2.5 border-b border-[oklch(90%_0.014_254)] px-4 py-4">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[oklch(52%_0.245_265)]">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            </svg>
+          </div>
+          <span className="text-sm font-800 tracking-tight text-[oklch(18%_0.012_254)]">SalesFlow</span>
+          <span className="ml-auto rounded-full bg-[oklch(93%_0.04_265)] px-2 py-0.5 text-[10px] font-700 text-[oklch(42%_0.20_265)]">Pro</span>
+        </div>
+
+        {/* Nav */}
+        <nav className="flex-1 overflow-y-auto p-2">
+          <div className="mb-3">
+            <p className="mb-1 px-2 text-[10px] font-700 uppercase tracking-[0.8px] text-[oklch(75%_0.012_254)]">หลัก</p>
+            {NAV.slice(0, 4).map(item => (
+              <Link
+                key={item.href}
+                href={item.href}
+                prefetch={true}
+                className="flex items-center gap-2 rounded-md px-2 py-1.5 text-[13px] font-500 text-[oklch(46%_0.022_254)] transition-colors hover:bg-[oklch(90%_0.014_254)] hover:text-[oklch(18%_0.012_254)]"
+              >
+                <Icon name={item.icon} />
+                {item.label}
+              </Link>
+            ))}
+          </div>
+          <div className="mb-3">
+            <p className="mb-1 px-2 text-[10px] font-700 uppercase tracking-[0.8px] text-[oklch(75%_0.012_254)]">วิเคราะห์</p>
+            <Link
+              href="/dashboard/crm"
+              prefetch={true}
+                className="flex items-center gap-2 rounded-md px-2 py-1.5 text-[13px] font-500 text-[oklch(46%_0.022_254)] transition-colors hover:bg-[oklch(90%_0.014_254)] hover:text-[oklch(18%_0.012_254)]"
+            >
+              <Icon name="chart" />
+              Dashboard
+            </Link>
+          </div>
+          <div>
+            <p className="mb-1 px-2 text-[10px] font-700 uppercase tracking-[0.8px] text-[oklch(75%_0.012_254)]">ระบบ</p>
+            <Link
+              href="/dashboard/settings"
+              prefetch={true}
+                className="flex items-center gap-2 rounded-md px-2 py-1.5 text-[13px] font-500 text-[oklch(46%_0.022_254)] transition-colors hover:bg-[oklch(90%_0.014_254)] hover:text-[oklch(18%_0.012_254)]"
+            >
+              <Icon name="setting" />
+              Settings
+            </Link>
+          </div>
+        </nav>
+
+        {/* User */}
+        <div className="flex items-center gap-2.5 border-t border-[oklch(90%_0.014_254)] px-4 py-3">
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[oklch(52%_0.245_265)] text-[11px] font-800 text-white">
+            {initials}
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-[12px] font-600 text-[oklch(18%_0.012_254)]">
+              {user.firstName} {user.lastName}
+            </p>
+            <p className="truncate text-[11px] text-[oklch(65%_0.016_254)]">AIA Agent</p>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main */}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {/* Upgrade approaching banner */}
+        {showApproachingBanner && (
+          <div className="flex flex-shrink-0 items-center justify-between gap-3 border-b border-[oklch(85%_0.045_60)] bg-[oklch(97%_0.025_60)] px-5 py-2">
+            <p className="text-[12px] text-[oklch(38%_0.080_60)]">
+              ใกล้ถึงขีดจำกัด{' '}
+              <span className="font-700">
+                ({contactCount}/{limit} contacts)
+              </span>{' '}
+              — อัปเกรด Pro เพื่อไม่จำกัด
+            </p>
+            <Link
+              href="/dashboard/contacts"
+              className="flex-shrink-0 rounded-md bg-[oklch(52%_0.245_265)] px-3 py-1 text-[11px] font-700 text-white transition-colors hover:bg-[oklch(46%_0.245_265)]"
+            >
+              อัปเกรด →
+            </Link>
+          </div>
+        )}
+
+        {/* Topbar */}
+        <div className="flex h-[52px] flex-shrink-0 items-center gap-3 border-b border-[oklch(90%_0.014_254)] bg-white px-5">
+          <div className="relative flex-1 max-w-xs">
+            <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[oklch(68%_0.016_254)]" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input
+              className="w-full rounded-md border border-[oklch(90%_0.014_254)] bg-[oklch(98.2%_0.006_254)] py-1.5 pl-8 pr-3 text-[13px] outline-none focus:border-[oklch(52%_0.245_265)] focus:ring-2 focus:ring-[oklch(93%_0.04_265)] placeholder:text-[oklch(68%_0.016_254)]"
+              placeholder="ค้นหาชื่อ, เบอร์, LINE ID..."
+            />
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <button className="flex h-8 w-8 items-center justify-center rounded-md border border-[oklch(90%_0.014_254)] text-[oklch(55%_0.020_254)] hover:border-[oklch(84%_0.018_254)] transition-colors">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </button>
+            <a href="/api/contacts/export" className="flex items-center gap-1.5 rounded-md border border-[oklch(90%_0.014_254)] px-3 py-1.5 text-[12px] font-600 text-[oklch(46%_0.022_254)] hover:border-[oklch(84%_0.018_254)] transition-colors">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export CSV
+            </a>
+          </div>
+        </div>
+
+        {/* Page content */}
+        <main className="flex-1 overflow-y-auto">
+          {children}
+        </main>
+      </div>
+    </div>
+  )
+}

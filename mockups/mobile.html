@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>SalesFlow CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --blue:   #1d4ed8;
+  --blue-d: #1e3a8a;
+  --blue-l: #3b82f6;
+  --blue-xl:#dbeafe;
+  --blue-2: #eff6ff;
+  --white:  #ffffff;
+  --bg:     #f0f4f8;
+  --card:   #ffffff;
+  --border: #e2e8f0;
+  --border2:#cbd5e1;
+  --t1:     #0f172a;
+  --t2:     #475569;
+  --t3:     #94a3b8;
+  --t4:     #cbd5e1;
+  --green:  #16a34a;
+  --green-l:#dcfce7;
+  --green-t:#15803d;
+  --amber:  #d97706;
+  --amber-l:#fef3c7;
+  --amber-t:#92400e;
+  --red:    #dc2626;
+  --red-l:  #fee2e2;
+  --red-t:  #991b1b;
+  --r:14px;--r2:10px;--r3:8px;
+  --shadow: 0 1px 3px rgba(15,23,42,.06),0 4px 12px rgba(15,23,42,.04);
+  --shadow2:0 2px 8px rgba(15,23,42,.08),0 8px 24px rgba(15,23,42,.06);
+  --shadow-btn:0 4px 14px rgba(29,78,216,.4);
+  --font:'Bricolage Grotesque','Sarabun',sans-serif;
+}
+
+html,body{height:100%}
+body{font-family:var(--font);background:#dde3ec;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:100vh;padding:28px 0 48px}
+
+/* Phone */
+.phone{width:393px;height:852px;background:var(--bg);border-radius:50px;overflow:hidden;position:relative;box-shadow:0 0 0 1px rgba(0,0,0,.12),0 40px 80px rgba(0,0,0,.28),inset 0 0 0 1px rgba(255,255,255,.8)}
+
+/* Dynamic island */
+.island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:126px;height:36px;background:#000;border-radius:20px;z-index:200}
+
+/* Status bar */
+.sb{position:absolute;top:0;left:0;right:0;height:52px;display:flex;align-items:flex-end;padding:0 28px 8px;justify-content:space-between;font-size:13px;font-weight:700;z-index:50;color:var(--t1);pointer-events:none}
+.sb-r{display:flex;gap:5px;align-items:center;font-size:12px}
+
+/* Pages */
+.page{display:none;flex-direction:column;height:100%;padding-top:52px}
+.page.on{display:flex}
+
+/* Scrollable body */
+.body{flex:1;overflow-y:auto;scrollbar-width:none;padding-bottom:82px}
+.body::-webkit-scrollbar{display:none}
+
+/* Bottom nav */
+.bnav{position:absolute;bottom:0;left:0;right:0;height:82px;display:flex;align-items:flex-start;padding-top:10px;background:var(--white);border-top:1px solid var(--border);z-index:100;box-shadow:0 -4px 16px rgba(15,23,42,.06)}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:4px 0;transition:all .15s}
+.ni-ico{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--t3);transition:color .15s}
+.ni-lbl{font-size:10px;color:var(--t3);font-weight:500;font-family:'Sarabun',sans-serif;transition:color .15s}
+.ni.on .ni-ico{color:var(--blue)}
+.ni.on .ni-lbl{color:var(--blue);font-weight:700}
+
+/* Page header */
+.hdr{background:var(--white);border-bottom:1px solid var(--border);padding:16px 20px 14px}
+.hdr-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.hdr-title{font-size:24px;font-weight:800;color:var(--t1);letter-spacing:-.4px}
+.hdr-sub{font-size:12px;color:var(--t3);font-weight:400}
+
+/* Add button */
+.btn-add{display:flex;align-items:center;gap:6px;background:var(--blue);color:#fff;border:none;border-radius:100px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);box-shadow:var(--shadow-btn);transition:all .2s;white-space:nowrap}
+.btn-add:hover{background:var(--blue-d);transform:translateY(-1px)}
+.btn-add svg{flex-shrink:0}
+
+/* Search */
+.search-wrap{padding:12px 16px 0;position:relative}
+.search-inp{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);padding:11px 14px 11px 40px;font-size:14px;font-family:var(--font);color:var(--t1);outline:none;transition:all .2s}
+.search-inp::placeholder{color:var(--t3)}
+.search-inp:focus{border-color:var(--blue);background:var(--white);box-shadow:0 0 0 3px rgba(29,78,216,.1)}
+.search-ico{position:absolute;left:28px;top:50%;transform:translateY(-3px);color:var(--t3)}
+
+/* Filter tabs */
+.tabs{display:flex;gap:7px;padding:12px 16px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{white-space:nowrap;padding:7px 14px;border-radius:100px;border:1.5px solid var(--border);background:var(--white);color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s}
+.tab.on{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(29,78,216,.3)}
+
+/* Contact cards */
+.cards{display:flex;flex-direction:column;gap:8px;padding:0 16px 8px}
+.ccard{background:var(--white);border-radius:var(--r);border:1.5px solid var(--border);padding:14px 16px;cursor:pointer;transition:all .18s;box-shadow:var(--shadow)}
+.ccard:hover{border-color:var(--blue-l);box-shadow:var(--shadow2);transform:translateY(-1px)}
+.cc-main{display:flex;align-items:center;gap:12px}
+.cc-info{flex:1;min-width:0}
+.cc-name{font-size:15px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cc-phone{font-size:12px;color:var(--t2);margin-top:2px;display:flex;align-items:center;gap:4px}
+.cc-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.cc-meta{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap;align-items:center}
+
+/* Avatar */
+.av{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0;color:#fff;font-family:var(--font)}
+.av1{background:linear-gradient(135deg,#1d4ed8,#3b82f6)}
+.av2{background:linear-gradient(135deg,#0369a1,#0ea5e9)}
+.av3{background:linear-gradient(135deg,#065f46,#10b981)}
+.av4{background:linear-gradient(135deg,#92400e,#f59e0b)}
+.av5{background:linear-gradient(135deg,#9d174d,#ec4899)}
+
+/* Status badges */
+.badge{padding:3px 9px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+.b-lead{background:#f1f5f9;color:#64748b}
+.b-prospect{background:var(--blue-xl);color:var(--blue-d);border:1px solid rgba(29,78,216,.15)}
+.b-appt{background:var(--amber-l);color:var(--amber-t);border:1px solid rgba(217,119,6,.15)}
+.b-client{background:var(--green-l);color:var(--green-t);border:1px solid rgba(22,163,74,.15)}
+.b-lost{background:var(--red-l);color:var(--red-t);border:1px solid rgba(220,38,38,.15)}
+.b-overdue{background:var(--red-l);color:var(--red-t);border:1px solid rgba(220,38,38,.2);display:flex;align-items:center;gap:4px}
+
+/* Tag */
+.tag{background:var(--bg);color:var(--t2);padding:3px 8px;border-radius:6px;font-size:10px;font-weight:500}
+
+/* Overdue bar */
+.overdue-bar{background:var(--red-l);border-radius:var(--r2);padding:10px 14px;margin:0 16px 8px;display:flex;align-items:center;gap:10px;border:1px solid rgba(220,38,38,.15)}
+.overdue-bar svg{flex-shrink:0;color:var(--red)}
+.overdue-bar-text{font-size:12px;color:var(--red-t);font-weight:600}
+
+/* ── Detail ─────────────────────────── */
+.det-hdr{background:var(--white);border-bottom:1px solid var(--border);padding:14px 20px 20px}
+.back-btn{display:flex;align-items:center;gap:5px;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;font-family:var(--font);margin-bottom:14px;padding:0}
+.det-hero{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.det-av{width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,#1d4ed8,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;box-shadow:0 4px 16px rgba(29,78,216,.25)}
+.det-name{font-size:22px;font-weight:800;color:var(--t1);letter-spacing:-.3px}
+.det-badges{display:flex;align-items:center;gap:8px;margin-top:5px}
+.change-btn{font-size:11px;font-weight:600;color:var(--blue);border:1.5px solid rgba(29,78,216,.25);background:var(--blue-2);padding:3px 10px;border-radius:100px;cursor:pointer;font-family:var(--font)}
+
+/* Action buttons */
+.act-row{display:flex;gap:8px;padding:14px 16px}
+.act{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;padding:14px 8px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--white);cursor:pointer;font-family:var(--font);font-size:12px;font-weight:700;color:var(--t2);transition:all .15s;box-shadow:var(--shadow)}
+.act:hover{transform:translateY(-1px);box-shadow:var(--shadow2)}
+.act-call{border-color:rgba(22,163,74,.25);background:#f0fdf4;color:var(--green-t)}
+.act-appt{border-color:rgba(29,78,216,.2);background:var(--blue-2);color:var(--blue-d)}
+.act-task{border-color:rgba(217,119,6,.2);background:#fffbeb;color:var(--amber-t)}
+.act svg{flex-shrink:0}
+
+/* Info section */
+.info-sec{padding:0 16px 14px}
+.sec-lbl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:9px;display:flex;align-items:center;gap:6px}
+.info-card{background:var(--white);border-radius:var(--r);border:1.5px solid var(--border);overflow:hidden;box-shadow:var(--shadow)}
+.info-row{display:flex;align-items:center;padding:12px 14px;border-bottom:1px solid var(--border);gap:12px}
+.info-row:last-child{border-bottom:none}
+.info-ico{width:32px;height:32px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--t2)}
+.info-lbl{font-size:10px;color:var(--t3);margin-bottom:2px;font-weight:500}
+.info-val{font-size:13px;font-weight:600;color:var(--t1)}
+.info-val-red{color:var(--red)}
+
+/* Timeline */
+.tl-wrap{padding:0 16px 14px}
+.tl-item{display:flex;gap:10px;padding-bottom:4px}
+.tl-l{display:flex;flex-direction:column;align-items:center;width:18px}
+.tl-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--white);margin-top:2px;flex-shrink:0}
+.tl-line{width:2px;flex:1;background:var(--border);margin:4px 0;min-height:18px}
+.tl-body{flex:1;padding-bottom:14px}
+.tl-t{font-size:13px;font-weight:600;color:var(--t1)}
+.tl-m{font-size:11px;color:var(--t3);margin-top:2px}
+.divider{height:1px;background:var(--border);margin:0 16px 14px}
+
+/* ── Dashboard ───────────────────────── */
+.dash-hdr{background:var(--white);border-bottom:1px solid var(--border);padding:16px 20px 18px}
+.month-nav{display:flex;align-items:center;gap:10px}
+.marrow{width:34px;height:34px;border-radius:10px;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);transition:all .15s;flex-shrink:0}
+.marrow:hover{border-color:var(--blue);color:var(--blue)}
+.month-main{flex:1}
+.month-title{font-size:20px;font-weight:800;color:var(--t1);letter-spacing:-.3px}
+.month-sub{font-size:12px;color:var(--t3);margin-top:2px;display:flex;align-items:center;gap:8px}
+.goal-edit{font-size:11px;font-weight:600;color:var(--blue);border:1.5px solid rgba(29,78,216,.2);background:var(--blue-2);padding:2px 10px;border-radius:100px;cursor:pointer;font-family:var(--font)}
+
+/* Metrics */
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px 6px}
+.mc{background:var(--white);border-radius:var(--r);padding:16px;border:1.5px solid var(--border);box-shadow:var(--shadow);border-top:3px solid transparent;transition:all .2s}
+.mc:nth-child(1){border-top-color:var(--blue)}
+.mc:nth-child(2){border-top-color:var(--amber)}
+.mc:nth-child(3){border-top-color:var(--red)}
+.mc:nth-child(4){border-top-color:var(--green)}
+.mc-val{font-size:30px;font-weight:800;color:var(--t1);line-height:1;letter-spacing:-1px}
+.mc-val span{font-size:15px;font-weight:500;color:var(--t3)}
+.mc-lbl{font-size:11px;font-weight:600;color:var(--t2);margin-top:6px}
+.mc-sub{font-size:10px;color:var(--t3);margin-top:2px}
+
+/* Pipeline */
+.pipe-sec{padding:6px 16px 16px}
+.pipe-lbl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.pipe-bar{height:8px;background:var(--bg);border-radius:100px;overflow:hidden;display:flex;margin-bottom:14px}
+.pb{height:100%}
+.pb-lead{background:var(--t4)}
+.pb-pro{background:var(--blue-l)}
+.pb-appt{background:#f59e0b}
+.pb-cli{background:#22c55e}
+.pipe-stages{display:flex}
+.ps{flex:1}
+.ps-n{font-size:17px;font-weight:800;color:var(--t1)}
+.ps-l{font-size:10px;color:var(--t3);margin-top:2px}
+.ps-c{font-size:10px;font-weight:700;color:var(--green);margin-top:1px}
+
+/* Follow-up */
+.fu-sec{padding:0 16px}
+.fu-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.fu-title{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1px}
+.fu-cnt{font-size:11px;font-weight:700;color:var(--red);background:var(--red-l);padding:2px 9px;border-radius:100px;border:1px solid rgba(220,38,38,.15)}
+.fu-item{background:var(--white);border-radius:var(--r2);padding:13px 14px 11px;border:1.5px solid var(--border);margin-bottom:8px;box-shadow:var(--shadow)}
+.fu-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.fu-av{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.fu-name{font-size:13px;font-weight:700;color:var(--t1)}
+.fu-meta{font-size:11px;color:var(--red);margin-top:1px;font-weight:500}
+.fu-meta-ok{font-size:11px;color:var(--t3);margin-top:1px}
+.fu-acts{display:flex;gap:6px}
+.fa{flex:1;padding:8px 4px;border-radius:8px;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:11px;font-weight:700;font-family:var(--font);color:var(--t2);transition:all .15s;text-align:center;display:flex;align-items:center;justify-content:center;gap:4px}
+.fa:hover{transform:scale(.96)}
+.fa-call{border-color:rgba(22,163,74,.25);color:var(--green-t);background:#f0fdf4}
+.fa-delay{border-color:rgba(217,119,6,.2);color:var(--amber-t);background:#fffbeb}
+.fa-done{border-color:rgba(29,78,216,.2);color:var(--blue-d);background:var(--blue-2)}
+.see-all{text-align:center;padding:12px 0;font-size:12px;font-weight:600;color:var(--blue);cursor:pointer}
+</style>
+</head>
+<body>
+<div class="phone">
+<div class="island"></div>
+<div class="sb"><span>9:41</span><div class="sb-r"><span>●●●●</span><span>5G</span><span>100%</span></div></div>
+
+<!-- SVG icon defs (hidden) -->
+<svg style="display:none">
+  <symbol id="ic-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </symbol>
+  <symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+  </symbol>
+  <symbol id="ic-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+  </symbol>
+  <symbol id="ic-board" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="10" rx="1"/><rect x="14" y="17" width="7" height="4" rx="1"/>
+  </symbol>
+  <symbol id="ic-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>
+  </symbol>
+  <symbol id="ic-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42 2 2 0 0 1 3.58 1.25h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+  </symbol>
+  <symbol id="ic-plus-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="15" x2="12" y2="19"/><line x1="10" y1="17" x2="14" y2="17"/>
+  </symbol>
+  <symbol id="ic-task" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+  </symbol>
+  <symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </symbol>
+  <symbol id="ic-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="15 18 9 12 15 6"/>
+  </symbol>
+  <symbol id="ic-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+  </symbol>
+  <symbol id="ic-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+  </symbol>
+  <symbol id="ic-chev-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="15 18 9 12 15 6"/>
+  </symbol>
+  <symbol id="ic-chev-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="9 18 15 12 9 6"/>
+  </symbol>
+  <symbol id="ic-line" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.105.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+  </symbol>
+  <symbol id="ic-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+  </symbol>
+  <symbol id="ic-money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+  </symbol>
+  <symbol id="ic-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+  </symbol>
+</svg>
+
+<!-- ════════════════════════════ PAGE: CONTACTS ══ -->
+<div class="page on" id="pg-contacts">
+<div class="body">
+  <div class="hdr">
+    <div class="hdr-row">
+      <div><div class="hdr-title">Contacts</div><div class="hdr-sub">23 รายชื่อ · 7 ต้อง follow-up</div></div>
+      <button class="btn-add" onclick="showPage('pg-detail')">
+        <svg width="14" height="14"><use href="#ic-plus"/></svg>เพิ่ม
+      </button>
+    </div>
+  </div>
+
+  <div class="search-wrap">
+    <svg class="search-ico" width="16" height="16"><use href="#ic-search"/></svg>
+    <input class="search-inp" placeholder="ชื่อ, เบอร์, LINE ID..." type="text">
+  </div>
+
+  <div class="tabs">
+    <button class="tab on">ทั้งหมด</button>
+    <button class="tab">Follow-up (7)</button>
+    <button class="tab">Prospect</button>
+    <button class="tab">Appointment</button>
+    <button class="tab">Client</button>
+  </div>
+
+  <div class="cards">
+    <div class="ccard" onclick="showPage('pg-detail')">
+      <div class="cc-main">
+        <div class="av av1">กม</div>
+        <div class="cc-info">
+          <div class="cc-name">กมล สมใจ</div>
+          <div class="cc-phone"><svg width="12" height="12"><use href="#ic-phone"/></svg>081-234-5678 · kamol99</div>
+        </div>
+        <div class="cc-right">
+          <span class="badge b-prospect">Prospect</span>
+          <span class="badge b-overdue"><svg width="9" height="9"><use href="#ic-clock"/></svg>ค้าง 3 วัน</span>
+        </div>
+      </div>
+      <div class="cc-meta"><span class="tag">สุขภาพ</span><span class="tag">H&S Extra</span><span class="tag" style="color:var(--t3)">฿18,000/ปี</span></div>
+    </div>
+
+    <div class="ccard">
+      <div class="cc-main">
+        <div class="av av2">ขว</div>
+        <div class="cc-info">
+          <div class="cc-name">ขวัญใจ ดีงาม</div>
+          <div class="cc-phone"><svg width="12" height="12"><use href="#ic-phone"/></svg>089-111-2222 · kwanjai</div>
+        </div>
+        <div class="cc-right">
+          <span class="badge b-appt">Appointment</span>
+        </div>
+      </div>
+      <div class="cc-meta"><span class="tag">ชีวิต</span><span class="tag">สุขภาพ</span><span class="tag" style="color:var(--t3)">฿24,000/ปี</span></div>
+    </div>
+
+    <div class="ccard">
+      <div class="cc-main">
+        <div class="av av3">คณ</div>
+        <div class="cc-info">
+          <div class="cc-name">คณิต วิจิตร</div>
+          <div class="cc-phone"><svg width="12" height="12"><use href="#ic-phone"/></svg>062-333-4444</div>
+        </div>
+        <div class="cc-right">
+          <span class="badge b-client">✓ Client</span>
+        </div>
+      </div>
+      <div class="cc-meta"><span class="tag">รถ</span><span class="tag" style="color:var(--t3)">฿9,500/ปี</span></div>
+    </div>
+
+    <div class="ccard">
+      <div class="cc-main">
+        <div class="av av4">จน</div>
+        <div class="cc-info">
+          <div class="cc-name">จันทร์ มั่นคง</div>
+          <div class="cc-phone"><svg width="12" height="12"><use href="#ic-phone"/></svg>091-555-6666</div>
+        </div>
+        <div class="cc-right">
+          <span class="badge b-prospect">Prospect</span>
+          <span class="badge b-overdue"><svg width="9" height="9"><use href="#ic-clock"/></svg>ค้าง 1 วัน</span>
+        </div>
+      </div>
+      <div class="cc-meta"><span class="tag">อุบัติเหตุ</span></div>
+    </div>
+
+    <div class="ccard">
+      <div class="cc-main">
+        <div class="av av5">ฉร</div>
+        <div class="cc-info">
+          <div class="cc-name">เฉลิม รุ่งเรือง</div>
+          <div class="cc-phone"><svg width="12" height="12"><use href="#ic-phone"/></svg>095-777-8888</div>
+        </div>
+        <div class="cc-right">
+          <span class="badge b-lead">Lead</span>
+        </div>
+      </div>
+      <div class="cc-meta"><span class="tag">บ้าน</span></div>
+    </div>
+  </div>
+</div><!-- /body -->
+
+<div class="bnav">
+  <div class="ni on"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-users"/></svg></div><div class="ni-lbl">Contacts</div></div>
+  <div class="ni" onclick="showPage('pg-tasks')"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-check"/></svg></div><div class="ni-lbl">Tasks</div></div>
+  <div class="ni"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-cal"/></svg></div><div class="ni-lbl">Calendar</div></div>
+  <div class="ni"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-board"/></svg></div><div class="ni-lbl">Board</div></div>
+  <div class="ni" onclick="showPage('pg-dash')"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-chart"/></svg></div><div class="ni-lbl">Dashboard</div></div>
+</div>
+</div>
+
+<!-- ════════════════════════════ PAGE: DETAIL ══ -->
+<div class="page" id="pg-detail">
+<div class="body">
+  <div class="det-hdr">
+    <button class="back-btn" onclick="showPage('pg-contacts')"><svg width="18" height="18"><use href="#ic-back"/></svg>กลับ</button>
+    <div class="det-hero">
+      <div class="det-av">กม</div>
+      <div>
+        <div class="det-name">กมล สมใจ</div>
+        <div class="det-badges">
+          <span class="badge b-prospect">Prospect</span>
+          <button class="change-btn">เปลี่ยน Status</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overdue-bar">
+    <svg width="16" height="16"><use href="#ic-alert"/></svg>
+    <div class="overdue-bar-text">เลย Follow-up มา 3 วัน — กำหนดเดิม 13 พ.ค. 2569</div>
+  </div>
+
+  <div class="act-row">
+    <button class="act act-call"><svg width="20" height="20" color="#16a34a"><use href="#ic-phone"/></svg>โทร</button>
+    <button class="act act-appt"><svg width="20" height="20" color="#1d4ed8"><use href="#ic-plus-cal"/></svg>สร้างนัด</button>
+    <button class="act act-task"><svg width="20" height="20" color="#d97706"><use href="#ic-task"/></svg>เพิ่ม Task</button>
+  </div>
+
+  <div class="info-sec">
+    <div class="sec-lbl">ข้อมูลติดต่อ</div>
+    <div class="info-card">
+      <div class="info-row">
+        <div class="info-ico"><svg width="16" height="16"><use href="#ic-phone"/></svg></div>
+        <div><div class="info-lbl">เบอร์โทร</div><div class="info-val">081-234-5678</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-ico"><svg width="16" height="16"><use href="#ic-line"/></svg></div>
+        <div><div class="info-lbl">LINE ID</div><div class="info-val">kamol99</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-ico"><svg width="16" height="16"><use href="#ic-shield"/></svg></div>
+        <div><div class="info-lbl">สินค้าที่สนใจ</div><div class="info-val">AIA H&S Extra</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-ico"><svg width="16" height="16"><use href="#ic-money"/></svg></div>
+        <div><div class="info-lbl">มูลค่าประมาณการ</div><div class="info-val">฿18,000 / ปี</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-ico"><svg width="16" height="16"><use href="#ic-clock"/></svg></div>
+        <div><div class="info-lbl">Follow-up ถัดไป</div><div class="info-val info-val-red">เลยกำหนด (13 พ.ค.)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-wrap">
+    <div class="sec-lbl" style="padding:0 0 9px">กิจกรรม</div>
+    <div class="tl-item">
+      <div class="tl-l"><div class="tl-dot" style="background:#f59e0b;border-color:var(--bg)"></div><div class="tl-line"></div></div>
+      <div class="tl-body"><div class="tl-t">ส่ง proposal แผนสุขภาพ</div><div class="tl-m">Task · 12 พ.ค. 2569</div></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-l"><div class="tl-dot" style="background:var(--blue-l);border-color:var(--bg)"></div><div class="tl-line"></div></div>
+      <div class="tl-body"><div class="tl-t">นัดพบ รพ.กรุงเทพ 10:00น.</div><div class="tl-m">Calendar · 8 พ.ค. 2569</div></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-l"><div class="tl-dot" style="background:var(--green);border-color:var(--bg)"></div></div>
+      <div class="tl-body"><div class="tl-t">โทรแนะนำแผน — ติดต่อได้</div><div class="tl-m">Log · 5 พ.ค. 2569</div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="info-sec">
+    <div class="sec-lbl">ประวัติ Status</div>
+    <div class="info-card">
+      <div class="info-row">
+        <div class="info-ico" style="background:var(--blue-xl);font-size:8px;font-weight:800;color:var(--blue-d)">PRO</div>
+        <div style="flex:1"><div class="info-lbl">5 พ.ค. 2569</div><div class="info-val">Prospect</div></div>
+        <span class="badge b-prospect">ปัจจุบัน</span>
+      </div>
+      <div class="info-row">
+        <div class="info-ico" style="font-size:8px;font-weight:800;color:var(--t3)">LEA</div>
+        <div><div class="info-lbl">1 พ.ค. 2569</div><div class="info-val">Lead</div></div>
+      </div>
+    </div>
+  </div>
+  <div style="height:24px"></div>
+</div>
+
+<div class="bnav">
+  <div class="ni on" onclick="showPage('pg-contacts')"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-users"/></svg></div><div class="ni-lbl">Contacts</div></div>
+  <div class="ni"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-check"/></svg></div><div class="ni-lbl">Tasks</div></div>
+  <div class="ni"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-cal"/></svg></div><div class="ni-lbl">Calendar</div></div>
+  <div class="ni"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-board"/></svg></div><div class="ni-lbl">Board</div></div>
+  <div class="ni" onclick="showPage('pg-dash')"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-chart"/></svg></div><div class="ni-lbl">Dashboard</div></div>
+</div>
+</div>
+
+<!-- ════════════════════════════ PAGE: DASHBOARD ══ -->
+<div class="page" id="pg-dash">
+<div class="body">
+  <div class="dash-hdr">
+    <div class="month-nav">
+      <div class="marrow"><svg width="18" height="18"><use href="#ic-chev-l"/></svg></div>
+      <div class="month-main">
+        <div class="month-title">พฤษภาคม 2569</div>
+        <div class="month-sub">เป้าหมาย: นัด 20 · Client 2 คน/เดือน <button class="goal-edit">แก้ไข</button></div>
+      </div>
+      <div class="marrow"><svg width="18" height="18"><use href="#ic-chev-r"/></svg></div>
+    </div>
+  </div>
+
+  <div class="metrics">
+    <div class="mc">
+      <div class="mc-val">12<span>/20</span></div>
+      <div class="mc-lbl">นัดแล้ว</div>
+      <div class="mc-sub">ขาดอีก 8 นัด</div>
+    </div>
+    <div class="mc">
+      <div class="mc-val" style="color:var(--amber)">8</div>
+      <div class="mc-lbl">ขาดอีก</div>
+      <div class="mc-sub">15 วันที่เหลือ</div>
+    </div>
+    <div class="mc">
+      <div class="mc-val" style="color:var(--red)">7</div>
+      <div class="mc-lbl">Follow-up วันนี้</div>
+      <div class="mc-sub">รอดำเนินการ</div>
+    </div>
+    <div class="mc">
+      <div class="mc-val" style="color:var(--green)">2<span style="color:var(--green)">/2</span></div>
+      <div class="mc-lbl">Client ใหม่ ✓</div>
+      <div class="mc-sub">ครบเป้าแล้ว</div>
+    </div>
+  </div>
+
+  <div class="pipe-sec">
+    <div class="pipe-lbl">Pipeline</div>
+    <div class="pipe-bar">
+      <div class="pb pb-lead" style="width:19%"></div>
+      <div class="pb pb-pro"  style="width:56%"></div>
+      <div class="pb pb-appt" style="width:20%"></div>
+      <div class="pb pb-cli"  style="width:5%"></div>
+    </div>
+    <div class="pipe-stages">
+      <div class="ps"><div class="ps-n">15</div><div class="ps-l">Lead</div></div>
+      <div class="ps"><div class="ps-n">45</div><div class="ps-l">Prospect</div><div class="ps-c">↑75%</div></div>
+      <div class="ps"><div class="ps-n">10</div><div class="ps-l">Appt</div><div class="ps-c">↑22%</div></div>
+      <div class="ps"><div class="ps-n">2</div><div class="ps-l">Client</div><div class="ps-c">↑20%</div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="fu-sec">
+    <div class="fu-hdr">
+      <div class="fu-title">Follow-up วันนี้</div>
+      <div class="fu-cnt">7 คน</div>
+    </div>
+
+    <div class="fu-item">
+      <div class="fu-top">
+        <div class="fu-av av1">กม</div>
+        <div><div class="fu-name">กมล สมใจ</div><div class="fu-meta">ค้าง 3 วัน · Prospect</div></div>
+      </div>
+      <div class="fu-acts">
+        <button class="fa fa-call"><svg width="12" height="12"><use href="#ic-phone"/></svg>โทร</button>
+        <button class="fa fa-delay">+1 วัน</button>
+        <button class="fa fa-done">✓ Done</button>
+      </div>
+    </div>
+
+    <div class="fu-item">
+      <div class="fu-top">
+        <div class="fu-av av4">จน</div>
+        <div><div class="fu-name">จันทร์ มั่นคง</div><div class="fu-meta">ค้าง 1 วัน · Prospect</div></div>
+      </div>
+      <div class="fu-acts">
+        <button class="fa fa-call"><svg width="12" height="12"><use href="#ic-phone"/></svg>โทร</button>
+        <button class="fa fa-delay">+1 วัน</button>
+        <button class="fa fa-done">✓ Done</button>
+      </div>
+    </div>
+
+    <div class="fu-item">
+      <div class="fu-top">
+        <div class="fu-av av5">ฉร</div>
+        <div><div class="fu-name">เฉลิม รุ่งเรือง</div><div class="fu-meta-ok">วันนี้ · Lead</div></div>
+      </div>
+      <div class="fu-acts">
+        <button class="fa fa-call"><svg width="12" height="12"><use href="#ic-phone"/></svg>โทร</button>
+        <button class="fa fa-delay">+1 วัน</button>
+        <button class="fa fa-done">✓ Done</button>
+      </div>
+    </div>
+
+    <div class="see-all">ดูทั้งหมด 7 คน →</div>
+  </div>
+</div>
+
+<div class="bnav">
+  <div class="ni" onclick="showPage('pg-contacts')"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-users"/></svg></div><div class="ni-lbl">Contacts</div></div>
+  <div class="ni"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-check"/></svg></div><div class="ni-lbl">Tasks</div></div>
+  <div class="ni"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-cal"/></svg></div><div class="ni-lbl">Calendar</div></div>
+  <div class="ni"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-board"/></svg></div><div class="ni-lbl">Board</div></div>
+  <div class="ni on"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-chart"/></svg></div><div class="ni-lbl">Dashboard</div></div>
+</div>
+</div>
+
+<!-- Tasks placeholder -->
+<div class="page" id="pg-tasks">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:var(--bg)">
+    <div style="width:56px;height:56px;border-radius:18px;background:var(--blue-xl);display:flex;align-items:center;justify-content:center;color:var(--blue)"><svg width="28" height="28"><use href="#ic-check"/></svg></div>
+    <div style="font-size:16px;font-weight:700;color:var(--t1)">Tasks</div>
+    <div style="font-size:12px;color:var(--t3)">Phase 1</div>
+  </div>
+  <div class="bnav">
+    <div class="ni" onclick="showPage('pg-contacts')"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-users"/></svg></div><div class="ni-lbl">Contacts</div></div>
+    <div class="ni on"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-check"/></svg></div><div class="ni-lbl">Tasks</div></div>
+    <div class="ni"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-cal"/></svg></div><div class="ni-lbl">Calendar</div></div>
+    <div class="ni"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-board"/></svg></div><div class="ni-lbl">Board</div></div>
+    <div class="ni" onclick="showPage('pg-dash')"><div class="ni-ico"><svg width="22" height="22"><use href="#ic-chart"/></svg></div><div class="ni-lbl">Dashboard</div></div>
+  </div>
+</div>
+
+</div><!-- /phone -->
+
+<script>
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.getElementById(id).classList.add('on')}
+document.querySelectorAll('.tab').forEach(t=>{t.addEventListener('click',function(){this.closest('.tabs').querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));this.classList.add('on')})});
+</script>
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SalesFlow CRM — Desktop</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:   #1d4ed8;--blue-d:#1e3a8a;--blue-l:#3b82f6;--blue-xl:#dbeafe;--blue-2:#eff6ff;
+  --white:  #ffffff;--bg:#f0f4f8;--card:#ffffff;
+  --border: #e2e8f0;--border2:#cbd5e1;
+  --t1:#0f172a;--t2:#475569;--t3:#94a3b8;--t4:#cbd5e1;
+  --green:#16a34a;--green-l:#dcfce7;--green-t:#15803d;
+  --amber:#d97706;--amber-l:#fef3c7;--amber-t:#92400e;
+  --red:#dc2626;--red-l:#fee2e2;--red-t:#991b1b;
+  --sidebar:240px;--header:56px;
+  --r:10px;--r2:8px;
+  --shadow:0 1px 3px rgba(15,23,42,.06),0 4px 12px rgba(15,23,42,.04);
+  --shadow2:0 2px 8px rgba(15,23,42,.1),0 8px 24px rgba(15,23,42,.06);
+  --font:'Bricolage Grotesque','Sarabun',sans-serif;
+}
+html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t1)}
+
+/* ── Layout ── */
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* ── Sidebar ── */
+.sidebar{width:var(--sidebar);flex-shrink:0;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100%;overflow:hidden}
+.logo{padding:18px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.logo-mark{width:32px;height:32px;background:var(--blue);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.logo-text{font-size:16px;font-weight:800;color:var(--t1);letter-spacing:-.3px}
+.logo-sub{font-size:10px;color:var(--t3);font-weight:500;margin-top:1px}
+
+.nav{padding:12px 10px;flex:1;overflow-y:auto}
+.nav-section{margin-bottom:20px}
+.nav-label{font-size:10px;font-weight:700;color:var(--t4);text-transform:uppercase;letter-spacing:1px;padding:0 10px;margin-bottom:6px}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r2);cursor:pointer;transition:all .12s;color:var(--t2);font-size:14px;font-weight:500;margin-bottom:1px;text-decoration:none}
+.ni:hover{background:var(--bg);color:var(--t1)}
+.ni.on{background:var(--blue-2);color:var(--blue);font-weight:700}
+.ni-ico{width:18px;height:18px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.ni-badge{margin-left:auto;background:var(--red-l);color:var(--red-t);font-size:10px;font-weight:700;padding:1px 7px;border-radius:100px}
+
+.sidebar-footer{padding:14px 16px;border-top:1px solid var(--border)}
+.user-row{display:flex;align-items:center;gap:10px}
+.user-av{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#1d4ed8,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.user-name{font-size:13px;font-weight:600;color:var(--t1)}
+.user-role{font-size:11px;color:var(--t3)}
+
+/* ── Main ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── Topbar ── */
+.topbar{height:var(--header);background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;flex-shrink:0}
+.topbar-title{font-size:18px;font-weight:800;color:var(--t1);letter-spacing:-.3px;flex-shrink:0}
+.topbar-search{flex:1;max-width:360px;position:relative;margin-left:16px}
+.topbar-inp{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:8px 14px 8px 36px;font-size:13px;font-family:var(--font);color:var(--t1);outline:none;transition:all .2s}
+.topbar-inp::placeholder{color:var(--t3)}
+.topbar-inp:focus{border-color:var(--blue);background:var(--white);box-shadow:0 0 0 3px rgba(29,78,216,.1)}
+.topbar-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--t3)}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.btn{display:flex;align-items:center;gap:6px;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(29,78,216,.35)}
+.btn-primary:hover{background:var(--blue-d);transform:translateY(-1px)}
+.btn-ghost{background:var(--bg);color:var(--t2);border:1.5px solid var(--border)}
+.btn-ghost:hover{border-color:var(--blue-l);color:var(--blue)}
+.notif-btn{width:36px;height:36px;border-radius:8px;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);position:relative;transition:all .15s}
+.notif-btn:hover{border-color:var(--blue-l);color:var(--blue)}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:var(--red);border-radius:50%;border:2px solid var(--white)}
+
+/* ── Content ── */
+.content{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+
+/* ── Pages ── */
+.page{display:none;padding:24px}
+.page.on{display:block}
+
+/* ── Filter bar ── */
+.filter-bar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.filter-tabs{display:flex;gap:6px}
+.tab{padding:7px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .12s}
+.tab.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.filter-right{margin-left:auto;display:flex;gap:8px}
+
+/* ── Table ── */
+.table-wrap{background:var(--white);border-radius:var(--r);border:1.5px solid var(--border);overflow:hidden;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:var(--bg);border-bottom:1.5px solid var(--border)}
+th{padding:11px 16px;text-align:left;font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap}
+td{padding:13px 16px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafbfd}
+tr{cursor:pointer;transition:background .1s}
+
+.td-name{display:flex;align-items:center;gap:10px}
+.av{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.av1{background:linear-gradient(135deg,#1d4ed8,#3b82f6)}
+.av2{background:linear-gradient(135deg,#0369a1,#0ea5e9)}
+.av3{background:linear-gradient(135deg,#065f46,#10b981)}
+.av4{background:linear-gradient(135deg,#92400e,#f59e0b)}
+.av5{background:linear-gradient(135deg,#9d174d,#ec4899)}
+.name-col .n{font-weight:700;color:var(--t1)}
+.name-col .s{font-size:11px;color:var(--t3);margin-top:1px}
+
+.badge{padding:3px 9px;border-radius:100px;font-size:11px;font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.b-lead{background:#f1f5f9;color:#64748b}
+.b-prospect{background:var(--blue-xl);color:var(--blue-d);border:1px solid rgba(29,78,216,.15)}
+.b-appt{background:var(--amber-l);color:var(--amber-t);border:1px solid rgba(217,119,6,.15)}
+.b-client{background:var(--green-l);color:var(--green-t);border:1px solid rgba(22,163,74,.15)}
+.b-lost{background:var(--red-l);color:var(--red-t);border:1px solid rgba(220,38,38,.15)}
+.b-overdue{background:var(--red-l);color:var(--red-t);font-size:11px;padding:3px 9px;border-radius:100px;border:1px solid rgba(220,38,38,.2);font-weight:700;white-space:nowrap}
+
+.row-acts{display:flex;gap:6px;opacity:0;transition:opacity .15s}
+tr:hover .row-acts{opacity:1}
+.ra{padding:5px 10px;border-radius:7px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;font-size:11px;font-weight:600;font-family:var(--font);color:var(--t2);transition:all .12s;display:flex;align-items:center;gap:4px}
+.ra:hover{border-color:var(--blue);color:var(--blue)}
+.ra-call{border-color:rgba(22,163,74,.3);color:var(--green-t)}
+.ra-call:hover{background:var(--green-l)}
+
+/* ── Dashboard ── */
+.dash-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;margin-bottom:24px}
+.mc{background:var(--white);border-radius:var(--r);padding:20px;border:1.5px solid var(--border);box-shadow:var(--shadow);border-top:3px solid transparent}
+.mc:nth-child(1){border-top-color:var(--blue)}
+.mc:nth-child(2){border-top-color:var(--amber)}
+.mc:nth-child(3){border-top-color:var(--red)}
+.mc:nth-child(4){border-top-color:var(--green)}
+.mc-val{font-size:36px;font-weight:800;color:var(--t1);letter-spacing:-1.5px;line-height:1}
+.mc-val span{font-size:18px;font-weight:500;color:var(--t3)}
+.mc-lbl{font-size:13px;font-weight:700;color:var(--t2);margin-top:8px}
+.mc-sub{font-size:11px;color:var(--t3);margin-top:3px}
+
+.dash-bottom{display:grid;grid-template-columns:1fr 1.4fr;gap:16px}
+.panel{background:var(--white);border-radius:var(--r);border:1.5px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
+.panel-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-size:14px;font-weight:800;color:var(--t1)}
+.panel-sub{font-size:12px;color:var(--t3);font-weight:400}
+.panel-body{padding:16px 20px}
+
+/* Pipeline */
+.pipe-bar{height:10px;background:var(--bg);border-radius:100px;overflow:hidden;display:flex;margin-bottom:16px}
+.pb{height:100%}
+.pb-lead{background:var(--t4)}
+.pb-pro{background:var(--blue-l)}
+.pb-appt{background:#f59e0b}
+.pb-cli{background:#22c55e}
+.pipe-stages{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.ps{background:var(--bg);border-radius:8px;padding:10px 12px}
+.ps-n{font-size:22px;font-weight:800;color:var(--t1)}
+.ps-l{font-size:11px;color:var(--t3);margin-top:2px}
+.ps-c{font-size:11px;font-weight:700;color:var(--green);margin-top:3px}
+
+/* Follow-up list */
+.fu-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.fu-item:last-child{border-bottom:none}
+.fu-info{flex:1;min-width:0}
+.fu-name{font-size:13px;font-weight:700;color:var(--t1)}
+.fu-meta{font-size:11px;color:var(--red);margin-top:2px}
+.fu-meta-ok{font-size:11px;color:var(--t3);margin-top:2px}
+.fu-acts{display:flex;gap:6px;flex-shrink:0}
+.fa{padding:6px 11px;border-radius:7px;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:11px;font-weight:700;font-family:var(--font);color:var(--t2);transition:all .12s;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.fa-call{border-color:rgba(22,163,74,.3);color:var(--green-t)}
+.fa-call:hover{background:var(--green-l)}
+.fa-delay:hover{background:var(--amber-l)}
+.fa-done:hover{background:var(--blue-2);color:var(--blue-d)}
+
+/* Detail panel layout */
+.detail-layout{display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:start}
+.det-card{background:var(--white);border-radius:var(--r);border:1.5px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
+.det-hero{padding:20px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,var(--blue-2) 0%,var(--white) 100%)}
+.det-av-lg{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#1d4ed8,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;margin-bottom:12px;box-shadow:0 4px 16px rgba(29,78,216,.25)}
+.det-name{font-size:22px;font-weight:800;color:var(--t1);letter-spacing:-.4px;margin-bottom:6px}
+.det-badges{display:flex;gap:8px;align-items:center}
+.change-btn{font-size:11px;font-weight:600;color:var(--blue);border:1.5px solid rgba(29,78,216,.25);background:var(--blue-2);padding:3px 10px;border-radius:100px;cursor:pointer;font-family:var(--font)}
+
+.act-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px 16px;border-bottom:1px solid var(--border)}
+.act{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;font-family:var(--font);font-size:12px;font-weight:700;color:var(--t2);transition:all .12s}
+.act:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.act-call{border-color:rgba(22,163,74,.25);background:#f0fdf4;color:var(--green-t)}
+.act-appt{border-color:rgba(29,78,216,.2);background:var(--blue-2);color:var(--blue-d)}
+.act-task{border-color:rgba(217,119,6,.2);background:#fffbeb;color:var(--amber-t)}
+
+.info-rows{padding:0}
+.info-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--border)}
+.info-row:last-child{border-bottom:none}
+.info-ico{width:30px;height:30px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--t2)}
+.info-lbl{font-size:10px;color:var(--t3);font-weight:500;margin-bottom:1px}
+.info-val{font-size:13px;font-weight:600;color:var(--t1)}
+.info-val-red{color:var(--red)}
+
+.sec-hdr{padding:14px 20px 10px;border-bottom:1px solid var(--border)}
+.sec-lbl{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px}
+
+.tl-item{display:flex;gap:12px;padding:12px 20px;border-bottom:1px solid var(--border)}
+.tl-item:last-child{border-bottom:none}
+.tl-l{display:flex;flex-direction:column;align-items:center;width:16px;flex-shrink:0}
+.tl-dot{width:10px;height:10px;border-radius:50%;margin-top:2px;border:2px solid var(--white)}
+.tl-line{width:2px;flex:1;background:var(--border);margin:4px 0;min-height:16px}
+.tl-t{font-size:13px;font-weight:600;color:var(--t1)}
+.tl-m{font-size:11px;color:var(--t3);margin-top:2px}
+
+.overdue-alert{background:var(--red-l);border:1px solid rgba(220,38,38,.2);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin:14px 16px 0;font-size:12px;color:var(--red-t);font-weight:600}
+
+.tag{background:var(--bg);color:var(--t2);padding:3px 8px;border-radius:6px;font-size:11px;font-weight:500}
+
+/* Scrollbar */
+.content::-webkit-scrollbar{width:4px}
+.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+</style>
+</head>
+<body>
+
+<!-- SVG defs -->
+<svg style="display:none">
+  <symbol id="ic-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></symbol>
+  <symbol id="ic-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+  <symbol id="ic-board" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="10" rx="1"/><rect x="14" y="17" width="7" height="4" rx="1"/></symbol>
+  <symbol id="ic-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></symbol>
+  <symbol id="ic-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42 2 2 0 0 1 3.58 1.25h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="ic-plus-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="15" x2="12" y2="19"/><line x1="10" y1="17" x2="14" y2="17"/></symbol>
+  <symbol id="ic-task" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+  <symbol id="ic-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="ic-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="ic-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+  <symbol id="ic-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+  <symbol id="ic-chev-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="ic-chev-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+  <symbol id="ic-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="ic-money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol>
+  <symbol id="ic-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="ic-line" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.105.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></symbol>
+  <symbol id="ic-setting" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+</svg>
+
+<div class="app">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div>
+        <div class="logo-text">SalesFlow</div>
+        <div class="logo-sub">CRM for Insurance</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section">
+        <div class="nav-label">หลัก</div>
+        <div class="ni on" onclick="showPage('pg-contacts')">
+          <div class="ni-ico"><svg width="18" height="18"><use href="#ic-users"/></svg></div>
+          Contacts
+          <span class="ni-badge">7</span>
+        </div>
+        <div class="ni" onclick="showPage('pg-tasks')">
+          <div class="ni-ico"><svg width="18" height="18"><use href="#ic-check"/></svg></div>
+          Tasks
+        </div>
+        <div class="ni">
+          <div class="ni-ico"><svg width="18" height="18"><use href="#ic-cal"/></svg></div>
+          Calendar
+        </div>
+        <div class="ni">
+          <div class="ni-ico"><svg width="18" height="18"><use href="#ic-board"/></svg></div>
+          Board
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">วิเคราะห์</div>
+        <div class="ni" onclick="showPage('pg-dash')">
+          <div class="ni-ico"><svg width="18" height="18"><use href="#ic-chart"/></svg></div>
+          Dashboard
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">ตั้งค่า</div>
+        <div class="ni">
+          <div class="ni-ico"><svg width="18" height="18"><use href="#ic-setting"/></svg></div>
+          Settings
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="user-av">พย</div>
+        <div>
+          <div class="user-name">พิยวัฒน์</div>
+          <div class="user-role">AIA Insurance Agent · Pro</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">Contacts</div>
+      <div class="topbar-search">
+        <svg class="topbar-ico" width="15" height="15"><use href="#ic-search"/></svg>
+        <input class="topbar-inp" placeholder="ค้นหาชื่อ, เบอร์, LINE ID...">
+      </div>
+      <div class="topbar-right">
+        <div class="notif-btn">
+          <svg width="17" height="17"><use href="#ic-bell"/></svg>
+          <div class="notif-dot"></div>
+        </div>
+        <button class="btn btn-ghost" id="import-btn">
+          <svg width="14" height="14"><use href="#ic-upload"/></svg>Import CSV
+        </button>
+        <button class="btn btn-primary" id="add-btn" onclick="showPage('pg-detail')">
+          <svg width="14" height="14"><use href="#ic-plus"/></svg>เพิ่ม Contact
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ════ PAGE: CONTACTS ════ -->
+      <div class="page on" id="pg-contacts">
+        <div class="filter-bar">
+          <div class="filter-tabs">
+            <button class="tab on">ทั้งหมด (23)</button>
+            <button class="tab">Follow-up วันนี้ (7)</button>
+            <button class="tab">Prospect (8)</button>
+            <button class="tab">Appointment (5)</button>
+            <button class="tab">Client (7)</button>
+            <button class="tab">Lost (3)</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ชื่อ</th>
+                <th>เบอร์โทร / LINE</th>
+                <th>Status</th>
+                <th>สินค้าที่สนใจ</th>
+                <th>มูลค่า</th>
+                <th>Follow-up</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr onclick="showPage('pg-detail')">
+                <td><div class="td-name"><div class="av av1">กม</div><div class="name-col"><div class="n">กมล สมใจ</div><div class="s">Facebook · สุขภาพ</div></div></div></td>
+                <td><div style="font-size:13px;color:var(--t1);font-weight:500">081-234-5678</div><div style="font-size:11px;color:var(--t3);margin-top:2px">LINE: kamol99</div></td>
+                <td><span class="badge b-prospect">Prospect</span></td>
+                <td><span style="font-size:13px;color:var(--t1)">AIA H&S Extra</span></td>
+                <td><span style="font-size:13px;font-weight:700;color:var(--t1)">฿18,000</span><span style="font-size:11px;color:var(--t3)">/ปี</span></td>
+                <td><span class="b-overdue"><svg width="11" height="11"><use href="#ic-clock"/></svg>ค้าง 3 วัน</span></td>
+                <td><div class="row-acts"><button class="ra ra-call" onclick="event.stopPropagation()"><svg width="12" height="12"><use href="#ic-phone"/></svg>โทร</button><button class="ra" onclick="event.stopPropagation()">สร้างนัด</button></div></td>
+              </tr>
+              <tr>
+                <td><div class="td-name"><div class="av av2">ขว</div><div class="name-col"><div class="n">ขวัญใจ ดีงาม</div><div class="s">Referral · ชีวิต, สุขภาพ</div></div></div></td>
+                <td><div style="font-size:13px;color:var(--t1);font-weight:500">089-111-2222</div><div style="font-size:11px;color:var(--t3);margin-top:2px">LINE: kwanjai</div></td>
+                <td><span class="badge b-appt">Appointment</span></td>
+                <td><span style="font-size:13px;color:var(--t1)">AIA Whole Life</span></td>
+                <td><span style="font-size:13px;font-weight:700;color:var(--t1)">฿24,000</span><span style="font-size:11px;color:var(--t3)">/ปี</span></td>
+                <td><span style="font-size:12px;color:var(--t2)">20 พ.ค. 2569</span></td>
+                <td><div class="row-acts"><button class="ra ra-call" onclick="event.stopPropagation()"><svg width="12" height="12"><use href="#ic-phone"/></svg>โทร</button><button class="ra" onclick="event.stopPropagation()">สร้างนัด</button></div></td>
+              </tr>
+              <tr>
+                <td><div class="td-name"><div class="av av3">คณ</div><div class="name-col"><div class="n">คณิต วิจิตร</div><div class="s">Referral · รถ</div></div></div></td>
+                <td><div style="font-size:13px;color:var(--t1);font-weight:500">062-333-4444</div><div style="font-size:11px;color:var(--t3);margin-top:2px">—</div></td>
+                <td><span class="badge b-client">✓ Client</span></td>
+                <td><span style="font-size:13px;color:var(--t1)">AIA Motor</span></td>
+                <td><span style="font-size:13px;font-weight:700;color:var(--t1)">฿9,500</span><span style="font-size:11px;color:var(--t3)">/ปี</span></td>
+                <td><span style="font-size:12px;color:var(--t3)">1 มิ.ย. 2569</span></td>
+                <td><div class="row-acts"><button class="ra ra-call" onclick="event.stopPropagation()"><svg width="12" height="12"><use href="#ic-phone"/></svg>โทร</button><button class="ra" onclick="event.stopPropagation()">ดู Policy</button></div></td>
+              </tr>
+              <tr>
+                <td><div class="td-name"><div class="av av4">จน</div><div class="name-col"><div class="n">จันทร์ มั่นคง</div><div class="s">Facebook · อุบัติเหตุ</div></div></div></td>
+                <td><div style="font-size:13px;color:var(--t1);font-weight:500">091-555-6666</div><div style="font-size:11px;color:var(--t3);margin-top:2px">—</div></td>
+                <td><span class="badge b-prospect">Prospect</span></td>
+                <td><span style="font-size:13px;color:var(--t1)">PA Basic</span></td>
+                <td><span style="font-size:13px;font-weight:700;color:var(--t1)">฿4,500</span><span style="font-size:11px;color:var(--t3)">/ปี</span></td>
+                <td><span class="b-overdue"><svg width="11" height="11"><use href="#ic-clock"/></svg>ค้าง 1 วัน</span></td>
+                <td><div class="row-acts"><button class="ra ra-call" onclick="event.stopPropagation()"><svg width="12" height="12"><use href="#ic-phone"/></svg>โทร</button><button class="ra" onclick="event.stopPropagation()">สร้างนัด</button></div></td>
+              </tr>
+              <tr>
+                <td><div class="td-name"><div class="av av5">ฉร</div><div class="name-col"><div class="n">เฉลิม รุ่งเรือง</div><div class="s">Walk-in · บ้าน</div></div></div></td>
+                <td><div style="font-size:13px;color:var(--t1);font-weight:500">095-777-8888</div><div style="font-size:11px;color:var(--t3);margin-top:2px">—</div></td>
+                <td><span class="badge b-lead">Lead</span></td>
+                <td><span style="font-size:13px;color:var(--t3)">ยังไม่ระบุ</span></td>
+                <td><span style="font-size:13px;color:var(--t3)">—</span></td>
+                <td><span style="font-size:12px;color:var(--t2)">วันนี้</span></td>
+                <td><div class="row-acts"><button class="ra ra-call" onclick="event.stopPropagation()"><svg width="12" height="12"><use href="#ic-phone"/></svg>โทร</button><button class="ra" onclick="event.stopPropagation()">สร้างนัด</button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ════ PAGE: DETAIL ════ -->
+      <div class="page" id="pg-detail">
+        <div style="margin-bottom:16px">
+          <button onclick="showPage('pg-contacts')" style="display:flex;align-items:center;gap:5px;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;font-family:var(--font);padding:0">
+            <svg width="16" height="16"><use href="#ic-back"/></svg>กลับไป Contacts
+          </button>
+        </div>
+
+        <div class="detail-layout">
+          <!-- Left: Contact card -->
+          <div>
+            <div class="det-card">
+              <div class="det-hero">
+                <div class="det-av-lg">กม</div>
+                <div class="det-name">กมล สมใจ</div>
+                <div class="det-badges">
+                  <span class="badge b-prospect">Prospect</span>
+                  <button class="change-btn">เปลี่ยน Status</button>
+                </div>
+              </div>
+
+              <div class="overdue-alert">
+                <svg width="15" height="15" color="var(--red)"><use href="#ic-clock"/></svg>
+                เลย Follow-up มา 3 วัน — กำหนด 13 พ.ค.
+              </div>
+
+              <div class="act-grid">
+                <button class="act act-call"><svg width="18" height="18" color="#16a34a"><use href="#ic-phone"/></svg>โทร</button>
+                <button class="act act-appt"><svg width="18" height="18" color="#1d4ed8"><use href="#ic-plus-cal"/></svg>สร้างนัด</button>
+                <button class="act act-task"><svg width="18" height="18" color="#d97706"><use href="#ic-task"/></svg>เพิ่ม Task</button>
+              </div>
+
+              <div class="info-rows">
+                <div class="info-row"><div class="info-ico"><svg width="14" height="14"><use href="#ic-phone"/></svg></div><div><div class="info-lbl">เบอร์โทร</div><div class="info-val">081-234-5678</div></div></div>
+                <div class="info-row"><div class="info-ico"><svg width="14" height="14"><use href="#ic-line"/></svg></div><div><div class="info-lbl">LINE ID</div><div class="info-val">kamol99</div></div></div>
+                <div class="info-row"><div class="info-ico"><svg width="14" height="14"><use href="#ic-shield"/></svg></div><div><div class="info-lbl">สินค้าที่สนใจ</div><div class="info-val">AIA H&S Extra</div></div></div>
+                <div class="info-row"><div class="info-ico"><svg width="14" height="14"><use href="#ic-money"/></svg></div><div><div class="info-lbl">มูลค่าประมาณการ</div><div class="info-val">฿18,000 / ปี</div></div></div>
+                <div class="info-row"><div class="info-ico"><svg width="14" height="14"><use href="#ic-clock"/></svg></div><div><div class="info-lbl">Follow-up ถัดไป</div><div class="info-val info-val-red">เลยกำหนด (13 พ.ค.)</div></div></div>
+              </div>
+            </div>
+
+            <div class="det-card" style="margin-top:12px">
+              <div class="sec-hdr"><div class="sec-lbl">ประวัติ Status</div></div>
+              <div class="info-rows">
+                <div class="info-row"><div class="info-ico" style="background:var(--blue-xl);font-size:8px;font-weight:800;color:var(--blue-d)">PRO</div><div style="flex:1"><div class="info-lbl">5 พ.ค. 2569</div><div class="info-val">Prospect</div></div><span class="badge b-prospect">ปัจจุบัน</span></div>
+                <div class="info-row"><div class="info-ico" style="font-size:8px;font-weight:800;color:var(--t3)">LEA</div><div><div class="info-lbl">1 พ.ค. 2569</div><div class="info-val">Lead</div></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Activity -->
+          <div class="det-card">
+            <div class="sec-hdr" style="padding:16px 20px"><div class="sec-lbl">กิจกรรมทั้งหมด</div></div>
+            <div class="tl-item">
+              <div class="tl-l"><div class="tl-dot" style="background:#f59e0b"></div><div class="tl-line"></div></div>
+              <div><div class="tl-t">ส่ง proposal แผนสุขภาพ</div><div class="tl-m">Task · 12 พ.ค. 2569 · สร้างโดยคุณ</div></div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-l"><div class="tl-dot" style="background:var(--blue-l)"></div><div class="tl-line"></div></div>
+              <div><div class="tl-t">นัดพบ รพ.กรุงเทพ 10:00 น.</div><div class="tl-m">Calendar · 8 พ.ค. 2569</div></div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-l"><div class="tl-dot" style="background:var(--green)"></div><div class="tl-line"></div></div>
+              <div><div class="tl-t">โทรแนะนำแผน — ติดต่อได้</div><div class="tl-m">Log · 5 พ.ค. 2569</div></div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-l"><div class="tl-dot" style="background:var(--blue-l)"></div></div>
+              <div><div class="tl-t">เพิ่ม Contact</div><div class="tl-m">System · 1 พ.ค. 2569</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ PAGE: DASHBOARD ════ -->
+      <div class="page" id="pg-dash">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div onclick="" style="width:32px;height:32px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2)"><svg width="16" height="16"><use href="#ic-chev-l"/></svg></div>
+            <div>
+              <span style="font-size:20px;font-weight:800;color:var(--t1)">พฤษภาคม 2569</span>
+              <span style="font-size:13px;color:var(--t3);margin-left:10px">เป้า: นัด 20 · Client 2 คน</span>
+            </div>
+            <div style="width:32px;height:32px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2)"><svg width="16" height="16"><use href="#ic-chev-r"/></svg></div>
+          </div>
+          <button class="btn btn-ghost"><svg width="14" height="14"><use href="#ic-setting"/></svg>ตั้งเป้าหมาย</button>
+        </div>
+
+        <div class="dash-grid">
+          <div class="mc"><div class="mc-val">12<span>/20</span></div><div class="mc-lbl">นัดแล้ว</div><div class="mc-sub">ขาดอีก 8 นัดจากเป้า</div></div>
+          <div class="mc"><div class="mc-val" style="color:var(--amber)">8</div><div class="mc-lbl">ขาดอีก</div><div class="mc-sub">ยังมี 15 วัน</div></div>
+          <div class="mc"><div class="mc-val" style="color:var(--red)">7</div><div class="mc-lbl">Follow-up วันนี้</div><div class="mc-sub">รอดำเนินการ</div></div>
+          <div class="mc"><div class="mc-val" style="color:var(--green)">2<span style="color:var(--green)">/2</span></div><div class="mc-lbl">Client ใหม่ ✓</div><div class="mc-sub">ครบเป้าเดือนนี้</div></div>
+        </div>
+
+        <div class="dash-bottom">
+          <!-- Follow-up list -->
+          <div class="panel">
+            <div class="panel-hdr">
+              <div><div class="panel-title">Follow-up วันนี้</div><div class="panel-sub">7 คนรอการติดตาม</div></div>
+              <span class="b-overdue">7 คน</span>
+            </div>
+            <div class="panel-body" style="padding:0 20px">
+              <div class="fu-item">
+                <div class="av av1" style="width:36px;height:36px;border-radius:10px;font-size:12px;flex-shrink:0">กม</div>
+                <div class="fu-info"><div class="fu-name">กมล สมใจ</div><div class="fu-meta">ค้าง 3 วัน · Prospect</div></div>
+                <div class="fu-acts"><button class="fa fa-call"><svg width="11" height="11"><use href="#ic-phone"/></svg>โทร</button><button class="fa fa-delay">+1 วัน</button><button class="fa fa-done">✓</button></div>
+              </div>
+              <div class="fu-item">
+                <div class="av av4" style="width:36px;height:36px;border-radius:10px;font-size:12px;flex-shrink:0">จน</div>
+                <div class="fu-info"><div class="fu-name">จันทร์ มั่นคง</div><div class="fu-meta">ค้าง 1 วัน · Prospect</div></div>
+                <div class="fu-acts"><button class="fa fa-call"><svg width="11" height="11"><use href="#ic-phone"/></svg>โทร</button><button class="fa fa-delay">+1 วัน</button><button class="fa fa-done">✓</button></div>
+              </div>
+              <div class="fu-item">
+                <div class="av av5" style="width:36px;height:36px;border-radius:10px;font-size:12px;flex-shrink:0">ฉร</div>
+                <div class="fu-info"><div class="fu-name">เฉลิม รุ่งเรือง</div><div class="fu-meta-ok">วันนี้ · Lead</div></div>
+                <div class="fu-acts"><button class="fa fa-call"><svg width="11" height="11"><use href="#ic-phone"/></svg>โทร</button><button class="fa fa-delay">+1 วัน</button><button class="fa fa-done">✓</button></div>
+              </div>
+              <div class="fu-item">
+                <div class="av av2" style="width:36px;height:36px;border-radius:10px;font-size:12px;flex-shrink:0">สม</div>
+                <div class="fu-info"><div class="fu-name">สมชาย ใจดี</div><div class="fu-meta-ok">วันนี้ · Appointment</div></div>
+                <div class="fu-acts"><button class="fa fa-call"><svg width="11" height="11"><use href="#ic-phone"/></svg>โทร</button><button class="fa fa-delay">+1 วัน</button><button class="fa fa-done">✓</button></div>
+              </div>
+              <div style="text-align:center;padding:14px 0;font-size:12px;font-weight:600;color:var(--blue);cursor:pointer">ดูทั้งหมด 7 คน →</div>
+            </div>
+          </div>
+
+          <!-- Pipeline -->
+          <div class="panel">
+            <div class="panel-hdr">
+              <div><div class="panel-title">Pipeline</div><div class="panel-sub">การแปลงลูกค้าเดือนนี้</div></div>
+            </div>
+            <div class="panel-body">
+              <div class="pipe-bar">
+                <div class="pb pb-lead" style="width:19%"></div>
+                <div class="pb pb-pro" style="width:56%"></div>
+                <div class="pb pb-appt" style="width:20%"></div>
+                <div class="pb pb-cli" style="width:5%"></div>
+              </div>
+              <div class="pipe-stages">
+                <div class="ps"><div class="ps-n">15</div><div class="ps-l">Lead</div></div>
+                <div class="ps"><div class="ps-n">45</div><div class="ps-l">Prospect</div><div class="ps-c">↑ 75%</div></div>
+                <div class="ps"><div class="ps-n">10</div><div class="ps-l">Appointment</div><div class="ps-c">↑ 22%</div></div>
+                <div class="ps"><div class="ps-n">2</div><div class="ps-l">Client</div><div class="ps-c">↑ 20%</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tasks placeholder -->
+      <div class="page" id="pg-tasks">
+        <div style="display:flex;align-items:center;justify-content:center;height:400px;flex-direction:column;gap:14px">
+          <div style="width:56px;height:56px;border-radius:18px;background:var(--blue-xl);display:flex;align-items:center;justify-content:center;color:var(--blue)"><svg width="28" height="28"><use href="#ic-check"/></svg></div>
+          <div style="font-size:18px;font-weight:800;color:var(--t1)">Tasks</div>
+          <div style="font-size:13px;color:var(--t3)">Phase 1 — coming soon</div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+const titles = {'pg-contacts':'Contacts','pg-detail':'กมล สมใจ','pg-dash':'Dashboard','pg-tasks':'Tasks'};
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.getElementById('topbar-title').textContent = titles[id]||'';
+  document.querySelectorAll('.sidebar .ni').forEach(n=>n.classList.remove('on'));
+  const map = {'pg-contacts':0,'pg-tasks':1,'pg-dash':4};
+  const idx = map[id];
+  if(idx!==undefined) document.querySelectorAll('.sidebar .ni')[idx]?.classList.add('on');
+}
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',function(){
+    this.closest('.filter-tabs').querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+    this.classList.add('on');
+  });
+});
+</script>
+</body>
+</html>
