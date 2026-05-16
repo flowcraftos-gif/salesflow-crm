@@ -1,5 +1,6 @@
 import { getContacts } from './actions'
 import { ContactsTable } from '@/components/contacts/contacts-table'
+import { WelcomeBanner } from '@/components/onboarding/welcome-banner'
 import { ensureUserExists } from '@/lib/auth'
 import { getUserTier } from '@/lib/tier'
 import { db } from '@/db'
@@ -24,11 +25,14 @@ export default async function ContactsPage({
   const totalCount = Number(countResult[0]?.count ?? 0)
 
   return (
-    <ContactsTable
-      contacts={allContacts}
-      filter={filter ?? 'all'}
-      tier={tier}
-      totalCount={totalCount}
-    />
+    <>
+      <WelcomeBanner contactCount={totalCount} />
+      <ContactsTable
+        contacts={allContacts}
+        filter={filter ?? 'all'}
+        tier={tier}
+        totalCount={totalCount}
+      />
+    </>
   )
 }

@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { checkContactLimit } from '@/lib/tier'
 import { ensureUserExists } from '@/lib/auth'
+import { PdpaNotice } from '@/components/onboarding/pdpa-notice'
 
 const NAV = [
   { href: '/dashboard/contacts', label: 'Contacts', icon: 'users' },
@@ -130,6 +131,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
             </Link>
           </div>
         )}
+
+        {/* PDPA inline notice */}
+        <PdpaNotice />
 
         {/* Topbar */}
         <div className="flex h-[52px] flex-shrink-0 items-center gap-3 border-b border-[oklch(90%_0.014_254)] bg-white px-5">

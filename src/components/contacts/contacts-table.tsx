@@ -111,11 +111,37 @@ export function ContactsTable({
       <div className="overflow-hidden rounded-lg border border-[oklch(90%_0.014_254)] bg-white">
         {contacts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[oklch(93%_0.04_265)] text-[oklch(52%_0.245_265)]">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[oklch(93%_0.04_265)] text-[oklch(52%_0.245_265)]">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
             </div>
-            <p className="text-sm font-600 text-[oklch(30%_0.015_254)]">ยังไม่มี Contact</p>
-            <p className="mt-1 text-xs text-[oklch(65%_0.016_254)]">เพิ่ม Contact แรกเพื่อเริ่มติดตาม</p>
+            <p className="text-sm font-700 text-[oklch(18%_0.012_254)]">ยังไม่มี Contact</p>
+            <p className="mt-1.5 max-w-[240px] text-xs text-[oklch(60%_0.016_254)] leading-relaxed">
+              เริ่มเพิ่ม Prospect คนแรกได้เลย — ติดตามทุกขั้นตอนจนปิดการขาย
+            </p>
+            <button
+              onClick={() => router.push('/dashboard/contacts/new')}
+              className="mt-5 flex items-center gap-1.5 rounded-md bg-[oklch(52%_0.245_265)] px-4 py-2.5 text-xs font-700 text-white transition-colors hover:bg-[oklch(46%_0.245_265)]"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              เพิ่ม Contact แรก
+            </button>
+            <div className="mt-3 flex items-center gap-2 text-[11px] text-[oklch(65%_0.016_254)]">
+              <span>หรือ</span>
+              <a
+                href="/api/contacts/import"
+                className="font-600 text-[oklch(52%_0.245_265)] underline underline-offset-2 hover:text-[oklch(40%_0.245_265)] transition-colors"
+              >
+                Import จาก CSV
+              </a>
+              <span>ถ้ามีข้อมูลอยู่แล้ว</span>
+            </div>
           </div>
         ) : (
           <table className="w-full border-collapse text-sm">
