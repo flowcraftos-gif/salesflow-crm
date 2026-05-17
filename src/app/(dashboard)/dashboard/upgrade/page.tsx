@@ -3,30 +3,30 @@
 import { useState } from 'react'
 
 const FEATURES = [
-  { label: 'Contacts', free: '20 รายการ', pro: 'ไม่จำกัด', proPlus: 'ไม่จำกัด',
-    hint: 'จำนวน prospect/ลูกค้าที่เก็บได้ในระบบ ตัวแทนส่วนใหญ่มีลูกค้า 50-200 คน Free tier เต็มใน 1-2 สัปดาห์' },
+  { label: 'Contacts', free: '20 รายการ', pro: '500 รายการ', proPlus: 'ไม่จำกัด',
+    hint: 'จำนวน prospect/ลูกค้าที่เก็บได้ในระบบ ตัวแทนส่วนใหญ่มีลูกค้า 100-300 คน' },
   { label: 'Tasks + Calendar + Board', free: true, pro: true, proPlus: true,
-    hint: 'จัดการ to-do รายวัน ดูนัดหมายแบบปฏิทิน และ Kanban board สำหรับติดตามงาน' },
+    hint: 'จัดการ to-do รายวัน ดูนัดหมายแบบปฏิทิน และ Kanban board' },
   { label: 'Follow-up tracking + โทร modal', free: true, pro: true, proPlus: true,
-    hint: 'กดโทรแล้วบันทึกผลทันที — ติดต่อได้ / ไม่รับสาย / โทรกลับ พร้อมตั้งวันนัด follow-up ครั้งต่อไป ลดโอกาสลืมลูกค้า' },
-  { label: 'นัดหมายจาก contact list', free: true, pro: true, proPlus: true,
-    hint: 'กดนัดได้เลยจากหน้ารายชื่อ ไม่ต้องไปเปิด Calendar แยก เลือกวันด้วย chip พรุ่งนี้/+3 วัน และเวลาได้ใน 2 tap' },
+    hint: 'กดโทรแล้วบันทึกผลทันที พร้อมตั้งวันนัด follow-up ครั้งต่อไป' },
+  { label: 'CRM Dashboard (เดือนปัจจุบัน)', free: true, pro: true, proPlus: true,
+    hint: 'ภาพรวมรายเดือน — นัด / follow-up ค้าง / client ใหม่ / pipeline' },
   { label: 'Export CSV', free: true, pro: true, proPlus: true,
-    hint: 'ดาวน์โหลดรายชื่อลูกค้าทั้งหมดเป็น Excel เพื่อ backup หรือส่งต่อทีม' },
+    hint: 'ดาวน์โหลดรายชื่อลูกค้าเป็น Excel เพื่อ backup' },
   { label: 'Import CSV', free: false, pro: true, proPlus: true,
-    hint: 'อัปโหลดรายชื่อจาก Excel ได้ครั้งละหลาย 100 คน ไม่ต้องกรอกทีละคน ประหยัดเวลาชั่วโมง' },
-  { label: 'CRM Dashboard', free: true, pro: true, proPlus: true,
-    hint: 'ภาพรวมรายเดือน — นัดกี่ครั้ง / follow-up ค้างกี่คน / ปิดดีลได้กี่คน Free ดูได้แค่เดือนปัจจุบัน' },
+    hint: 'อัปโหลดรายชื่อจาก Excel ครั้งละหลาย 100 คน ไม่ต้องกรอกทีละคน' },
+  { label: 'Policy reminder (วันครบเบี้ย)', free: false, pro: true, proPlus: true,
+    hint: 'แจ้งเตือนล่วงหน้าเมื่อลูกค้าใกล้ครบกำหนดเบี้ย ลดโอกาส lapse' },
   { label: 'ย้อนดูย้อนหลัง 12 เดือน', free: false, pro: true, proPlus: true,
-    hint: 'เปรียบเทียบ performance เดือนนี้กับเดือนก่อน เห็นแนวโน้ม ใช้วางแผนเป้าหมายปีหน้า' },
+    hint: 'เปรียบเทียบ performance รายเดือน เห็นแนวโน้มและวางแผนเป้าหมาย' },
   { label: 'ตั้งเป้าหมายรายเดือน', free: false, pro: true, proPlus: true,
-    hint: 'กำหนดเป้า เช่น นัด 20 ครั้ง / รับ client ใหม่ 3 คน ระบบแสดง progress bar เทียบเป้าแบบ real-time' },
-  { label: 'Insurance templates สำเร็จรูป', free: false, pro: false, proPlus: true,
-    hint: 'ฟอร์ม note และ script สำหรับสินค้า AIA ยอดนิยม ช่วยให้ agent ใหม่เริ่มได้เร็วขึ้น' },
-  { label: 'รายงานเชิงลึก + export PDF', free: false, pro: false, proPlus: true,
-    hint: 'สรุปผลงานรายปี พร้อม export PDF เพื่อนำเสนอหัวหน้าทีมหรือเก็บเป็นพอร์ตโฟลิโอ' },
+    hint: 'กำหนดเป้านัด/client ใหม่ ระบบแสดง progress bar เทียบเป้า real-time' },
+  { label: 'LINE message templates', free: false, pro: false, proPlus: true,
+    hint: 'template ข้อความ follow-up, นัดหมาย, แจ้งเตือนเบี้ย copy ได้ใน 1 กด' },
+  { label: 'Advanced analytics + charts', free: false, pro: false, proPlus: true,
+    hint: 'กราฟเชิงลึก: conversion rate, revenue pipeline, source ROI' },
   { label: 'Priority Support', free: false, pro: false, proPlus: true,
-    hint: 'ได้รับการตอบกลับภายใน 4 ชั่วโมง มี dedicated line สำหรับแจ้งปัญหาเร่งด่วน' },
+    hint: 'ตอบกลับภายใน 4 ชั่วโมง มี dedicated line สำหรับปัญหาเร่งด่วน' },
 ]
 
 function Check() {
@@ -140,21 +140,6 @@ export default function UpgradePage() {
         </div>
       </div>
 
-      {/* Hint display — above table */}
-      <div className={`mb-3 rounded-lg border px-4 py-3 min-h-[52px] transition-all ${openHint ? 'border-[oklch(85%_0.06_265)] bg-[oklch(97%_0.015_265)]' : 'border-[oklch(90%_0.014_254)] bg-[oklch(98.5%_0.004_254)]'}`}>
-        {openHint ? (
-          <div className="flex items-start gap-2">
-            <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[oklch(52%_0.245_265)] text-[9px] font-800 text-white">?</span>
-            <div>
-              <p className="text-[12px] font-700 text-[oklch(30%_0.015_254)] mb-0.5">{openHint}</p>
-              <p className="text-[12px] text-[oklch(46%_0.018_254)] leading-relaxed">{FEATURES.find(f => f.label === openHint)?.hint}</p>
-            </div>
-          </div>
-        ) : (
-          <p className="text-center text-[12px] text-[oklch(72%_0.012_254)]">กด ? หน้า feature เพื่อดูคำอธิบาย</p>
-        )}
-      </div>
-
       {/* Feature comparison table */}
       <div className="overflow-hidden rounded-xl border border-[oklch(90%_0.014_254)] bg-white">
         {/* Header row */}
@@ -166,23 +151,27 @@ export default function UpgradePage() {
         </div>
 
         {FEATURES.map((f, i) => (
-          <div
-            key={f.label}
-            className={`grid grid-cols-4 border-b border-[oklch(90%_0.014_254)] last:border-none ${i % 2 === 0 ? 'bg-white' : 'bg-[oklch(99%_0.004_254)]'}`}
-          >
-            <div className="px-4 py-3 flex items-center gap-1.5">
-              <span className="text-[13px] text-[oklch(30%_0.015_254)]">{f.label}</span>
-              <button
-                type="button"
-                onClick={() => setOpenHint(openHint === f.label ? null : f.label)}
-                className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[9px] font-800 transition-colors ${openHint === f.label ? 'bg-[oklch(52%_0.245_265)] text-white' : 'bg-[oklch(92%_0.010_254)] text-[oklch(58%_0.018_254)] hover:bg-[oklch(86%_0.014_254)]'}`}
-              >
-                ?
-              </button>
+          <div key={f.label} className={`border-b border-[oklch(90%_0.014_254)] last:border-none ${i % 2 === 0 ? 'bg-white' : 'bg-[oklch(99%_0.004_254)]'}`}>
+            <div className="grid grid-cols-4">
+              <div className="px-4 py-3 flex items-center gap-1.5">
+                <span className="text-[13px] text-[oklch(30%_0.015_254)]">{f.label}</span>
+                <button
+                  type="button"
+                  onClick={() => setOpenHint(openHint === f.label ? null : f.label)}
+                  className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[9px] font-800 transition-colors ${openHint === f.label ? 'bg-[oklch(52%_0.245_265)] text-white' : 'bg-[oklch(92%_0.010_254)] text-[oklch(58%_0.018_254)] hover:bg-[oklch(86%_0.014_254)]'}`}
+                >
+                  ?
+                </button>
+              </div>
+              <div className="flex items-center justify-center px-4 py-3"><Cell value={f.free} /></div>
+              <div className="flex items-center justify-center px-4 py-3"><Cell value={f.pro} /></div>
+              <div className="flex items-center justify-center px-4 py-3"><Cell value={f.proPlus} /></div>
             </div>
-            <div className="flex items-center justify-center px-4 py-3"><Cell value={f.free} /></div>
-            <div className="flex items-center justify-center px-4 py-3"><Cell value={f.pro} /></div>
-            <div className="flex items-center justify-center px-4 py-3"><Cell value={f.proPlus} /></div>
+            {openHint === f.label && (
+              <div className="col-span-4 px-4 pb-3 pt-0">
+                <p className="text-[12px] text-[oklch(46%_0.018_254)] leading-relaxed bg-[oklch(97%_0.015_265)] rounded-lg px-3 py-2 border border-[oklch(88%_0.04_265)]">{f.hint}</p>
+              </div>
+            )}
           </div>
         ))}
       </div>

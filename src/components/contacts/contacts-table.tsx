@@ -60,6 +60,7 @@ export function ContactsTable({
   const [activeFilter, setActiveFilter] = useState(filter)
   const [appointContact, setAppointContact] = useState<Contact | null>(null)
   const [appointPending, setAppointPending] = useState(false)
+  const importInputRef = useRef<HTMLInputElement>(null)
 
   const atLimit = tier === 'free' && totalCount >= FREE_CONTACT_LIMIT
   const today = new Date().toLocaleDateString('en-CA')
@@ -122,12 +123,13 @@ export function ContactsTable({
       </button>
       <div className="mt-3 flex items-center gap-2 text-[11px] text-[oklch(65%_0.016_254)]">
         <span>หรือ</span>
-        <a
-          href="/api/contacts/import"
+        <button
+          type="button"
+          onClick={() => importInputRef.current?.click()}
           className="font-600 text-[oklch(52%_0.245_265)] underline underline-offset-2 hover:text-[oklch(40%_0.245_265)] transition-colors"
         >
           Import จาก CSV
-        </a>
+        </button>
         <span>ถ้ามีข้อมูลอยู่แล้ว</span>
       </div>
     </div>
@@ -165,7 +167,7 @@ export function ContactsTable({
         </div>
 
         <div className="ml-auto flex items-center gap-2">
-          <CsvButtons />
+          <CsvButtons inputRef={importInputRef} tier={tier} />
           <button
             onClick={() => router.push('/dashboard/contacts/new')}
             disabled={atLimit}
@@ -340,8 +342,8 @@ export function ContactsTable({
   )
 }
 
-function CsvButtons() {
-  const inputRef = useRef<HTMLInputElement>(null)
+function CsvButtons({ inputRef, tier }: { inputRef: React.RefObject<HTMLInputElement | null>; tier: string }) {
+  const canImport = tier !== 'free'
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [msg, setMsg] = useState<{ text: string; ok: boolean } | null>(null)
@@ -366,14 +368,21 @@ function CsvButtons() {
   return (
     <div className="relative hidden md:flex items-center gap-1.5">
       <input ref={inputRef} type="file" accept=".csv" className="hidden" onChange={handleFile} />
-      <button
-        onClick={() => inputRef.current?.click()}
-        disabled={isPending}
-        className="flex items-center gap-1.5 rounded-md border border-[oklch(90%_0.014_254)] px-3 py-1.5 text-[12px] font-600 text-[oklch(46%_0.022_254)] hover:border-[oklch(84%_0.018_254)] transition-colors disabled:opacity-50"
-      >
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        {isPending ? 'กำลังนำเข้า...' : 'Import'}
-      </button>
+      {canImport ? (
+        <button
+          onClick={() => inputRef.current?.click()}
+          disabled={isPending}
+          className="flex items-center gap-1.5 rounded-md border border-[oklch(90%_0.014_254)] px-3 py-1.5 text-[12px] font-600 text-[oklch(46%_0.022_254)] hover:border-[oklch(84%_0.018_254)] transition-colors disabled:opacity-50"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          {isPending ? 'กำลังนำเข้า...' : 'Import'}
+        </button>
+      ) : (
+        <a href="/dashboard/upgrade" className="flex items-center gap-1.5 rounded-md border border-[oklch(90%_0.014_254)] px-3 py-1.5 text-[12px] font-600 text-[oklch(65%_0.016_254)] hover:border-[oklch(84%_0.018_254)] transition-colors">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Import
+        </a>
+      )}
       <a
         href="/api/contacts/export"
         className="flex items-center gap-1.5 rounded-md border border-[oklch(90%_0.014_254)] px-3 py-1.5 text-[12px] font-600 text-[oklch(46%_0.022_254)] hover:border-[oklch(84%_0.018_254)] transition-colors"

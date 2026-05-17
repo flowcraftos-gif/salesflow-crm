@@ -27,6 +27,7 @@ export function ContactForm() {
   const [showAddSource, setShowAddSource] = useState(false)
   const [newSource, setNewSource] = useState('')
   const [showStatusHint, setShowStatusHint] = useState(false)
+  const [showInsurance, setShowInsurance] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
 
   function toggleTag(tag: string) {
@@ -60,6 +61,10 @@ export function ContactForm() {
         nextFollowUpDate: val(fd, 'nextFollowUpDate'),
         notes: val(fd, 'notes'),
         tags,
+        insuranceCompany: val(fd, 'insuranceCompany'),
+        policyNumber: val(fd, 'policyNumber'),
+        annualPremium: fd.get('annualPremium') ? String(Number(fd.get('annualPremium'))) : null,
+        premiumDueDate: val(fd, 'premiumDueDate'),
       })
       router.push('/dashboard/contacts')
     } catch (err: unknown) {
@@ -228,6 +233,46 @@ export function ContactForm() {
       <div className="mb-4">
         <label className={LABEL}>Follow-up ครั้งถัดไป</label>
         <input name="nextFollowUpDate" type="date" className={INPUT} />
+      </div>
+
+      {/* Insurance fields — collapsible */}
+      <div className="mb-4">
+        <button
+          type="button"
+          onClick={() => setShowInsurance(v => !v)}
+          className="flex items-center gap-2 text-[12px] font-600 text-[oklch(42%_0.20_265)] hover:text-[oklch(32%_0.20_265)] transition-colors"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+            style={{ transform: showInsurance ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.15s' }}>
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+          {showInsurance ? 'ซ่อนข้อมูลประกัน' : '+ เพิ่มข้อมูลประกัน (ไม่บังคับ)'}
+        </button>
+
+        {showInsurance && (
+          <div className="mt-3 rounded-lg border border-[oklch(88%_0.06_265)] bg-[oklch(97.5%_0.015_265)] p-4">
+            <div className="grid grid-cols-2 gap-3 mb-3">
+              <div>
+                <label className={LABEL}>บริษัทประกัน</label>
+                <input name="insuranceCompany" placeholder="AIA, FWD, Prudential..." className={INPUT} />
+              </div>
+              <div>
+                <label className={LABEL}>เลขกรมธรรม์</label>
+                <input name="policyNumber" placeholder="P-XXXXXXXXX" className={INPUT} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={LABEL}>เบี้ยต่อปี (฿)</label>
+                <input name="annualPremium" type="number" min="0" placeholder="18000" className={INPUT} />
+              </div>
+              <div>
+                <label className={LABEL}>วันครบเบี้ยถัดไป</label>
+                <input name="premiumDueDate" type="date" className={INPUT} />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Tags */}

@@ -30,6 +30,10 @@ export const contacts = pgTable('contacts', {
   lastContactedAt: timestamp('last_contacted_at'),
   notes: text('notes'),
   tags: text('tags').array().default(sql`'{}'`).notNull(),
+  insuranceCompany: text('insurance_company'),
+  policyNumber: text('policy_number'),
+  annualPremium: numeric('annual_premium'),
+  premiumDueDate: date('premium_due_date'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })

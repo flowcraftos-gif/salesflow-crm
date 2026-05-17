@@ -43,8 +43,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const tier = await getUserTier(user.id)
   const isPro = tier !== 'free'
 
-  // Show banner when free user has > 40 contacts (approaching limit)
-  const showApproachingBanner = limit !== null && contactCount > 40
+  // Show banner when approaching 80% of limit
+  const showApproachingBanner = limit !== null && contactCount >= Math.floor(limit * 0.8)
 
   const initials = `${user.firstName?.[0] ?? ''}${user.lastName?.[0] ?? ''}` || user.emailAddresses[0]?.emailAddress?.[0]?.toUpperCase() || '?'
 
