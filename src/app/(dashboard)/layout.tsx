@@ -98,7 +98,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </nav>
 
         {/* Help button */}
-        <div className="px-10 pb-2">
+        <div className="px-2 pb-2">
           <Link
             href="/dashboard/contacts?tour=1"
             prefetch={false}
@@ -172,7 +172,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </div>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto overflow-x-auto">
           {children}
         </main>
       </div>

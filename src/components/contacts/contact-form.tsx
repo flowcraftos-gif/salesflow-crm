@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createContact } from '@/app/(dashboard)/dashboard/contacts/actions'
-import { CONTACT_STATUSES, PRESET_TAGS } from '@/db/schema'
+import { CONTACT_STATUSES, PRESET_TAGS, FREE_CONTACT_LIMIT } from '@/db/schema'
 
 const INPUT = 'w-full rounded-md border border-[oklch(90%_0.014_254)] bg-[oklch(98.2%_0.006_254)] px-3 py-2 text-[13px] text-[oklch(18%_0.012_254)] outline-none transition focus:border-[oklch(52%_0.245_265)] focus:bg-white focus:ring-2 focus:ring-[oklch(93%_0.04_265)] placeholder:text-[oklch(68%_0.016_254)]'
 const LABEL = 'block text-[11px] font-700 uppercase tracking-[0.6px] text-[oklch(55%_0.020_254)] mb-1.5'
@@ -65,7 +65,7 @@ export function ContactForm() {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'เกิดข้อผิดพลาด'
       setError(msg.startsWith('CONTACT_LIMIT_REACHED')
-        ? 'ถึงขีดจำกัด Free tier (50 contacts) — กรุณาอัปเกรด Pro'
+        ? `ถึงขีดจำกัด Free tier (${FREE_CONTACT_LIMIT} contacts) — กรุณาอัปเกรด Pro`
         : msg)
       setLoading(false)
     }

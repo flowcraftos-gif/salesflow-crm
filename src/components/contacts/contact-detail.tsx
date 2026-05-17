@@ -75,6 +75,8 @@ export function ContactDetail({
 
   async function handleCall() {
     if (!callResult) return
+    // Open dialer then log
+    window.location.href = `tel:${contact.phone}`
     await logCall(contact.id, callResult, nextDate || undefined)
     setShowCallModal(false)
     setCallResult(null)
@@ -109,7 +111,7 @@ export function ContactDetail({
       <div className="grid grid-cols-[300px_1fr] gap-4 items-start">
 
         {/* Left panel */}
-        <div>
+        <div className="min-w-0">
           {/* Hero */}
           <div className="bg-white rounded-lg border border-[oklch(90%_0.014_254)] overflow-hidden">
             <div className="p-5 border-b border-[oklch(90%_0.014_254)] bg-[oklch(97%_0.010_265)]">
@@ -147,11 +149,11 @@ export function ContactDetail({
 
             {/* Action buttons */}
             <div className="grid grid-cols-3 gap-2 p-4 border-b border-[oklch(90%_0.014_254)]">
-              <a href={`tel:${contact.phone}`} onClick={() => setShowCallModal(true)}
+              <button onClick={() => setShowCallModal(true)}
                 className="flex flex-col items-center gap-1.5 py-3 rounded-lg border border-[oklch(85%_0.06_160)] bg-[oklch(95%_0.038_160)] text-[11px] font-700 text-[oklch(42%_0.17_160)] hover:bg-[oklch(92%_0.055_160)] transition-colors">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42 2 2 0 0 1 3.58 1.25h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 โทร
-              </a>
+              </button>
               <button onClick={() => router.push(`/dashboard/contacts/${contact.id}/edit`)}
                 className="flex flex-col items-center gap-1.5 py-3 rounded-lg border border-[oklch(85%_0.06_265)] bg-[oklch(96%_0.020_265)] text-[11px] font-700 text-[oklch(42%_0.20_265)] hover:bg-[oklch(93%_0.04_265)] transition-colors">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>

@@ -97,7 +97,7 @@ export function BoardView({ initialCards }: Props) {
       </div>
 
       {/* Board columns */}
-      <div className="grid grid-cols-3 gap-4 items-start">
+      <div className="grid grid-cols-3 gap-4 items-start min-w-[700px]">
         {COLUMNS.map(col => {
           const colCards = getCards(col.key)
           return (
