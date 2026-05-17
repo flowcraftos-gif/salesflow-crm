@@ -46,7 +46,7 @@ export function CrmTeaser() {
               disabled={loading}
               className="w-full rounded-lg bg-[oklch(52%_0.245_265)] px-4 py-2.5 text-[13px] font-700 text-white hover:bg-[oklch(46%_0.245_265)] transition-colors disabled:opacity-60"
             >
-              {loading ? 'กำลังโหลด...' : 'อัปเกรด Pro ฿199/เดือน →'}
+              {loading ? 'กำลังโหลด...' : 'อัปเกรด Pro ฿149/เดือน →'}
             </button>
             <p className="mt-2 text-[11px] text-[oklch(68%_0.016_254)]">ยกเลิกเมื่อไหรก็ได้</p>
           </div>

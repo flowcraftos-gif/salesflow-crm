@@ -14,7 +14,18 @@ interface StripeSession {
 interface StripeSubscription {
   id: string
   object: 'subscription'
-  metadata: Record<string, string>
+  metadata: Record<string, string> | null
+  customer?: string | {
+    id?: string
+    metadata?: Record<string, string> | null
+  } | null
+  items?: {
+    data?: Array<{
+      price?: {
+        id?: string
+      } | null
+    }>
+  }
 }
 
 interface StripeEvent {
@@ -28,9 +39,28 @@ export async function POST(req: NextRequest) {
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
   const stripePricePro = process.env.STRIPE_PRICE_PRO
+  const stripePriceProPlus = process.env.STRIPE_PRICE_PRO_PLUS
 
   if (!stripeSecretKey || !webhookSecret) {
     return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 })
+  }
+
+  function tierFromPrice(priceId?: string) {
+    if (priceId === stripePricePro) return 'pro'
+    if (priceId === stripePriceProPlus) return 'pro_plus'
+    return null
+  }
+
+  function tierFromMetadata(tier?: string) {
+    return tier === 'pro' || tier === 'pro_plus' ? tier : null
+  }
+
+  function userIdFromSubscription(subscription: StripeSubscription) {
+    if (subscription.metadata?.userId) return subscription.metadata.userId
+    if (typeof subscription.customer === 'object') {
+      return subscription.customer?.metadata?.clerkUserId ?? subscription.customer?.metadata?.userId ?? null
+    }
+    return null
   }
 
   const body = await req.text()
@@ -60,9 +90,9 @@ export async function POST(req: NextRequest) {
         const session = event.data.object as StripeSession
 
         const userId = session.metadata?.userId
-        const tier = session.metadata?.tier
+        const tier = tierFromMetadata(session.metadata?.tier)
 
-        if (userId && (tier === 'pro' || tier === 'pro_plus')) {
+        if (userId && tier) {
           await db.update(users)
             .set({ tier })
             .where(eq(users.id, userId))
@@ -72,14 +102,26 @@ export async function POST(req: NextRequest) {
             expand: ['line_items'],
           })
           const priceId = fullSession.line_items?.data[0]?.price?.id
-          const resolvedTier = priceId === stripePricePro ? 'pro' : 'pro_plus'
+          const resolvedTier = tierFromPrice(priceId)
+          if (resolvedTier) {
+            await db.update(users)
+              .set({ tier: resolvedTier })
+              .where(eq(users.id, userId))
+          }
+        }
+      } else if (event.type === 'customer.subscription.created' || event.type === 'customer.subscription.updated') {
+        const subscription = event.data.object as StripeSubscription
+        const userId = userIdFromSubscription(subscription)
+        const priceId = subscription.items?.data?.[0]?.price?.id
+        const tier = tierFromMetadata(subscription.metadata?.tier) ?? tierFromPrice(priceId)
+        if (userId && tier) {
           await db.update(users)
-            .set({ tier: resolvedTier })
+            .set({ tier })
             .where(eq(users.id, userId))
         }
       } else if (event.type === 'customer.subscription.deleted') {
         const subscription = event.data.object as StripeSubscription
-        const userId = subscription.metadata?.userId
+        const userId = userIdFromSubscription(subscription)
         if (userId) {
           await db.update(users)
             .set({ tier: 'free' })

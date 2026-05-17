@@ -51,9 +51,9 @@
 | คำถาม | คำตัดสินใจ | เหตุผล |
 |---|---|---|
 | Import format | CSV MVP → .xlsx phase 5 | ไม่ต้อง lib; agent บันทึก "CSV UTF-8" ได้ |
-| Pro gating | Beta ฟรี 4 สัปดาห์ → Pro 299 บาท/เดือน | validate UX ก่อนคิดเงิน |
+| Pro gating | Beta ฟรี 4 สัปดาห์ → Pro 149 บาท/เดือน | validate UX ก่อนคิดเงิน |
 | นับ "นัด" จากอะไร | Calendar event ที่ link contact_id | accurate; status change overcount |
-| Contact limit | Free=50, Pro=ไม่จำกัด | 50 พอ validate |
+| Contact limit | Free=20, Pro=ไม่จำกัด | 20 บังคับให้เห็น upgrade moment เร็วขึ้น |
 | Status tracking | ตาราง contact_status_log แยก | SQL join ง่ายกว่า array |
 | DB security | Application-level WHERE user_id | RLS + Neon serverless = ซับซ้อนเกินจำเป็น |
 | DB connection | @neondatabase/serverless HTTP driver | ป้องกัน connection exhaustion ใน serverless |
@@ -313,12 +313,12 @@ Month navigation: ย้อนหลัง 12 เดือน
 
 | Tier | ราคา | Contacts | Features |
 |------|-----:|---:|---|
-| Free | ฟรี | 50 | Contact CRUD + Task + Calendar + Board |
-| Pro | 299 บาท/เดือน | ไม่จำกัด | + CRM Dashboard + CSV import/export |
-| Pro Plus | 499 บาท/เดือน | ไม่จำกัด | + Historical reports + Insurance templates |
+| Free | ฟรี | 20 | Contact CRUD + Task + Calendar + Board |
+| Pro | 149 บาท/เดือน | ไม่จำกัด | + CRM Dashboard + CSV import/export |
+| Pro Plus | 299 บาท/เดือน | ไม่จำกัด | + Historical reports + Insurance templates |
 
 **Beta**: design partners ฟรี (AIA + 10 ตัวแทน)
-**Early lock**: upgrade ระหว่าง beta = 199 บาท/เดือนตลอดชีพ
+**Early lock**: upgrade ระหว่าง beta = 149 บาท/เดือนตลอดชีพ
 
 ---
 

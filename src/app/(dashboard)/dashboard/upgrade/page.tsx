@@ -105,7 +105,7 @@ export default function UpgradePage() {
           <div className="mb-3">
             <p className="text-[11px] font-700 uppercase tracking-[0.6px] text-[oklch(42%_0.20_265)]">Pro</p>
             <div className="flex items-baseline gap-1 mt-1">
-              <span className="text-[28px] font-800 text-[oklch(18%_0.012_254)]">฿199</span>
+              <span className="text-[28px] font-800 text-[oklch(18%_0.012_254)]">฿149</span>
               <span className="text-[12px] text-[oklch(65%_0.016_254)]">/เดือน</span>
             </div>
           </div>
@@ -118,21 +118,25 @@ export default function UpgradePage() {
           </button>
         </div>
 
-        {/* Pro Plus — coming soon */}
-        <div className="relative rounded-xl border border-[oklch(90%_0.014_254)] bg-[oklch(98.5%_0.004_254)] p-4 flex flex-col">
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[oklch(72%_0.012_254)] px-3 py-0.5 text-[10px] font-700 uppercase tracking-wider text-white">
-            Coming Soon
+        {/* Pro Plus */}
+        <div className="relative rounded-xl border border-[oklch(88%_0.025_265)] bg-white p-4 flex flex-col">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[oklch(68%_0.016_254)] px-3 py-0.5 text-[10px] font-700 uppercase tracking-wider text-white">
+            ทีม/รายงาน
           </div>
           <div className="mb-3">
-            <p className="text-[11px] font-700 uppercase tracking-[0.6px] text-[oklch(68%_0.012_254)]">Pro Plus</p>
+            <p className="text-[11px] font-700 uppercase tracking-[0.6px] text-[oklch(42%_0.022_254)]">Pro Plus</p>
             <div className="flex items-baseline gap-1 mt-1">
-              <span className="text-[28px] font-800 text-[oklch(65%_0.012_254)]">฿349</span>
-              <span className="text-[12px] text-[oklch(72%_0.012_254)]">/เดือน</span>
+              <span className="text-[28px] font-800 text-[oklch(18%_0.012_254)]">฿299</span>
+              <span className="text-[12px] text-[oklch(65%_0.016_254)]">/เดือน</span>
             </div>
           </div>
-          <div className="mt-auto w-full rounded-lg border border-[oklch(90%_0.014_254)] py-2 text-center text-[12px] font-600 text-[oklch(72%_0.012_254)]">
-            เร็วๆ นี้
-          </div>
+          <button
+            onClick={() => handleUpgrade('pro_plus')}
+            disabled={loading !== null}
+            className="mt-auto w-full rounded-lg border border-[oklch(52%_0.245_265)] py-2.5 text-[13px] font-700 text-[oklch(52%_0.245_265)] hover:bg-[oklch(96%_0.015_265)] transition-colors disabled:opacity-60"
+          >
+            {loading === 'pro_plus' ? 'กำลังโหลด...' : 'เลือก Pro Plus →'}
+          </button>
         </div>
       </div>
 

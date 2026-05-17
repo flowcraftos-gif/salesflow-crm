@@ -4,8 +4,8 @@ import { NextRequest, NextResponse } from 'next/server'
 type OmisePlan = 'pro' | 'pro_plus'
 
 const OMISE_AMOUNTS: Record<OmisePlan, number> = {
-  pro: 29900,       // ฿299
-  pro_plus: 49900,  // ฿499
+  pro: 14900,       // ฿149
+  pro_plus: 29900,  // ฿299
 }
 
 interface OmiseChargeResponse {

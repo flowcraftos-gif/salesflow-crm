@@ -16,14 +16,14 @@ const PLANS: Plan[] = [
   {
     id: 'pro',
     name: 'Pro',
-    price: '฿199/เดือน',
+    price: '฿149/เดือน',
     features: ['contacts ไม่จำกัด', 'CRM Dashboard + Goal tracking', 'CSV Import/Export', 'ดูย้อนหลัง 12 เดือน'],
     highlight: true,
   },
   {
     id: 'pro_plus',
     name: 'Pro Plus',
-    price: '฿349/เดือน',
+    price: '฿299/เดือน',
     features: ['ทุกอย่างใน Pro', 'Insurance templates สำเร็จรูป', 'รายงานเชิงลึก + export PDF', 'Priority Support'],
     highlight: false,
   },
@@ -101,12 +101,6 @@ export function UpgradePrompt() {
                   ยอดนิยม
                 </div>
               )}
-              {plan.id === 'pro_plus' && (
-                <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full bg-[oklch(68%_0.016_254)] px-3 py-0.5 text-[10px] font-700 uppercase tracking-wider text-white">
-                  Coming Soon
-                </div>
-              )}
-
               <div className="mb-3">
                 <p className="text-[13px] font-700 text-[oklch(18%_0.012_254)]">{plan.name}</p>
                 <p className="mt-0.5 text-[18px] font-800 text-[oklch(52%_0.245_265)]">
@@ -135,8 +129,8 @@ export function UpgradePrompt() {
               </ul>
 
               <button
-                onClick={() => plan.id !== 'pro_plus' && void handleUpgrade(plan.id)}
-                disabled={loading !== null || plan.id === 'pro_plus'}
+                onClick={() => void handleUpgrade(plan.id)}
+                disabled={loading !== null}
                 className={[
                   'flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-[13px] font-700 transition-all',
                   plan.highlight

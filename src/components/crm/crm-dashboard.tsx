@@ -298,7 +298,7 @@ export function CrmDashboard({
             ดู Dashboard ได้เดือนปัจจุบันเท่านั้น — <span className="font-700">อัปเกรด Pro</span> เพื่อย้อนดู 12 เดือน + ตั้งเป้าหมาย
           </p>
           <Link href="/dashboard/contacts" className="shrink-0 rounded-md bg-[oklch(52%_0.245_265)] px-3 py-1 text-[11px] font-700 text-white hover:bg-[oklch(46%_0.245_265)] transition-colors">
-            อัปเกรด ฿199 →
+            อัปเกรด ฿149 →
           </Link>
         </div>
       )}
