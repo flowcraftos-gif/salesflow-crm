@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { getContacts } from './actions'
 import { ContactsTable } from '@/components/contacts/contacts-table'
 import { WelcomeBanner } from '@/components/onboarding/welcome-banner'
@@ -26,7 +27,9 @@ export default async function ContactsPage({
 
   return (
     <>
-      <WelcomeBanner contactCount={totalCount} />
+      <Suspense fallback={null}>
+        <WelcomeBanner contactCount={totalCount} />
+      </Suspense>
       <ContactsTable
         contacts={allContacts}
         filter={filter ?? 'all'}

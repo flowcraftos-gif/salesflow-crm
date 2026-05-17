@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const DISMISSED_KEY = 'sf_onboarding_dismissed'
@@ -13,18 +13,27 @@ type Step = {
 
 export function WelcomeBanner({ contactCount }: { contactCount: number }) {
   const router = useRouter()
-  const [dismissed, setDismissed] = useState(true) // start hidden to avoid flash
+  const searchParams = useSearchParams()
+  const isTour = searchParams.get('tour') === '1'
+  const [dismissed, setDismissed] = useState(true)
   const [crmVisited, setCrmVisited] = useState(false)
 
   useEffect(() => {
-    const isDismissed = localStorage.getItem(DISMISSED_KEY) === 'true'
+    if (isTour) {
+      // Force show — clear dismissed state
+      localStorage.removeItem(DISMISSED_KEY)
+      setDismissed(false)
+    } else {
+      const isDismissed = localStorage.getItem(DISMISSED_KEY) === 'true'
+      setDismissed(isDismissed)
+    }
     const hasCrmVisited = localStorage.getItem(CRM_VISITED_KEY) === 'true'
-    setDismissed(isDismissed)
     setCrmVisited(hasCrmVisited)
-  }, [])
+  }, [isTour])
 
-  // Don't show if dismissed or contacts exist
-  if (dismissed || contactCount > 0) return null
+  // Don't show if dismissed (and not forced by ?tour=1)
+  if (dismissed && !isTour) return null
+  if (!isTour && contactCount > 0) return null
 
   const steps: Step[] = [
     { label: 'สร้างบัญชี', completed: true },

@@ -97,6 +97,22 @@ export default async function DashboardLayout({ children }: { children: React.Re
           </div>
         </nav>
 
+        {/* Help button */}
+        <div className="px-10 pb-2">
+          <Link
+            href="/dashboard/contacts?tour=1"
+            prefetch={false}
+            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-[12px] font-500 text-[oklch(55%_0.020_254)] transition-colors hover:bg-[oklch(90%_0.014_254)] hover:text-[oklch(30%_0.015_254)]"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            วิธีใช้งาน
+          </Link>
+        </div>
+
         {/* User */}
         <div className="flex items-center gap-2.5 border-t border-[oklch(90%_0.014_254)] px-4 py-3">
           <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[oklch(52%_0.245_265)] text-[11px] font-800 text-white">
