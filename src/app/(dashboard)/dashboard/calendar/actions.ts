@@ -1,7 +1,7 @@
 'use server'
 
 import { db } from '@/db'
-import { events, tasks } from '@/db/schema'
+import { events } from '@/db/schema'
 import { getAuthUser, ensureUserExists } from '@/lib/auth'
 import { and, eq, gte, lt } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
@@ -54,6 +54,8 @@ export async function createEvent(data: {
     contactId: data.contactId ?? null,
     contactName: data.contactName ?? null,
   }).returning()
+
+  if (!event) throw new Error('Event creation failed')
 
   revalidatePath('/dashboard/calendar')
   return event

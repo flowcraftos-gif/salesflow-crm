@@ -11,14 +11,14 @@ import { eq, count } from 'drizzle-orm'
 export default async function ContactsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ filter?: string }>
+  searchParams: Promise<{ filter?: string; q?: string }>
 }) {
-  const { filter } = await searchParams
+  const { filter, q } = await searchParams
   const userId = await ensureUserExists()
   if (!userId) return null
 
   const [allContacts, tier, countResult] = await Promise.all([
-    getContacts(filter),
+    getContacts(filter, q),
     getUserTier(userId),
     db.select({ count: count() }).from(contacts).where(eq(contacts.userId, userId)),
   ])

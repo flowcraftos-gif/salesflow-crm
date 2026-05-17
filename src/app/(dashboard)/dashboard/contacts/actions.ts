@@ -1,10 +1,10 @@
 'use server'
 
 import { db } from '@/db'
-import { contacts, contactStatusLog, tasks, events, ContactInsert, FREE_CONTACT_LIMIT, CONTACT_STATUSES } from '@/db/schema'
+import { contacts, contactStatusLog, tasks, events, ContactInsert, CONTACT_STATUSES } from '@/db/schema'
 import { ensureUserExists, getAuthUser } from '@/lib/auth'
 import { checkContactLimit } from '@/lib/tier'
-import { eq, and, desc, asc, lte, sql } from 'drizzle-orm'
+import { eq, and, desc, asc, lte, sql, or, ilike } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 
 function revalidateContacts(id?: string) {
@@ -12,23 +12,33 @@ function revalidateContacts(id?: string) {
   if (id) revalidatePath(`/dashboard/contacts/${id}`)
 }
 
-export async function getContacts(filter?: string) {
+export async function getContacts(filter?: string, q?: string) {
   const userId = await getAuthUser()
   if (!userId) return []
 
   try {
+    const searchFilter = q?.trim()
+      ? or(
+          ilike(contacts.name, `%${q.trim()}%`),
+          ilike(contacts.phone, `%${q.trim()}%`),
+          ilike(contacts.lineId, `%${q.trim()}%`),
+        )
+      : undefined
+
+    const base = and(eq(contacts.userId, userId), searchFilter)
+
     if (filter === 'overdue') {
       return db.select().from(contacts).where(
-        and(eq(contacts.userId, userId), lte(contacts.nextFollowUpDate, sql`CURRENT_DATE`))
+        and(base, lte(contacts.nextFollowUpDate, sql`CURRENT_DATE`))
       ).orderBy(asc(contacts.nextFollowUpDate))
     }
     if (filter && filter !== 'all') {
       return db.select().from(contacts).where(
-        and(eq(contacts.userId, userId), eq(contacts.status, filter))
+        and(base, eq(contacts.status, filter))
       ).orderBy(asc(contacts.nextFollowUpDate))
     }
     return db.select().from(contacts)
-      .where(eq(contacts.userId, userId))
+      .where(base)
       .orderBy(asc(contacts.nextFollowUpDate))
   } catch {
     return []

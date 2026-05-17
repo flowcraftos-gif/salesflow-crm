@@ -1,35 +1,44 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 
 const DISMISSED_KEY = 'sf_onboarding_dismissed'
 const CRM_VISITED_KEY = 'sf_crm_visited'
+const ONBOARDING_EVENT = 'sf_onboarding_changed'
 
 type Step = {
   label: string
   completed: boolean
 }
 
+function subscribe(callback: () => void) {
+  window.addEventListener(ONBOARDING_EVENT, callback)
+  window.addEventListener('storage', callback)
+  return () => {
+    window.removeEventListener(ONBOARDING_EVENT, callback)
+    window.removeEventListener('storage', callback)
+  }
+}
+
+function getDismissedSnapshot() {
+  return localStorage.getItem(DISMISSED_KEY) === 'true'
+}
+
+function getCrmVisitedSnapshot() {
+  return localStorage.getItem(CRM_VISITED_KEY) === 'true'
+}
+
+function getServerSnapshot() {
+  return true
+}
+
 export function WelcomeBanner({ contactCount }: { contactCount: number }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const isTour = searchParams.get('tour') === '1'
-  const [dismissed, setDismissed] = useState(true)
-  const [crmVisited, setCrmVisited] = useState(false)
-
-  useEffect(() => {
-    if (isTour) {
-      // Force show — clear dismissed state
-      localStorage.removeItem(DISMISSED_KEY)
-      setDismissed(false)
-    } else {
-      const isDismissed = localStorage.getItem(DISMISSED_KEY) === 'true'
-      setDismissed(isDismissed)
-    }
-    const hasCrmVisited = localStorage.getItem(CRM_VISITED_KEY) === 'true'
-    setCrmVisited(hasCrmVisited)
-  }, [isTour])
+  const dismissed = useSyncExternalStore(subscribe, getDismissedSnapshot, getServerSnapshot)
+  const crmVisited = useSyncExternalStore(subscribe, getCrmVisitedSnapshot, () => false)
 
   // Don't show if dismissed (and not forced by ?tour=1)
   if (dismissed && !isTour) return null
@@ -43,7 +52,7 @@ export function WelcomeBanner({ contactCount }: { contactCount: number }) {
 
   function dismiss() {
     localStorage.setItem(DISMISSED_KEY, 'true')
-    setDismissed(true)
+    window.dispatchEvent(new Event(ONBOARDING_EVENT))
   }
 
   function goToAddContact() {

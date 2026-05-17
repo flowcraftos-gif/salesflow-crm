@@ -1,22 +1,35 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 
 const PDPA_KEY = 'sf_pdpa_accepted'
+const PDPA_EVENT = 'sf_pdpa_changed'
+
+function subscribe(callback: () => void) {
+  window.addEventListener(PDPA_EVENT, callback)
+  window.addEventListener('storage', callback)
+  return () => {
+    window.removeEventListener(PDPA_EVENT, callback)
+    window.removeEventListener('storage', callback)
+  }
+}
+
+function getAcceptedSnapshot() {
+  return localStorage.getItem(PDPA_KEY) === 'true'
+}
+
+function getServerSnapshot() {
+  return true
+}
 
 export function PdpaNotice() {
-  const [visible, setVisible] = useState(false)
+  const accepted = useSyncExternalStore(subscribe, getAcceptedSnapshot, getServerSnapshot)
 
-  useEffect(() => {
-    const accepted = localStorage.getItem(PDPA_KEY) === 'true'
-    setVisible(!accepted)
-  }, [])
-
-  if (!visible) return null
+  if (accepted) return null
 
   function accept() {
     localStorage.setItem(PDPA_KEY, 'true')
-    setVisible(false)
+    window.dispatchEvent(new Event(PDPA_EVENT))
   }
 
   return (

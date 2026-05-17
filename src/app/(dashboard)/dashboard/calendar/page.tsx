@@ -13,7 +13,7 @@ export default async function CalendarPage({
   const events = await getEvents(currentMonth)
 
   return (
-    <div className="p-5">
+    <div>
       <CalendarView month={currentMonth} initialEvents={events} />
     </div>
   )

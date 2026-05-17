@@ -92,13 +92,13 @@ export function TaskList({ initialTasks }: TaskListProps) {
   }
 
   return (
-    <div className="p-5">
+    <div className="p-4 md:p-5">
       {/* Quick-add form */}
       <form
         onSubmit={handleAdd}
         className="mb-5 flex flex-wrap items-center gap-2 rounded-xl border border-[oklch(90%_0.014_254)] bg-white px-4 py-3 shadow-sm"
       >
-        <div className="relative flex-1 min-w-48">
+        <div className="relative w-full md:flex-1 md:min-w-48">
           <svg
             className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[oklch(68%_0.016_254)] pointer-events-none"
             width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"

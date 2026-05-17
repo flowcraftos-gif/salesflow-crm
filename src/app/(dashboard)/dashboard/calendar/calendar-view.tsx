@@ -102,7 +102,7 @@ export function CalendarView({ month, initialEvents }: Props) {
   const todayDate = today.getDate()
 
   return (
-    <div className="max-w-3xl">
+    <div className="w-full max-w-3xl px-4 py-4 md:px-5 md:py-5">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div>
@@ -165,7 +165,7 @@ export function CalendarView({ month, initialEvents }: Props) {
                 key={idx}
                 onClick={() => day && setSelectedDay(day === selectedDay ? null : day)}
                 className={[
-                  'min-h-[80px] p-1.5 border-b border-r border-[oklch(90%_0.014_254)]',
+                  'min-h-[52px] md:min-h-[80px] p-1 md:p-1.5 border-b border-r border-[oklch(90%_0.014_254)]',
                   'last:border-r-0',
                   idx % 7 === 6 ? 'border-r-0' : '',
                   Math.floor(idx / 7) === Math.floor((grid.length - 1) / 7) ? 'border-b-0' : '',

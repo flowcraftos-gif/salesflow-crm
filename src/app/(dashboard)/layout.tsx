@@ -4,6 +4,9 @@ import Link from 'next/link'
 import { checkContactLimit } from '@/lib/tier'
 import { ensureUserExists } from '@/lib/auth'
 import { PdpaNotice } from '@/components/onboarding/pdpa-notice'
+import { MobileNav } from './mobile-nav'
+import { TopbarSearch } from './topbar-search'
+import { Suspense } from 'react'
 
 const NAV = [
   { href: '/dashboard/contacts', label: 'Contacts', icon: 'users' },
@@ -35,7 +38,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   // Ensure user row exists before checking limit
   await ensureUserExists()
-  const { count: contactCount, limit, allowed } = await checkContactLimit(user.id)
+  const { count: contactCount, limit } = await checkContactLimit(user.id)
 
   // Show banner when free user has > 40 contacts (approaching limit)
   const showApproachingBanner = limit !== null && contactCount > 40
@@ -44,8 +47,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="flex h-screen overflow-hidden bg-[oklch(98.2%_0.006_254)] font-[system-ui,-apple-system,'Segoe_UI',sans-serif]">
-      {/* Sidebar */}
-      <aside className="flex w-56 flex-shrink-0 flex-col border-r border-[oklch(90%_0.014_254)] bg-[oklch(97%_0.010_254)]">
+      {/* Sidebar — hidden on mobile, visible on md+ */}
+      <aside className="hidden md:flex w-56 flex-shrink-0 flex-col border-r border-[oklch(90%_0.014_254)] bg-[oklch(97%_0.010_254)]">
         {/* Logo */}
         <div className="flex items-center gap-2.5 border-b border-[oklch(90%_0.014_254)] px-4 py-4">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[oklch(52%_0.245_265)]">
@@ -97,6 +100,20 @@ export default async function DashboardLayout({ children }: { children: React.Re
           </div>
         </nav>
 
+        {/* Upgrade button */}
+        <div className="px-2 pb-1">
+          <Link
+            href="/dashboard/upgrade"
+            prefetch={false}
+            className="flex w-full items-center gap-2 rounded-md bg-[oklch(93%_0.04_265)] px-2 py-1.5 text-[12px] font-700 text-[oklch(42%_0.20_265)] transition-colors hover:bg-[oklch(88%_0.06_265)]"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="17 11 12 6 7 11"/><line x1="12" y1="6" x2="12" y2="18"/>
+            </svg>
+            อัปเกรด Pro
+          </Link>
+        </div>
+
         {/* Help button */}
         <div className="px-2 pb-2">
           <Link
@@ -127,6 +144,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </div>
       </aside>
 
+      {/* Mobile bottom nav */}
+      <MobileNav />
+
       {/* Main */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Upgrade approaching banner */}
@@ -152,27 +172,24 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <PdpaNotice />
 
         {/* Topbar */}
-        <div className="flex h-[52px] flex-shrink-0 items-center gap-3 border-b border-[oklch(90%_0.014_254)] bg-white px-5">
-          <div className="relative flex-1 max-w-xs">
-            <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[oklch(68%_0.016_254)]" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input
-              className="w-full rounded-md border border-[oklch(90%_0.014_254)] bg-[oklch(98.2%_0.006_254)] py-1.5 pl-8 pr-3 text-[13px] outline-none focus:border-[oklch(52%_0.245_265)] focus:ring-2 focus:ring-[oklch(93%_0.04_265)] placeholder:text-[oklch(68%_0.016_254)]"
-              placeholder="ค้นหาชื่อ, เบอร์, LINE ID..."
-            />
-          </div>
-          <div className="ml-auto flex items-center gap-2">
-            <button className="flex h-8 w-8 items-center justify-center rounded-md border border-[oklch(90%_0.014_254)] text-[oklch(55%_0.020_254)] hover:border-[oklch(84%_0.018_254)] transition-colors">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-            </button>
-            <a href="/api/contacts/export" className="flex items-center gap-1.5 rounded-md border border-[oklch(90%_0.014_254)] px-3 py-1.5 text-[12px] font-600 text-[oklch(46%_0.022_254)] hover:border-[oklch(84%_0.018_254)] transition-colors">
+        <div className="flex h-[52px] flex-shrink-0 items-center gap-3 border-b border-[oklch(90%_0.014_254)] bg-white px-4 md:px-5">
+          <Suspense fallback={
+            <div className="relative flex-1 md:max-w-xs">
+              <div className="h-8 w-full rounded-md border border-[oklch(90%_0.014_254)] bg-[oklch(98.2%_0.006_254)]" />
+            </div>
+          }>
+            <TopbarSearch />
+          </Suspense>
+          <div className="flex items-center gap-2">
+            <a href="/api/contacts/export" className="hidden md:flex items-center gap-1.5 rounded-md border border-[oklch(90%_0.014_254)] px-3 py-1.5 text-[12px] font-600 text-[oklch(46%_0.022_254)] hover:border-[oklch(84%_0.018_254)] transition-colors">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Export CSV
             </a>
           </div>
         </div>
 
-        {/* Page content */}
-        <main className="flex-1 overflow-y-auto overflow-x-auto">
+        {/* Page content — add bottom padding on mobile for bottom nav */}
+        <main className="flex-1 overflow-y-auto overflow-x-auto pb-16 md:pb-0">
           {children}
         </main>
       </div>

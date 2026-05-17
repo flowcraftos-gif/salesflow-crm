@@ -2,7 +2,6 @@ import { getCrmStats, getCrmGoals } from './actions'
 import { CrmDashboard } from '@/components/crm/crm-dashboard'
 import { getUserTier } from '@/lib/tier'
 import { ensureUserExists } from '@/lib/auth'
-import { CrmTeaser } from '@/components/crm/crm-teaser'
 
 export default async function CrmPage({
   searchParams,
@@ -17,15 +16,11 @@ export default async function CrmPage({
   const userId = await ensureUserExists()
   if (!userId) return null
 
-  const tier = await getUserTier(userId)
-
-  // Free users see teaser
-  if (tier === 'free') return <CrmTeaser />
-
-  const [stats, goals] = await Promise.all([
+  const [tier, stats, goals] = await Promise.all([
+    getUserTier(userId),
     getCrmStats(month),
     getCrmGoals(),
   ])
 
-  return <CrmDashboard stats={stats} goals={goals} month={month} />
+  return <CrmDashboard stats={stats} goals={goals} month={month} tier={tier} />
 }

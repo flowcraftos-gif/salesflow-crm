@@ -185,14 +185,22 @@ function FollowUpRow({ contact }: { contact: FollowUpContact }) {
   const isOverdue = contact.daysOverdue > 0
 
   function handlePlusOneDay() {
-    startTransition(() => {
-      logCall(contact.id, 'no_answer')
+    startTransition(async () => {
+      try {
+        await logCall(contact.id, 'no_answer')
+      } catch (err) {
+        console.error('handlePlusOneDay failed:', err)
+      }
     })
   }
 
   function handleDone() {
-    startTransition(() => {
-      markFollowUpDone(contact.id)
+    startTransition(async () => {
+      try {
+        await markFollowUpDone(contact.id)
+      } catch (err) {
+        console.error('handleDone failed:', err)
+      }
     })
   }
 
@@ -256,12 +264,15 @@ export function CrmDashboard({
   stats,
   goals,
   month,
+  tier = 'free',
 }: {
   stats: CrmStats
   goals: CrmGoals
   month: string
+  tier?: string
 }) {
   const router = useRouter()
+  const isPro = tier !== 'free'
   const [showGoalPanel, setShowGoalPanel] = useState(false)
 
   const apptPct = stats.appointmentsGoal > 0
@@ -277,7 +288,20 @@ export function CrmDashboard({
   const pipelineTotal = stats.pipeline.reduce((s, r) => s + r.count, 0)
 
   return (
-    <div className="p-5 max-w-[1100px]">
+    <div className="p-4 md:p-5 max-w-[1100px]">
+
+      {/* Free tier upgrade banner */}
+      {!isPro && (
+        <div className="mb-4 flex items-center gap-3 rounded-lg border border-[oklch(85%_0.06_265)] bg-[oklch(96%_0.020_265)] px-4 py-2.5">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="oklch(42% 0.20 265)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <p className="flex-1 text-[12px] text-[oklch(42%_0.20_265)]">
+            ดู Dashboard ได้เดือนปัจจุบันเท่านั้น — <span className="font-700">อัปเกรด Pro</span> เพื่อย้อนดู 12 เดือน + ตั้งเป้าหมาย
+          </p>
+          <Link href="/dashboard/contacts" className="shrink-0 rounded-md bg-[oklch(52%_0.245_265)] px-3 py-1 text-[11px] font-700 text-white hover:bg-[oklch(46%_0.245_265)] transition-colors">
+            อัปเกรด ฿199 →
+          </Link>
+        </div>
+      )}
 
       {/* Month navigation bar */}
       <div className="mb-4 flex items-center gap-2.5">
@@ -291,24 +315,33 @@ export function CrmDashboard({
         </div>
 
         <button
-          onClick={() => router.push(`/dashboard/crm?month=${prevMonth(month)}`)}
-          className="flex h-8 w-8 items-center justify-center rounded-md border border-[oklch(90%_0.014_254)] bg-white text-[oklch(46%_0.022_254)] transition-colors hover:border-[oklch(84%_0.018_254)] hover:text-[oklch(18%_0.012_254)]"
-          aria-label="เดือนก่อนหน้า"
+          onClick={() => isPro && router.push(`/dashboard/crm?month=${prevMonth(month)}`)}
+          disabled={!isPro}
+          title={!isPro ? 'Pro feature' : undefined}
+          className={`flex h-8 w-8 items-center justify-center rounded-md border transition-colors ${isPro ? 'border-[oklch(90%_0.014_254)] bg-white text-[oklch(46%_0.022_254)] hover:border-[oklch(84%_0.018_254)]' : 'border-[oklch(90%_0.014_254)] bg-[oklch(97%_0.006_254)] text-[oklch(75%_0.010_254)] cursor-not-allowed'}`}
         >
           <ChevLeft />
         </button>
         <button
-          onClick={() => router.push(`/dashboard/crm?month=${nextMonth(month)}`)}
-          className="flex h-8 w-8 items-center justify-center rounded-md border border-[oklch(90%_0.014_254)] bg-white text-[oklch(46%_0.022_254)] transition-colors hover:border-[oklch(84%_0.018_254)] hover:text-[oklch(18%_0.012_254)]"
-          aria-label="เดือนถัดไป"
+          onClick={() => isPro && router.push(`/dashboard/crm?month=${nextMonth(month)}`)}
+          disabled={!isPro}
+          title={!isPro ? 'Pro feature' : undefined}
+          className={`flex h-8 w-8 items-center justify-center rounded-md border transition-colors ${isPro ? 'border-[oklch(90%_0.014_254)] bg-white text-[oklch(46%_0.022_254)] hover:border-[oklch(84%_0.018_254)]' : 'border-[oklch(90%_0.014_254)] bg-[oklch(97%_0.006_254)] text-[oklch(75%_0.010_254)] cursor-not-allowed'}`}
         >
           <ChevRight />
         </button>
         <button
-          onClick={() => setShowGoalPanel(v => !v)}
-          className="rounded-md border border-[oklch(90%_0.014_254)] bg-white px-3 py-1.5 text-[12px] font-600 text-[oklch(46%_0.022_254)] transition-colors hover:border-[oklch(84%_0.018_254)] hover:text-[oklch(18%_0.012_254)]"
+          onClick={() => isPro ? setShowGoalPanel(v => !v) : undefined}
+          disabled={!isPro}
+          className={`flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-[12px] font-600 transition-colors ${isPro ? 'border-[oklch(90%_0.014_254)] bg-white text-[oklch(46%_0.022_254)] hover:border-[oklch(84%_0.018_254)]' : 'border-[oklch(90%_0.014_254)] bg-[oklch(97%_0.006_254)] text-[oklch(72%_0.010_254)] cursor-not-allowed'}`}
         >
+          {!isPro && (
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          )}
           ตั้งเป้า
+          {!isPro && <span className="text-[10px] font-700 text-[oklch(52%_0.245_265)]">Pro</span>}
         </button>
       </div>
 
@@ -317,11 +350,11 @@ export function CrmDashboard({
         <GoalPanel goals={goals} onClose={() => setShowGoalPanel(false)} />
       )}
 
-      {/* Summary strip — single panel with 4 divided cells */}
-      <div className="mb-5 grid grid-cols-4 overflow-hidden rounded-lg border border-[oklch(90%_0.014_254)] bg-white">
+      {/* Summary strip — 2 cols on mobile, 4 on desktop */}
+      <div className="mb-5 grid grid-cols-2 md:grid-cols-4 overflow-hidden rounded-lg border border-[oklch(90%_0.014_254)] bg-white">
 
         {/* Cell 1: นัดเดือนนี้ */}
-        <div className="relative border-r border-[oklch(90%_0.014_254)] px-5 py-4">
+        <div className="relative border-r border-b md:border-b-0 border-[oklch(90%_0.014_254)] px-4 md:px-5 py-3.5 md:py-4">
           <div className="mb-2 text-[11px] font-600 uppercase tracking-[0.5px] text-[oklch(68%_0.016_254)]">
             นัดเดือนนี้
           </div>
@@ -346,7 +379,7 @@ export function CrmDashboard({
         </div>
 
         {/* Cell 2: Follow-up วันนี้ */}
-        <div className="border-r border-[oklch(90%_0.014_254)] px-5 py-4">
+        <div className="border-b md:border-b-0 md:border-r border-[oklch(90%_0.014_254)] px-4 md:px-5 py-3.5 md:py-4">
           <div className="mb-2 text-[11px] font-600 uppercase tracking-[0.5px] text-[oklch(68%_0.016_254)]">
             Follow-up วันนี้
           </div>
@@ -363,7 +396,7 @@ export function CrmDashboard({
         </div>
 
         {/* Cell 3: Client ใหม่ */}
-        <div className="border-r border-[oklch(90%_0.014_254)] px-5 py-4">
+        <div className="border-r border-[oklch(90%_0.014_254)] px-4 md:px-5 py-3.5 md:py-4">
           <div className="mb-2 text-[11px] font-600 uppercase tracking-[0.5px] text-[oklch(68%_0.016_254)]">
             Client ใหม่
           </div>
@@ -386,7 +419,7 @@ export function CrmDashboard({
         </div>
 
         {/* Cell 4: Conversion */}
-        <div className="px-5 py-4">
+        <div className="px-4 md:px-5 py-3.5 md:py-4">
           <div className="mb-2 text-[11px] font-600 uppercase tracking-[0.5px] text-[oklch(68%_0.016_254)]">
             Conversion
           </div>
@@ -399,7 +432,7 @@ export function CrmDashboard({
       </div>
 
       {/* Follow-up + Pipeline grid */}
-      <div className="grid grid-cols-[1fr_1.6fr] gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_1.6fr] gap-4">
 
         {/* Follow-up panel */}
         <div className="overflow-hidden rounded-lg border border-[oklch(90%_0.014_254)] bg-white">

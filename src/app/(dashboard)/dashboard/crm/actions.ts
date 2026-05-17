@@ -3,7 +3,7 @@
 import { db } from '@/db'
 import { contacts, contactStatusLog, events, users } from '@/db/schema'
 import { getAuthUser, ensureUserExists } from '@/lib/auth'
-import { eq, and, lte, sql, gte, lt, isNotNull, ne, inArray } from 'drizzle-orm'
+import { eq, and, lte, sql, gte, lt, isNotNull, ne } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 
 // ── Types ─────────────────────────────────────────────────

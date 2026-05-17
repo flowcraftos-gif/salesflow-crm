@@ -11,10 +11,9 @@ const HINT = 'text-[10px] text-[oklch(68%_0.016_254)] mt-1'
 
 const PRESET_SOURCES = ['Facebook', 'Referral', 'Walk-in', 'เพื่อน/ครอบครัว', 'Online', 'Other']
 
-// Convert empty string to null; keep "-" as-is (user's explicit "ไม่มี")
 function val(fd: FormData, key: string): string | null {
   const v = (fd.get(key) as string ?? '').trim()
-  return v === '' ? null : v
+  return v === '' || v === '-' ? null : v
 }
 
 export function ContactForm() {
@@ -23,8 +22,11 @@ export function ContactForm() {
   const [error, setError] = useState('')
   const [tags, setTags] = useState<string[]>([])
   const [customTag, setCustomTag] = useState('')
-  const [customSource, setCustomSource] = useState('')
-  const [sourceMode, setSourceMode] = useState<'select' | 'custom'>('select')
+  const [selectedSource, setSelectedSource] = useState('')
+  const [extraSources, setExtraSources] = useState<string[]>([])
+  const [showAddSource, setShowAddSource] = useState(false)
+  const [newSource, setNewSource] = useState('')
+  const [showStatusHint, setShowStatusHint] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
 
   function toggleTag(tag: string) {
@@ -43,9 +45,7 @@ export function ContactForm() {
     setError('')
     const fd = new FormData(e.currentTarget)
 
-    const source = sourceMode === 'custom'
-      ? (customSource.trim() || null)
-      : val(fd, 'source')
+    const source = selectedSource || null
 
     try {
       await createContact({
@@ -98,14 +98,57 @@ export function ContactForm() {
         </div>
         <div>
           <label className={LABEL}>อีเมล</label>
-          <input name="email" type="email" placeholder="email@example.com หรือพิม -" className={INPUT} />
+          <input name="email" type="text" placeholder="email@example.com หรือพิม -" className={INPUT}
+            onKeyDown={e => {
+              const inp = e.currentTarget
+              if ((e.key === 'Enter' || e.key === 'Tab') && inp.value.trim() === '-') {
+                e.preventDefault()
+                inp.value = ''
+                const form = inp.form
+                if (form) {
+                  const els = Array.from(form.elements) as HTMLElement[]
+                  const idx = els.indexOf(inp)
+                  els[idx + 1]?.focus()
+                }
+              }
+            }}
+          />
           <p className={HINT}>ไม่มีให้พิม -</p>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
-          <label className={LABEL}>Status</label>
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <label className="text-[11px] font-700 uppercase tracking-[0.6px] text-[oklch(55%_0.020_254)]">Status</label>
+            <div className="relative">
+              <button type="button" onClick={() => setShowStatusHint(v => !v)}
+                className="flex h-4 w-4 items-center justify-center rounded-full bg-[oklch(92%_0.010_254)] text-[oklch(58%_0.018_254)] hover:bg-[oklch(88%_0.014_254)] transition-colors text-[9px] font-800">
+                ?
+              </button>
+              {showStatusHint && (
+                <>
+                  <div className="fixed inset-0 z-10" onClick={() => setShowStatusHint(false)} />
+                  <div className="absolute left-0 bottom-6 z-20 w-64 rounded-xl border border-[oklch(88%_0.014_254)] bg-white/90 backdrop-blur-sm shadow-lg px-3 py-2.5 space-y-1.5">
+                    <div className="absolute -bottom-1.5 left-2 w-3 h-3 rotate-45 border-r border-b border-[oklch(88%_0.014_254)] bg-white/90" />
+                    {[
+                      ['Lead', 'ได้ชื่อ/เบอร์มา ยังไม่ได้คุย'],
+                      ['Prospect', 'คุยแล้ว สนใจ กำลัง follow-up'],
+                      ['Appointment', 'นัดพบแล้ว รอวันนัด'],
+                      ['Proposal', 'เสนอแผนแล้ว รอตัดสินใจ'],
+                      ['Client', 'ซื้อแล้ว เป็นลูกค้า'],
+                      ['Lost', 'ไม่สนใจ / หมดหวัง'],
+                    ].map(([s, desc]) => (
+                      <div key={s} className="flex gap-2 text-[11px]">
+                        <span className="font-700 text-[oklch(30%_0.020_254)] w-20 shrink-0">{s}</span>
+                        <span className="text-[oklch(58%_0.016_254)]">{desc}</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
           <select name="status" defaultValue="Prospect" className={INPUT}>
             {CONTACT_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
@@ -113,28 +156,60 @@ export function ContactForm() {
         <div>
           <label className={LABEL}>แหล่งที่มา</label>
           <div className="flex gap-2">
-            {sourceMode === 'select' ? (
-              <select name="source" className={INPUT}>
-                <option value="">— เลือก —</option>
-                {PRESET_SOURCES.map(s => <option key={s} value={s}>{s}</option>)}
-              </select>
-            ) : (
-              <input
-                value={customSource}
-                onChange={e => setCustomSource(e.target.value)}
-                placeholder="พิมแหล่งที่มาเอง..."
-                className={INPUT}
-              />
-            )}
+            <select
+              value={selectedSource}
+              onChange={e => setSelectedSource(e.target.value)}
+              className={INPUT}
+            >
+              <option value="">— เลือก —</option>
+              {[...PRESET_SOURCES, ...extraSources].map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
             <button
               type="button"
-              onClick={() => setSourceMode(m => m === 'select' ? 'custom' : 'select')}
-              className="flex-shrink-0 px-2 rounded-md border border-[oklch(90%_0.014_254)] text-[11px] text-[oklch(52%_0.245_265)] hover:bg-[oklch(96%_0.020_265)] transition-colors"
-              title={sourceMode === 'select' ? 'พิมเอง' : 'เลือกจากรายการ'}
+              onClick={() => setShowAddSource(v => !v)}
+              className="flex-shrink-0 px-2.5 rounded-md border border-[oklch(90%_0.014_254)] text-[12px] font-700 text-[oklch(52%_0.245_265)] hover:bg-[oklch(96%_0.020_265)] transition-colors"
             >
-              {sourceMode === 'select' ? 'พิมเอง' : 'รายการ'}
+              + เพิ่ม
             </button>
           </div>
+          {showAddSource && (
+            <div className="mt-1.5 flex gap-2">
+              <input
+                type="text"
+                value={newSource}
+                onChange={e => setNewSource(e.target.value)}
+                placeholder="แหล่งที่มาใหม่..."
+                className="flex-1 rounded-md border border-[oklch(90%_0.014_254)] bg-[oklch(98.2%_0.006_254)] px-3 py-1.5 text-[12px] outline-none focus:border-[oklch(52%_0.245_265)]"
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    const v = newSource.trim()
+                    if (v && ![...PRESET_SOURCES, ...extraSources].includes(v)) {
+                      setExtraSources(prev => [...prev, v])
+                      setSelectedSource(v)
+                    }
+                    setNewSource('')
+                    setShowAddSource(false)
+                  }
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  const v = newSource.trim()
+                  if (v && ![...PRESET_SOURCES, ...extraSources].includes(v)) {
+                    setExtraSources(prev => [...prev, v])
+                    setSelectedSource(v)
+                  }
+                  setNewSource('')
+                  setShowAddSource(false)
+                }}
+                className="rounded-md bg-[oklch(52%_0.245_265)] px-3 py-1.5 text-[12px] font-700 text-white hover:bg-[oklch(46%_0.245_265)] transition-colors"
+              >
+                บันทึก
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

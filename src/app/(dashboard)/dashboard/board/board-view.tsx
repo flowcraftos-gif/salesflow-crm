@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import Link from 'next/link'
 import { BoardCard } from '@/db/schema'
 import { createCard, moveCard, deleteCard } from './actions'
 
@@ -94,10 +95,11 @@ export function BoardView({ initialCards }: Props) {
       <div className="mb-5">
         <h1 className="text-[22px] font-800 tracking-tight text-[oklch(18%_0.012_254)]">Board</h1>
         <p className="text-[13px] text-[oklch(55%_0.020_254)]">จัดการงานแบบ Kanban</p>
+        <p className="mt-1 text-[11px] text-[oklch(70%_0.012_254)] md:hidden">← เลื่อนซ้าย/ขวาเพื่อดูทุก column</p>
       </div>
 
       {/* Board columns */}
-      <div className="grid grid-cols-3 gap-4 items-start min-w-[700px]">
+      <div className="grid grid-cols-3 gap-3 items-start min-w-[640px]">
         {COLUMNS.map(col => {
           const colCards = getCards(col.key)
           return (
@@ -190,10 +192,21 @@ function CardItem({
           <p className="text-[13px] font-500 text-[oklch(18%_0.012_254)] leading-snug">{card.title}</p>
           {card.contactName && (
             <div className="mt-1.5">
-              <span className="inline-flex items-center gap-1 rounded-full bg-[oklch(93%_0.04_265)] px-2 py-0.5 text-[10px] font-600 text-[oklch(42%_0.20_265)]">
-                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                {card.contactName}
-              </span>
+              {card.contactId ? (
+                <Link
+                  href={`/dashboard/contacts/${card.contactId}`}
+                  onClick={e => e.stopPropagation()}
+                  className="inline-flex items-center gap-1 rounded-full bg-[oklch(93%_0.04_265)] px-2 py-0.5 text-[10px] font-600 text-[oklch(42%_0.20_265)] hover:bg-[oklch(88%_0.06_265)] transition-colors"
+                >
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  {card.contactName}
+                </Link>
+              ) : (
+                <span className="inline-flex items-center gap-1 rounded-full bg-[oklch(93%_0.04_265)] px-2 py-0.5 text-[10px] font-600 text-[oklch(42%_0.20_265)]">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  {card.contactName}
+                </span>
+              )}
             </div>
           )}
         </div>

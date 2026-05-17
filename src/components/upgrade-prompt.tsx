@@ -17,15 +17,15 @@ const PLANS: Plan[] = [
     id: 'pro',
     name: 'Pro',
     price: '฿199/เดือน',
-    features: ['contacts ไม่จำกัด', 'CRM Dashboard + Goal tracking', 'CSV Import/Export', 'Follow-up reminders'],
-    highlight: false,
+    features: ['contacts ไม่จำกัด', 'CRM Dashboard + Goal tracking', 'CSV Import/Export', 'ดูย้อนหลัง 12 เดือน'],
+    highlight: true,
   },
   {
     id: 'pro_plus',
     name: 'Pro Plus',
     price: '฿349/เดือน',
-    features: ['ทุกอย่างใน Pro', 'รายงานย้อนหลัง 12 เดือน', 'Insurance templates', 'Priority Support'],
-    highlight: true,
+    features: ['ทุกอย่างใน Pro', 'Insurance templates สำเร็จรูป', 'รายงานเชิงลึก + export PDF', 'Priority Support'],
+    highlight: false,
   },
 ]
 
@@ -50,7 +50,7 @@ export function UpgradePrompt() {
       }
 
       if (data.url) {
-        window.location.href = data.url
+        window.location.assign(data.url)
       }
     } catch {
       setLoading(null)
@@ -98,7 +98,12 @@ export function UpgradePrompt() {
             >
               {plan.highlight && (
                 <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full bg-[oklch(52%_0.245_265)] px-3 py-0.5 text-[10px] font-700 uppercase tracking-wider text-white">
-                  แนะนำ
+                  ยอดนิยม
+                </div>
+              )}
+              {plan.id === 'pro_plus' && (
+                <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full bg-[oklch(68%_0.016_254)] px-3 py-0.5 text-[10px] font-700 uppercase tracking-wider text-white">
+                  Coming Soon
                 </div>
               )}
 
@@ -130,8 +135,8 @@ export function UpgradePrompt() {
               </ul>
 
               <button
-                onClick={() => void handleUpgrade(plan.id)}
-                disabled={loading !== null}
+                onClick={() => plan.id !== 'pro_plus' && void handleUpgrade(plan.id)}
+                disabled={loading !== null || plan.id === 'pro_plus'}
                 className={[
                   'flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-[13px] font-700 transition-all',
                   plan.highlight
