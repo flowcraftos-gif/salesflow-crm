@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getUserTier } from '@/lib/tier'
 import { ensureUserExists } from '@/lib/auth'
+import { LogoutButton } from '../../logout-button'
 
 export default async function SettingsPage() {
   const user = await currentUser()
@@ -72,9 +73,20 @@ export default async function SettingsPage() {
               href="/dashboard/upgrade"
               className="rounded-md bg-[oklch(52%_0.245_265)] px-4 py-2 text-[12px] font-700 text-white hover:bg-[oklch(46%_0.245_265)] transition-colors"
             >
-              อัปเกรด Pro ฿199 →
+              อัปเกรด Pro ฿149 →
             </Link>
           )}
+        </div>
+      </section>
+
+      {/* Logout */}
+      <section className="mb-4 overflow-hidden rounded-xl border border-[oklch(90%_0.014_254)] bg-white">
+        <div className="flex items-center justify-between px-5 py-4">
+          <div>
+            <p className="text-[13px] font-600 text-[oklch(18%_0.012_254)]">ออกจากระบบ</p>
+            <p className="text-[11px] text-[oklch(65%_0.016_254)]">{email}</p>
+          </div>
+          <LogoutButton variant="full" />
         </div>
       </section>
 

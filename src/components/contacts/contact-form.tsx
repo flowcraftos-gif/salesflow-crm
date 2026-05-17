@@ -2,8 +2,27 @@
 
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { createContact } from '@/app/(dashboard)/dashboard/contacts/actions'
+import { createContact, updateContact } from '@/app/(dashboard)/dashboard/contacts/actions'
 import { CONTACT_STATUSES, PRESET_TAGS, FREE_CONTACT_LIMIT } from '@/db/schema'
+
+type ContactData = {
+  id: string
+  name: string
+  phone: string
+  lineId?: string | null
+  email?: string | null
+  status?: string | null
+  source?: string | null
+  interestedProduct?: string | null
+  estimatedValue?: string | null
+  nextFollowUpDate?: string | null
+  notes?: string | null
+  tags?: string[] | null
+  insuranceCompany?: string | null
+  policyNumber?: string | null
+  annualPremium?: string | null
+  premiumDueDate?: string | null
+}
 
 const INPUT = 'w-full rounded-md border border-[oklch(90%_0.014_254)] bg-[oklch(98.2%_0.006_254)] px-3 py-2 text-[13px] text-[oklch(18%_0.012_254)] outline-none transition focus:border-[oklch(52%_0.245_265)] focus:bg-white focus:ring-2 focus:ring-[oklch(93%_0.04_265)] placeholder:text-[oklch(68%_0.016_254)]'
 const LABEL = 'block text-[11px] font-700 uppercase tracking-[0.6px] text-[oklch(55%_0.020_254)] mb-1.5'
@@ -16,18 +35,19 @@ function val(fd: FormData, key: string): string | null {
   return v === '' || v === '-' ? null : v
 }
 
-export function ContactForm() {
+export function ContactForm({ contact }: { contact?: ContactData }) {
+  const isEdit = !!contact
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [tags, setTags] = useState<string[]>([])
+  const [tags, setTags] = useState<string[]>(contact?.tags ?? [])
   const [customTag, setCustomTag] = useState('')
-  const [selectedSource, setSelectedSource] = useState('')
+  const [selectedSource, setSelectedSource] = useState(contact?.source ?? '')
   const [extraSources, setExtraSources] = useState<string[]>([])
   const [showAddSource, setShowAddSource] = useState(false)
   const [newSource, setNewSource] = useState('')
   const [showStatusHint, setShowStatusHint] = useState(false)
-  const [showInsurance, setShowInsurance] = useState(false)
+  const [showInsurance, setShowInsurance] = useState(!!(contact?.insuranceCompany || contact?.policyNumber))
   const formRef = useRef<HTMLFormElement>(null)
 
   function toggleTag(tag: string) {
@@ -48,25 +68,32 @@ export function ContactForm() {
 
     const source = selectedSource || null
 
+    const payload = {
+      name: val(fd, 'name')!,
+      phone: val(fd, 'phone')!,
+      lineId: val(fd, 'lineId'),
+      email: val(fd, 'email'),
+      status: val(fd, 'status') ?? 'Prospect',
+      source,
+      interestedProduct: val(fd, 'interestedProduct'),
+      estimatedValue: fd.get('estimatedValue') ? String(Number(fd.get('estimatedValue'))) : null,
+      nextFollowUpDate: val(fd, 'nextFollowUpDate'),
+      notes: val(fd, 'notes'),
+      tags,
+      insuranceCompany: val(fd, 'insuranceCompany'),
+      policyNumber: val(fd, 'policyNumber'),
+      annualPremium: fd.get('annualPremium') ? String(Number(fd.get('annualPremium'))) : null,
+      premiumDueDate: val(fd, 'premiumDueDate'),
+    }
+
     try {
-      await createContact({
-        name: val(fd, 'name')!,
-        phone: val(fd, 'phone')!,
-        lineId: val(fd, 'lineId'),
-        email: val(fd, 'email'),
-        status: val(fd, 'status') ?? 'Prospect',
-        source,
-        interestedProduct: val(fd, 'interestedProduct'),
-        estimatedValue: fd.get('estimatedValue') ? String(Number(fd.get('estimatedValue'))) : null,
-        nextFollowUpDate: val(fd, 'nextFollowUpDate'),
-        notes: val(fd, 'notes'),
-        tags,
-        insuranceCompany: val(fd, 'insuranceCompany'),
-        policyNumber: val(fd, 'policyNumber'),
-        annualPremium: fd.get('annualPremium') ? String(Number(fd.get('annualPremium'))) : null,
-        premiumDueDate: val(fd, 'premiumDueDate'),
-      })
-      router.push('/dashboard/contacts')
+      if (isEdit) {
+        await updateContact(contact.id, payload)
+        router.push(`/dashboard/contacts/${contact.id}`)
+      } else {
+        await createContact(payload)
+        router.push('/dashboard/contacts')
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'เกิดข้อผิดพลาด'
       setError(msg.startsWith('CONTACT_LIMIT_REACHED')
@@ -87,23 +114,23 @@ export function ContactForm() {
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
           <label className={LABEL}>ชื่อ *</label>
-          <input name="name" required placeholder="นายก สมใจ" className={INPUT} />
+          <input name="name" required placeholder="นายก สมใจ" defaultValue={contact?.name} className={INPUT} />
         </div>
         <div>
           <label className={LABEL}>เบอร์โทร *</label>
-          <input name="phone" required placeholder="081-234-5678" pattern="[0-9]{9,10}" className={INPUT} />
+          <input name="phone" required placeholder="081-234-5678" pattern="[0-9]{9,10}" defaultValue={contact?.phone} className={INPUT} />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
           <label className={LABEL}>LINE ID</label>
-          <input name="lineId" placeholder="line_id หรือพิม -" className={INPUT} />
+          <input name="lineId" placeholder="line_id หรือพิม -" defaultValue={contact?.lineId ?? ''} className={INPUT} />
           <p className={HINT}>ไม่มีให้พิม -</p>
         </div>
         <div>
           <label className={LABEL}>อีเมล</label>
-          <input name="email" type="text" placeholder="email@example.com หรือพิม -" className={INPUT}
+          <input name="email" type="text" placeholder="email@example.com หรือพิม -" defaultValue={contact?.email ?? ''} className={INPUT}
             onKeyDown={e => {
               const inp = e.currentTarget
               if ((e.key === 'Enter' || e.key === 'Tab') && inp.value.trim() === '-') {
@@ -154,7 +181,7 @@ export function ContactForm() {
               )}
             </div>
           </div>
-          <select name="status" defaultValue="Prospect" className={INPUT}>
+          <select name="status" defaultValue={contact?.status ?? 'Prospect'} className={INPUT}>
             {CONTACT_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
@@ -221,18 +248,18 @@ export function ContactForm() {
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
           <label className={LABEL}>สินค้าที่สนใจ</label>
-          <input name="interestedProduct" placeholder="AIA H&S Extra หรือพิม -" className={INPUT} />
+          <input name="interestedProduct" placeholder="AIA H&S Extra หรือพิม -" defaultValue={contact?.interestedProduct ?? ''} className={INPUT} />
           <p className={HINT}>ไม่มีให้พิม -</p>
         </div>
         <div>
           <label className={LABEL}>มูลค่าประมาณการ (บาท/ปี)</label>
-          <input name="estimatedValue" type="number" min="0" placeholder="18000" className={INPUT} />
+          <input name="estimatedValue" type="number" min="0" placeholder="18000" defaultValue={contact?.estimatedValue ?? ''} className={INPUT} />
         </div>
       </div>
 
       <div className="mb-4">
         <label className={LABEL}>Follow-up ครั้งถัดไป</label>
-        <input name="nextFollowUpDate" type="date" className={INPUT} />
+        <input name="nextFollowUpDate" type="date" defaultValue={contact?.nextFollowUpDate?.slice(0, 10) ?? ''} className={INPUT} />
       </div>
 
       {/* Insurance fields — collapsible */}
@@ -254,21 +281,21 @@ export function ContactForm() {
             <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
                 <label className={LABEL}>บริษัทประกัน</label>
-                <input name="insuranceCompany" placeholder="AIA, FWD, Prudential..." className={INPUT} />
+                <input name="insuranceCompany" placeholder="AIA, FWD, Prudential..." defaultValue={contact?.insuranceCompany ?? ''} className={INPUT} />
               </div>
               <div>
                 <label className={LABEL}>เลขกรมธรรม์</label>
-                <input name="policyNumber" placeholder="P-XXXXXXXXX" className={INPUT} />
+                <input name="policyNumber" placeholder="P-XXXXXXXXX" defaultValue={contact?.policyNumber ?? ''} className={INPUT} />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className={LABEL}>เบี้ยต่อปี (฿)</label>
-                <input name="annualPremium" type="number" min="0" placeholder="18000" className={INPUT} />
+                <input name="annualPremium" type="number" min="0" placeholder="18000" defaultValue={contact?.annualPremium ?? ''} className={INPUT} />
               </div>
               <div>
                 <label className={LABEL}>วันครบเบี้ยถัดไป</label>
-                <input name="premiumDueDate" type="date" className={INPUT} />
+                <input name="premiumDueDate" type="date" defaultValue={contact?.premiumDueDate?.slice(0, 10) ?? ''} className={INPUT} />
               </div>
             </div>
           </div>
@@ -315,7 +342,7 @@ export function ContactForm() {
 
       <div className="mb-6">
         <label className={LABEL}>หมายเหตุ</label>
-        <textarea name="notes" rows={3} placeholder="โน้ตเพิ่มเติม..." className={INPUT + ' resize-none'} />
+        <textarea name="notes" rows={3} placeholder="โน้ตเพิ่มเติม..." defaultValue={contact?.notes ?? ''} className={INPUT + ' resize-none'} />
       </div>
 
       <div className="flex gap-3">
@@ -331,7 +358,7 @@ export function ContactForm() {
           disabled={loading}
           className="flex-1 py-2 rounded-md bg-[oklch(52%_0.245_265)] text-white text-[13px] font-700 hover:bg-[oklch(46%_0.245_265)] transition-colors disabled:opacity-60"
         >
-          {loading ? 'กำลังบันทึก...' : 'บันทึก Contact'}
+          {loading ? 'กำลังบันทึก...' : isEdit ? 'บันทึกการแก้ไข' : 'บันทึก Contact'}
         </button>
       </div>
     </form>
