@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
       amount,
       currency: 'thb',
       card: token,
-      description: `SalesFlow CRM ${plan === 'pro' ? 'Pro' : 'Pro Plus'} subscription`,
+      description: `Tamdee ${plan === 'pro' ? 'Pro' : 'Pro Plus'} subscription`,
       metadata: {
         userId,
         plan,

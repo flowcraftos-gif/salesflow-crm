@@ -5,7 +5,7 @@ import { useState, useTransition } from 'react'
 import Link from 'next/link'
 import { setCrmGoals } from '@/app/(dashboard)/dashboard/crm/actions'
 import { logCall, markFollowUpDone } from '@/app/(dashboard)/dashboard/contacts/actions'
-import type { CrmGoals, CrmStats, FollowUpContact, PipelineRow } from '@/app/(dashboard)/dashboard/crm/actions'
+import type { CrmGoals, CrmStats, FollowUpContact, PipelineRow, SourceRow, ValueRow, TrendRow } from '@/app/(dashboard)/dashboard/crm/actions'
 
 // ── Color system (consistent with contacts-table) ─────────
 
@@ -254,6 +254,151 @@ function FollowUpRow({ contact }: { contact: FollowUpContact }) {
           Done
         </button>
       </div>
+    </div>
+  )
+}
+
+// ── Chart: Source Donut ───────────────────────────────────
+
+const SOURCE_COLORS: Record<string, string> = {
+  Facebook: 'oklch(52% 0.245 265)',
+  Referral: 'oklch(52% 0.175 160)',
+  WalkIn:   'oklch(66% 0.175 68)',
+  Friend:   'oklch(52% 0.20 300)',
+  Other:    'oklch(60% 0.015 254)',
+}
+const SOURCE_BG: Record<string, string> = {
+  Facebook: 'bg-[oklch(52%_0.245_265)]',
+  Referral: 'bg-[oklch(52%_0.175_160)]',
+  WalkIn:   'bg-[oklch(66%_0.175_68)]',
+  Friend:   'bg-[oklch(52%_0.20_300)]',
+  Other:    'bg-[oklch(60%_0.015_254)]',
+}
+
+function SourceDonut({ data }: { data: SourceRow[] }) {
+  const total = data.reduce((s, r) => s + r.count, 0)
+  const r = 36
+  const circ = 2 * Math.PI * r
+  let cumLen = 0
+
+  return (
+    <div className="overflow-hidden rounded-lg border border-[oklch(90%_0.014_254)] bg-white p-4">
+      <div className="mb-3 text-[13px] font-700 text-[oklch(18%_0.012_254)]">แหล่งที่มา Lead</div>
+      {total === 0 ? (
+        <div className="py-8 text-center text-[12px] text-[oklch(68%_0.016_254)]">ยังไม่มีข้อมูล</div>
+      ) : (
+        <div className="flex items-center gap-4">
+          <svg viewBox="0 0 100 100" className="w-24 h-24 shrink-0">
+            {data.map((seg, i) => {
+              const segLen = total > 0 ? (seg.count / total) * circ : 0
+              const offset = circ * 0.25 - cumLen
+              cumLen += segLen
+              return (
+                <circle
+                  key={i}
+                  cx="50" cy="50" r={r}
+                  fill="none"
+                  stroke={SOURCE_COLORS[seg.source] ?? 'oklch(60% 0.015 254)'}
+                  strokeWidth="14"
+                  strokeDasharray={`${segLen} ${circ - segLen}`}
+                  strokeDashoffset={offset}
+                />
+              )
+            })}
+            <text x="50" y="47" textAnchor="middle" fontSize="14" fontWeight="800" fill="oklch(18% 0.012 254)">{total}</text>
+            <text x="50" y="59" textAnchor="middle" fontSize="7" fill="oklch(68% 0.016 254)">contacts</text>
+          </svg>
+          <div className="flex-1 space-y-1.5 min-w-0">
+            {data.map(seg => (
+              <div key={seg.source} className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full shrink-0 ${SOURCE_BG[seg.source] ?? 'bg-[oklch(60%_0.015_254)]'}`} />
+                <span className="flex-1 text-[11px] text-[oklch(46%_0.022_254)] truncate">{seg.source}</span>
+                <span className="text-[11px] font-700 text-[oklch(18%_0.012_254)]">{seg.count}</span>
+                <span className="text-[10px] text-[oklch(68%_0.016_254)] w-8 text-right">
+                  {Math.round((seg.count / total) * 100)}%
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Chart: Monthly Trend ──────────────────────────────────
+
+const MONTH_SHORT_TH = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']
+
+function MonthlyTrendChart({ data }: { data: TrendRow[] }) {
+  const maxCount = Math.max(1, ...data.map(r => r.count))
+  const MAX_BAR_PX = 64
+
+  return (
+    <div className="overflow-hidden rounded-lg border border-[oklch(90%_0.014_254)] bg-white p-4">
+      <div className="mb-4 text-[13px] font-700 text-[oklch(18%_0.012_254)]">Contact ใหม่ 6 เดือน</div>
+      <div className="flex items-end gap-2" style={{ height: `${MAX_BAR_PX + 20}px` }}>
+        {data.map((row, i) => {
+          const barPx = row.count > 0 ? Math.max(Math.round((row.count / maxCount) * MAX_BAR_PX), 6) : 0
+          const [, m] = row.month.split('-').map(Number)
+          const isLast = i === data.length - 1
+          return (
+            <div key={row.month} className="flex-1 flex flex-col items-center justify-end gap-1">
+              <span className={`text-[10px] font-700 ${row.count > 0 ? 'text-[oklch(42%_0.20_265)]' : 'invisible'}`}>
+                {row.count}
+              </span>
+              <div
+                className={`w-full rounded-t-md transition-all ${isLast ? 'bg-[oklch(52%_0.245_265)]' : 'bg-[oklch(74%_0.10_265)]'}`}
+                style={{ height: `${barPx}px` }}
+              />
+              <span className="text-[9px] text-[oklch(60%_0.016_254)] whitespace-nowrap mt-1">
+                {MONTH_SHORT_TH[m - 1]}
+              </span>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// ── Chart: Pipeline Value ─────────────────────────────────
+
+function PipelineValueChart({ data }: { data: ValueRow[] }) {
+  const maxVal = Math.max(1, ...data.map(r => r.value))
+
+  function formatBaht(v: number): string {
+    if (v >= 1_000_000) return `${(v / 1_000_000).toFixed(1)}M`
+    if (v >= 1_000) return `${Math.round(v / 1_000)}K`
+    return String(Math.round(v))
+  }
+
+  return (
+    <div className="overflow-hidden rounded-lg border border-[oklch(90%_0.014_254)] bg-white p-4">
+      <div className="mb-3 text-[13px] font-700 text-[oklch(18%_0.012_254)]">มูลค่า Pipeline (฿)</div>
+      {data.length === 0 ? (
+        <div className="py-8 text-center text-[12px] text-[oklch(68%_0.016_254)]">ยังไม่มีข้อมูลมูลค่า</div>
+      ) : (
+        <div className="space-y-2">
+          {data.map(row => {
+            const pct = Math.round((row.value / maxVal) * 100)
+            return (
+              <div key={row.stage}>
+                <div className="flex items-center justify-between mb-0.5">
+                  <span className="text-[11px] text-[oklch(46%_0.022_254)]">{row.stage}</span>
+                  <span className="text-[11px] font-700 text-[oklch(18%_0.012_254)]">฿{formatBaht(row.value)}</span>
+                </div>
+                <div className="h-[8px] rounded-sm bg-[oklch(92%_0.010_254)] overflow-hidden">
+                  <div
+                    className={`h-full rounded-sm transition-all ${STAGE_BAR_COLORS[row.stage] ?? 'bg-[oklch(75%_0.015_254)]'}`}
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
@@ -551,6 +696,14 @@ export function CrmDashboard({
           </table>
         </div>
       </div>
+
+      {/* Charts row */}
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <MonthlyTrendChart data={stats.monthlyTrend} />
+        <SourceDonut data={stats.sourceBreakdown} />
+        <PipelineValueChart data={stats.pipelineValue} />
+      </div>
+
     </div>
   )
 }

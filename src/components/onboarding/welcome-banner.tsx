@@ -73,7 +73,7 @@ export function WelcomeBanner({ contactCount }: { contactCount: number }) {
               </svg>
             </div>
             <h2 className="text-sm font-700 text-[oklch(18%_0.012_254)]">
-              ยินดีต้อนรับสู่ SalesFlow CRM
+              ยินดีต้อนรับสู่ Tamdee
             </h2>
           </div>
           <p className="mb-4 text-xs text-[oklch(55%_0.020_254)]">

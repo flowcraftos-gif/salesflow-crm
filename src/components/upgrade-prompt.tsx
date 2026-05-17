@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-const SUPPORT_EMAIL = 'support@salesflow.app'
+const SUPPORT_EMAIL = 'support@tamdee.space'
 
 interface Plan {
   id: 'pro' | 'pro_plus'

@@ -36,6 +36,10 @@ export type FollowUpContact = {
   daysOverdue: number
 }
 
+export type SourceRow = { source: string; count: number }
+export type ValueRow = { stage: string; value: number }
+export type TrendRow = { month: string; count: number }
+
 export type CrmStats = {
   appointmentsDone: number
   appointmentsGoal: number
@@ -45,6 +49,9 @@ export type CrmStats = {
   conversionRate: number
   pipeline: PipelineRow[]
   followUpList: FollowUpContact[]
+  sourceBreakdown: SourceRow[]
+  pipelineValue: ValueRow[]
+  monthlyTrend: TrendRow[]
 }
 
 // ── Helpers ───────────────────────────────────────────────
@@ -109,6 +116,9 @@ export async function getCrmStats(month: string): Promise<CrmStats> {
       conversionRate: 0,
       pipeline: [],
       followUpList: [],
+      sourceBreakdown: [],
+      pipelineValue: [],
+      monthlyTrend: [],
     }
   }
 
@@ -123,6 +133,9 @@ export async function getCrmStats(month: string): Promise<CrmStats> {
     pipelineResult,
     followUpListResult,
     totalContactsResult,
+    sourceResult,
+    valueResult,
+    trendResult,
   ] = await Promise.all([
     // 1. Appointments done: calendar events with contactId in month
     db.select({ count: sql<number>`cast(count(*) as integer)` })
@@ -196,6 +209,44 @@ export async function getCrmStats(month: string): Promise<CrmStats> {
     db.select({ count: sql<number>`cast(count(*) as integer)` })
       .from(contacts)
       .where(eq(contacts.userId, userId)),
+
+    // 7. Source breakdown
+    db.select({
+      source: contacts.source,
+      count: sql<number>`cast(count(*) as integer)`,
+    })
+      .from(contacts)
+      .where(and(eq(contacts.userId, userId), isNotNull(contacts.source)))
+      .groupBy(contacts.source),
+
+    // 8. Pipeline value (sum estimatedValue per status)
+    db.select({
+      status: contacts.status,
+      value: sql<number>`cast(coalesce(sum(cast(estimated_value as numeric)), 0) as float)`,
+    })
+      .from(contacts)
+      .where(and(eq(contacts.userId, userId), isNotNull(contacts.estimatedValue)))
+      .groupBy(contacts.status),
+
+    // 9. Monthly trend: new contacts per month (6 months ending at selected month)
+    db.select({
+      month: sql<string>`to_char(date_trunc('month', created_at AT TIME ZONE 'Asia/Bangkok'), 'YYYY-MM')`,
+      count: sql<number>`cast(count(*) as integer)`,
+    })
+      .from(contacts)
+      .where(and(
+        eq(contacts.userId, userId),
+        gte(contacts.createdAt, (() => {
+          const [y, m] = month.split('-').map(Number)
+          return new Date(y, m - 7, 1) // start of 6 months before selected month
+        })()),
+        lt(contacts.createdAt, (() => {
+          const [y, m] = month.split('-').map(Number)
+          return new Date(y, m, 1) // start of month after selected month
+        })()),
+      ))
+      .groupBy(sql`date_trunc('month', created_at AT TIME ZONE 'Asia/Bangkok')`)
+      .orderBy(sql`date_trunc('month', created_at AT TIME ZONE 'Asia/Bangkok')`),
   ])
 
   const appointmentsDone = apptResult[0]?.count ?? 0
@@ -244,6 +295,27 @@ export async function getCrmStats(month: string): Promise<CrmStats> {
     }
   })
 
+  // Build 6-month array, fill missing months with 0
+  const trendMap = Object.fromEntries(trendResult.map(r => [r.month, r.count]))
+  const [selY, selM] = month.split('-').map(Number)
+  const monthlyTrend: TrendRow[] = Array.from({ length: 6 }, (_, i) => {
+    const d = new Date(selY, selM - 6 + i, 1)
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    return { month: key, count: trendMap[key] ?? 0 }
+  })
+
+  const sourceBreakdown: SourceRow[] = sourceResult
+    .filter(r => r.source)
+    .sort((a, b) => b.count - a.count)
+    .map(r => ({ source: r.source!, count: r.count }))
+
+  const pipelineValue: ValueRow[] = STAGE_ORDER
+    .map(stage => ({
+      stage,
+      value: valueResult.find(r => r.status === stage)?.value ?? 0,
+    }))
+    .filter(r => r.value > 0)
+
   return {
     appointmentsDone,
     appointmentsGoal: goals.appointmentsPerMonth,
@@ -253,5 +325,8 @@ export async function getCrmStats(month: string): Promise<CrmStats> {
     conversionRate,
     pipeline,
     followUpList,
+    sourceBreakdown,
+    pipelineValue,
+    monthlyTrend,
   }
 }

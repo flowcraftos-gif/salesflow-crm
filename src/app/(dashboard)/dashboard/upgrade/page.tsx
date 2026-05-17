@@ -77,7 +77,7 @@ export default function UpgradePage() {
 
       {notConfigured && (
         <div className="mb-6 rounded-lg border border-[oklch(88%_0.025_265)] bg-[oklch(97%_0.010_254)] px-5 py-4 text-center text-[13px] text-[oklch(46%_0.022_254)]">
-          ระบบชำระเงินยังไม่พร้อม — ติดต่อ <a href="mailto:support@salesflow.app" className="font-600 text-[oklch(52%_0.245_265)] underline">support@salesflow.app</a>
+          ระบบชำระเงินยังไม่พร้อม — ติดต่อ <a href="mailto:support@tamdee.space" className="font-600 text-[oklch(52%_0.245_265)] underline">support@tamdee.space</a>
         </div>
       )}
 
@@ -188,7 +188,7 @@ export default function UpgradePage() {
       </div>
 
       <p className="mt-4 text-center text-[11px] text-[oklch(68%_0.016_254)]">
-        มีคำถาม? ติดต่อ <a href="mailto:support@salesflow.app" className="text-[oklch(52%_0.245_265)] underline">support@salesflow.app</a>
+        มีคำถาม? ติดต่อ <a href="mailto:support@tamdee.space" className="text-[oklch(52%_0.245_265)] underline">support@tamdee.space</a>
       </p>
     </div>
   )

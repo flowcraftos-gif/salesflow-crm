@@ -39,6 +39,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
   // Ensure user row exists before checking limit
   await ensureUserExists()
   const { count: contactCount, limit } = await checkContactLimit(user.id)
+  const { getUserTier } = await import('@/lib/tier')
+  const tier = await getUserTier(user.id)
+  const isPro = tier !== 'free'
 
   // Show banner when free user has > 40 contacts (approaching limit)
   const showApproachingBanner = limit !== null && contactCount > 40
@@ -51,13 +54,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <aside className="hidden md:flex w-56 flex-shrink-0 flex-col border-r border-[oklch(90%_0.014_254)] bg-[oklch(97%_0.010_254)]">
         {/* Logo */}
         <div className="flex items-center gap-2.5 border-b border-[oklch(90%_0.014_254)] px-4 py-4">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[oklch(52%_0.245_265)]">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-            </svg>
-          </div>
-          <span className="text-sm font-800 tracking-tight text-[oklch(18%_0.012_254)]">SalesFlow</span>
-          <span className="ml-auto rounded-full bg-[oklch(93%_0.04_265)] px-2 py-0.5 text-[10px] font-700 text-[oklch(42%_0.20_265)]">Pro</span>
+          <img src="/tamdee-logo.png" alt="Tamdee" width={34} height={34} className="rounded-xl" />
+          <span className="text-sm tracking-tight text-[oklch(18%_0.012_254)]" style={{ fontFamily: 'var(--font-brand)', fontWeight: 800 }}>Tamdee</span>
+          {isPro ? (
+            <span className="ml-auto rounded-full bg-[oklch(93%_0.04_265)] px-2 py-0.5 text-[10px] font-700 text-[oklch(42%_0.20_265)]">Pro</span>
+          ) : (
+            <Link href="/dashboard/upgrade" className="ml-auto rounded-full bg-[oklch(92%_0.010_254)] px-2 py-0.5 text-[10px] font-700 text-[oklch(55%_0.020_254)] hover:bg-[oklch(88%_0.06_265)] hover:text-[oklch(42%_0.20_265)] transition-colors">Free</Link>
+          )}
         </div>
 
         {/* Nav */}
@@ -117,7 +120,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         {/* Help button */}
         <div className="px-2 pb-2">
           <Link
-            href="/dashboard/contacts?tour=1"
+            href="/dashboard/guide"
             prefetch={false}
             className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-[12px] font-500 text-[oklch(55%_0.020_254)] transition-colors hover:bg-[oklch(90%_0.014_254)] hover:text-[oklch(30%_0.015_254)]"
           >
@@ -180,12 +183,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           }>
             <TopbarSearch />
           </Suspense>
-          <div className="flex items-center gap-2">
-            <a href="/api/contacts/export" className="hidden md:flex items-center gap-1.5 rounded-md border border-[oklch(90%_0.014_254)] px-3 py-1.5 text-[12px] font-600 text-[oklch(46%_0.022_254)] hover:border-[oklch(84%_0.018_254)] transition-colors">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Export CSV
-            </a>
-          </div>
+          <div className="flex items-center gap-2"></div>
         </div>
 
         {/* Page content — add bottom padding on mobile for bottom nav */}
