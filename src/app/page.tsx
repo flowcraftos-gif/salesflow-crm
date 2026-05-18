@@ -192,7 +192,7 @@ export default async function Home() {
                 เข้าสู่ระบบ
               </Link>
               <Link href="/sign-up" className="cta-p" style={{ padding: '0.425rem 1rem', borderRadius: '8px', fontSize: '13px', fontWeight: 700, background: 'var(--blue)', color: 'white', textDecoration: 'none', boxShadow: '0 2px 8px oklch(52% 0.245 265 / 0.26)' }}>
-                ลองใช้ฟรี
+                เริ่มฟรีเลย
               </Link>
             </nav>
           </div>
@@ -215,10 +215,7 @@ export default async function Home() {
               </p>
               <div className="hi4" style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '1.1rem' }}>
                 <Link href="/sign-up" className="cta-p" style={{ padding: '0.8rem 1.6rem', borderRadius: '10px', fontSize: '14px', fontWeight: 700, background: 'var(--blue)', color: 'white', textDecoration: 'none', boxShadow: '0 3px 12px oklch(52% 0.245 265 / 0.3)', fontFamily: 'var(--font-heading)' }}>
-                  ลองใช้ฟรี ไม่ต้องใช้บัตร
-                </Link>
-                <Link href="/sign-in" className="cta-g" style={{ padding: '0.8rem 1.4rem', borderRadius: '10px', fontSize: '14px', fontWeight: 600, border: '1px solid var(--border)', color: 'var(--ink-2)', textDecoration: 'none', fontFamily: 'var(--font-heading)' }}>
-                  เข้าสู่ระบบ
+                  เริ่มใช้ฟรี — ไม่ต้องจำนัดเองอีกต่อไป
                 </Link>
               </div>
               <p className="hi5" style={{ fontSize: '12px', color: 'var(--ink-3)' }}>
@@ -500,7 +497,7 @@ export default async function Home() {
                   <span style={{ position: 'absolute', top: '-11px', left: '50%', translate: '-50% 0', background: 'var(--blue)', color: 'white', fontSize: '9px', fontWeight: 800, padding: '3px 11px', borderRadius: '999px', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'var(--font-heading)', whiteSpace: 'nowrap' }}>ยอดนิยม</span>
                   <p style={{ fontFamily: 'var(--font-heading)', fontSize: '13px', fontWeight: 700, color: 'var(--blue)', marginBottom: '0.5rem' }}>Pro</p>
                   <p style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '36px', color: 'var(--ink)', letterSpacing: '-0.025em', lineHeight: 1, marginBottom: '0.25rem' }}>฿149</p>
-                  <p style={{ fontSize: '11px', color: 'var(--ink-3)', marginBottom: '1.25rem' }}>/เดือน · หรือ ฿1,490/ปี</p>
+                  <p style={{ fontSize: '11px', color: 'var(--ink-3)', marginBottom: '1.25rem' }}>/เดือน · น้อยกว่าค่าคอมลูกค้า 1 คน</p>
                   <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
                     {['Contacts 500 คน', 'ทุกอย่างใน Free', 'Import CSV', 'Policy reminder (วันครบเบี้ย)', 'ตั้งเป้าหมายรายเดือน', 'ย้อนดูย้อนหลัง 12 เดือน'].map(f => (
                       <li key={f} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}><CheckIcon /><span style={{ fontSize: '12px', color: 'var(--ink-2)' }}>{f}</span></li>
@@ -514,7 +511,7 @@ export default async function Home() {
                 <div data-r="3" className="pc" style={{ border: '1px solid oklch(78% 0.028 265)', borderRadius: '18px', padding: '1.5rem', background: 'white', display: 'flex', flexDirection: 'column' }}>
                   <p style={{ fontFamily: 'var(--font-heading)', fontSize: '13px', fontWeight: 700, color: 'var(--ink-2)', marginBottom: '0.5rem' }}>Pro+</p>
                   <p style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '36px', color: 'var(--ink)', letterSpacing: '-0.025em', lineHeight: 1, marginBottom: '0.25rem' }}>฿299</p>
-                  <p style={{ fontSize: '11px', color: 'var(--ink-3)', marginBottom: '1.25rem' }}>/เดือน · หรือ ฿2,990/ปี</p>
+                  <p style={{ fontSize: '11px', color: 'var(--ink-3)', marginBottom: '1.25rem' }}>/เดือน · ลูกค้าไม่จำกัด ค่าคอมไม่จำกัด</p>
                   <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
                     {['Contacts ไม่จำกัด', 'ทุกอย่างใน Pro', 'LINE message templates', 'Advanced analytics + charts', 'Priority Support (ตอบใน 4 ชม.)'].map(f => (
                       <li key={f} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}><CheckIcon /><span style={{ fontSize: '12px', color: 'var(--ink-2)' }}>{f}</span></li>
@@ -576,7 +573,7 @@ export default async function Home() {
               <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(26px, 3.5vw, 40px)', letterSpacing: '-0.02em', lineHeight: 1.2, color: 'white', marginBottom: '1.1rem' }}>เริ่มจัดการลูกค้าดีขึ้นวันนี้</h2>
               <p style={{ fontSize: '14px', color: 'oklch(60% 0.022 265)', marginBottom: '2rem', lineHeight: 1.65 }}>สมัครฟรี ไม่ต้องใช้บัตรเครดิต ใช้งานได้เลย</p>
               <Link href="/sign-up" className="cta-p" style={{ display: 'inline-block', padding: '0.9rem 2rem', borderRadius: '11px', fontSize: '14px', fontWeight: 700, background: 'var(--blue)', color: 'white', textDecoration: 'none', boxShadow: '0 4px 18px oklch(52% 0.245 265 / 0.42)', fontFamily: 'var(--font-heading)' }}>
-                ลองใช้ฟรี ไม่ต้องใช้บัตร
+                เริ่มใช้ฟรี — ไม่ต้องจำนัดเองอีกต่อไป
               </Link>
             </div>
           </section>
