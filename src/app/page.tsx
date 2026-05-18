@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   title,
   description,
   keywords: ['CRM ตัวแทนประกัน', 'ระบบจัดการลูกค้าประกัน', 'CRM ประกัน', 'ตัวแทนประกันไทย', 'เบี้ยประกัน', 'ต่ออายุประกัน', 'นายหน้าประกัน'],
-  openGraph: { title, description, url: 'https://tamdee.space', siteName: 'Tamdee', locale: 'th_TH', type: 'website' },
-  twitter: { card: 'summary_large_image', title, description },
+  openGraph: { title, description, url: 'https://tamdee.space', siteName: 'Tamdee', locale: 'th_TH', type: 'website', images: [{ url: 'https://tamdee.space/og-image.png', width: 1200, height: 630, alt: 'Tamdee — CRM สำหรับตัวแทนประกันไทย' }] },
+  twitter: { card: 'summary_large_image', title, description, images: ['https://tamdee.space/og-image.png'] },
   alternates: { canonical: 'https://tamdee.space' },
   robots: { index: true, follow: true },
 }
