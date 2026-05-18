@@ -315,7 +315,7 @@ Month navigation: ย้อนหลัง 12 เดือน
 |------|-----:|---:|---|
 | Free | ฟรี | 20 | Contact CRUD + Task + Calendar + Board |
 | Pro | 149 บาท/เดือน | ไม่จำกัด | + CRM Dashboard + CSV import/export |
-| Pro Plus | 299 บาท/เดือน | ไม่จำกัด | + Historical reports + Insurance templates |
+| Pro+ | 299 บาท/เดือน | ไม่จำกัด | + Historical reports + Insurance templates |
 
 **Beta**: design partners ฟรี (AIA + 10 ตัวแทน)
 **Early lock**: upgrade ระหว่าง beta = 149 บาท/เดือนตลอดชีพ

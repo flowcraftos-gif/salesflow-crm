@@ -279,7 +279,16 @@ function SourceDonut({ data }: { data: SourceRow[] }) {
   const total = data.reduce((s, r) => s + r.count, 0)
   const r = 36
   const circ = 2 * Math.PI * r
-  let cumLen = 0
+  const segments = data.reduce<{
+    items: Array<{ seg: SourceRow; segLen: number; offset: number }>
+    used: number
+  }>((acc, seg) => {
+    const segLen = total > 0 ? (seg.count / total) * circ : 0
+    return {
+      items: [...acc.items, { seg, segLen, offset: circ * 0.25 - acc.used }],
+      used: acc.used + segLen,
+    }
+  }, { items: [], used: 0 }).items
 
   return (
     <div className="overflow-hidden rounded-lg border border-[oklch(90%_0.014_254)] bg-white p-4">
@@ -289,10 +298,7 @@ function SourceDonut({ data }: { data: SourceRow[] }) {
       ) : (
         <div className="flex items-center gap-4">
           <svg viewBox="0 0 100 100" className="w-24 h-24 shrink-0">
-            {data.map((seg, i) => {
-              const segLen = total > 0 ? (seg.count / total) * circ : 0
-              const offset = circ * 0.25 - cumLen
-              cumLen += segLen
+            {segments.map(({ seg, segLen, offset }, i) => {
               return (
                 <circle
                   key={i}

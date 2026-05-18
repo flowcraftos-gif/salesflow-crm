@@ -10,6 +10,10 @@ const sarabun = Sarabun({ subsets: ['thai', 'latin'], weight: ['400', '500', '60
 export const metadata: Metadata = {
   title: 'Tamdee — CRM สำหรับตัวแทนประกัน',
   description: 'Planner + CRM สำหรับตัวแทนประกันและนักขายเดี่ยว',
+  icons: {
+    icon: '/tamdee-logo.png',
+    apple: '/tamdee-logo.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

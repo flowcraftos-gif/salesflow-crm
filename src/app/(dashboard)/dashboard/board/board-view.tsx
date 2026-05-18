@@ -188,6 +188,8 @@ export function BoardView({ initialCards, todayTasks, todayEvents }: Props) {
       <div className="grid grid-cols-3 gap-3 items-start min-w-[640px]">
         {COLUMNS.map(col => {
           const colCards = getCards(col.key)
+          const total = cards.length
+          const pct = total > 0 ? Math.round((colCards.length / total) * 10000) / 100 : 0
           const isOver = dragOver === col.key
           const showInput = inputs[col.key].trim().length > 0
           const selected = contactSelected[col.key]
@@ -209,7 +211,12 @@ export function BoardView({ initialCards, todayTasks, todayEvents }: Props) {
               <div className="px-4 py-3.5 border-b border-[oklch(90%_0.014_254)] flex items-center gap-2">
                 <div className={`w-2 h-2 rounded-full ${col.dot}`} />
                 <span className={`text-[13px] font-700 ${col.color}`}>{col.label}</span>
-                <span className={`ml-auto rounded-full px-2 py-0.5 text-[11px] font-700 ${col.countBg}`}>{colCards.length}</span>
+                <div className="ml-auto flex items-center gap-1.5">
+                  <span className={`rounded-full px-2 py-0.5 text-[11px] font-700 ${col.countBg}`}>{colCards.length}</span>
+                  {total > 0 && (
+                    <span className="text-[10px] font-600 text-[oklch(68%_0.016_254)]">{pct.toFixed(2)}%</span>
+                  )}
+                </div>
               </div>
 
               {/* Cards */}

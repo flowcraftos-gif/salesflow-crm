@@ -1,0 +1,74 @@
+[
+  {
+    "label": "landing-mobile-390",
+    "url": "https://tamdee.space",
+    "screenshotPath": "/Users/piyawath/Projects/salesflow-crm/qa-screenshots/landing-mobile-390.png",
+    "errors": [],
+    "warnings": [],
+    "overflowInfo": {
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "overflowElements": []
+    },
+    "zeroSizeElements": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "issue": "zero-size"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "issue": "zero-size"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "issue": "zero-size"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "issue": "zero-size"
+      }
+    ],
+    "bodyTextSnippet": "Tamdee\nเข้าสู่ระบบ\nลองใช้ฟรี\n\nสำหรับตัวแทนและนายหน้าประกันไทย\n\nลูกค้าไม่หลุด\nเบี้ยไม่ขาด\nนัดไม่ลืม\n\nเพราะตัวแทนที่เก่งไม่แพ้เรื่องสินค้า แต่แพ้เรื่องการติดตาม Tamdee ช่วยจำแทนคุณ\n\nลองใช้ฟรี ไม่ต้องใช้บัตร\nเข้าสู่ระบบ\n\n฿149/เดือน · ยกเลิกได้ทุกเมื่อ · เริ่มต้น 20 contacts ฟรี\n\nใช้ได้ทุกค่าย\nAIA\nFWD\nPrudential\nMTL\nกรุงเทพประกันชีวิต\nเมืองไทยประกันชีวิต\nอาคเนย์\nCIGNA\nChubb\nSCB Life\n\nปัญหาที่ตัวแทนเจอทุกวัน\n\nไม่ใช่เรื่องสินค้า\nแต่เรื่องการติดตาม\n\nลืมตามลูกค้าที่ยังไม่ตัดสินใจ\n\nบางคนต้องการ 3-4 ครั้ง"
+  },
+  {
+    "label": "signin-mobile-390",
+    "url": "https://tamdee.space/sign-in",
+    "screenshotPath": "/Users/piyawath/Projects/salesflow-crm/qa-screenshots/signin-mobile-390.png",
+    "errors": [],
+    "warnings": [],
+    "overflowInfo": {
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "overflowElements": []
+    },
+    "zeroSizeElements": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "issue": "zero-size"
+      }
+    ],
+    "bodyTextSnippet": "Sign in to Tamdee\n\nWelcome back! Please sign in to continue\n\nContinue with Google\n\nor\n\nEmail address\nPassword\nContinue\nDon’t have an account?\nSign up\n\nSecured by"
+  },
+  {
+    "label": "landing-desktop-1440",
+    "url": "https://tamdee.space",
+    "screenshotPath": "/Users/piyawath/Projects/salesflow-crm/qa-screenshots/landing-desktop-1440.png",
+    "errors": [],
+    "warnings": [],
+    "overflowInfo": {
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "hasOverflow": false,
+      "overflowElements": []
+    },
+    "zeroSizeElements": [],
+    "bodyTextSnippet": "Tamdee\nเข้าสู่ระบบ\nลองใช้ฟรี\n\nสำหรับตัวแทนและนายหน้าประกันไทย\n\nลูกค้าไม่หลุด\nเบี้ยไม่ขาด\nนัดไม่ลืม\n\nเพราะตัวแทนที่เก่งไม่แพ้เรื่องสินค้า แต่แพ้เรื่องการติดตาม Tamdee ช่วยจำแทนคุณ\n\nลองใช้ฟรี ไม่ต้องใช้บัตร\nเข้าสู่ระบบ\n\n฿149/เดือน · ยกเลิกได้ทุกเมื่อ · เริ่มต้น 20 contacts ฟรี\n\ntamdee.space/dashboard/contacts\nTamdee\nContacts\nTasks\nCalendar\nBoard\nDashboard\nค้นหาชื่อหรือเบอร์...\n+ เพิ่ม\nส\nสมชาย วงศ์ไทย\nProspect\nAIA\nวันนี้\nน\nนารี รักดี\nAppointment\nAIA\nพรุ่งนี้\nป\nประสิทธิ์ ใจดี\nClient\nAIA\n—\nว\nวิภา สุข"
+  }
+]

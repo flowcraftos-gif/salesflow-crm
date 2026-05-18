@@ -22,7 +22,7 @@ const PLANS: Plan[] = [
   },
   {
     id: 'pro_plus',
-    name: 'Pro Plus',
+    name: 'Pro+',
     price: '฿299/เดือน',
     features: ['ทุกอย่างใน Pro', 'Insurance templates สำเร็จรูป', 'รายงานเชิงลึก + export PDF', 'Priority Support'],
     highlight: false,

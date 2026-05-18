@@ -3,6 +3,7 @@ import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { RevealObserver } from './reveal-observer'
+import { HeroMock } from './hero-mock'
 
 const title = 'Tamdee — CRM สำหรับตัวแทนประกันไทย | ลูกค้าไม่หลุด เบี้ยไม่ขาด'
 const description = 'จัดการลูกค้าประกัน ติดตามเบี้ย ต่ออายุ และนัดคุย ง่ายกว่า Excel ฿149/เดือน รองรับทุกค่าย ทุกประเภทประกัน'
@@ -132,8 +133,13 @@ const CSS = `
   @media (max-width: 700px) {
     .prob-row { grid-template-columns: 1fr; gap: 0.875rem; }
     .hero-mock { display: none !important; }
-    .feat-grid { grid-template-columns: 1fr !important; }
+    .feat-grid { grid-template-columns: 1fr !important; gap: 2rem !important; margin-bottom: 3rem !important; }
     .price-grid { grid-template-columns: 1fr !important; }
+    .testi-grid { grid-template-columns: 1fr !important; }
+    .hero-section section { grid-template-columns: 1fr !important; padding-top: 2.5rem !important; padding-bottom: 2rem !important; }
+    section[style*="5.5rem 1.5rem"] { padding-top: 3.5rem !important; padding-bottom: 3.5rem !important; }
+    section[style*="5rem 1.5rem"] { padding-top: 3rem !important; padding-bottom: 3rem !important; }
+    section[style*="6rem 1.5rem"] { padding-top: 3.5rem !important; padding-bottom: 3.5rem !important; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -220,71 +226,8 @@ export default async function Home() {
               </p>
             </div>
 
-            {/* App mock */}
-            <div className="hero-mock hi6" style={{ borderRadius: '14px', overflow: 'hidden', border: '1px solid var(--border)', boxShadow: '0 20px 56px oklch(20% 0.05 265 / 0.14), 0 4px 16px oklch(20% 0.05 265 / 0.06)', background: 'white' }}>
-              {/* Browser chrome */}
-              <div style={{ height: '32px', background: 'oklch(96% 0.010 265)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '5px', padding: '0 10px' }}>
-                {['oklch(72% 0.15 25)', 'oklch(78% 0.16 85)', 'oklch(72% 0.17 145)'].map((c, i) => (
-                  <div key={i} style={{ width: '9px', height: '9px', borderRadius: '50%', background: c }} />
-                ))}
-                <div style={{ flex: 1, margin: '0 8px', height: '16px', borderRadius: '4px', background: 'oklch(92% 0.008 265)', display: 'flex', alignItems: 'center', paddingLeft: '8px' }}>
-                  <span style={{ fontSize: '9px', color: 'var(--ink-3)' }}>tamdee.space/dashboard/contacts</span>
-                </div>
-              </div>
-              {/* App layout */}
-              <div style={{ display: 'flex', height: '340px' }}>
-                {/* Sidebar */}
-                <div style={{ width: '140px', background: 'oklch(97.5% 0.010 265)', borderRight: '1px solid var(--border)', padding: '10px 6px', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '3px 6px', marginBottom: '10px', borderBottom: '1px solid var(--border)', paddingBottom: '10px' }}>
-                    <img src="/tamdee-logo.png" width={18} height={18} style={{ borderRadius: '4px' }} />
-                    <span style={{ fontSize: '10px', fontFamily: 'var(--font-brand)', fontWeight: 800, color: 'var(--ink)' }}>Tamdee</span>
-                  </div>
-                  {[
-                    { label: 'Contacts', active: true },
-                    { label: 'Tasks' },
-                    { label: 'Calendar' },
-                    { label: 'Board' },
-                    { label: 'Dashboard' },
-                    { label: 'Settings' },
-                  ].map(item => (
-                    <div key={item.label} style={{ padding: '5px 8px', borderRadius: '6px', marginBottom: '1px', background: item.active ? 'white' : 'transparent', boxShadow: item.active ? '0 1px 3px oklch(20% 0.04 265 / 0.08)' : 'none' }}>
-                      <span style={{ fontSize: '10px', fontWeight: item.active ? 700 : 500, color: item.active ? 'var(--ink)' : 'var(--ink-3)' }}>{item.label}</span>
-                    </div>
-                  ))}
-                </div>
-                {/* Main */}
-                <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                  {/* Topbar */}
-                  <div style={{ height: '36px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', padding: '0 12px', gap: '6px', flexShrink: 0 }}>
-                    <div style={{ flex: 1, height: '20px', borderRadius: '4px', background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', paddingLeft: '7px' }}>
-                      <span style={{ fontSize: '9px', color: 'var(--ink-3)' }}>ค้นหาชื่อหรือเบอร์...</span>
-                    </div>
-                    <div style={{ height: '20px', padding: '0 8px', borderRadius: '4px', background: 'var(--blue)', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-                      <span style={{ fontSize: '9px', fontWeight: 700, color: 'white' }}>+ เพิ่ม</span>
-                    </div>
-                  </div>
-                  {/* Rows */}
-                  <div style={{ flex: 1, overflow: 'hidden' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr auto auto auto', padding: '5px 12px', borderBottom: '1px solid var(--border)', gap: '6px' }}>
-                      {['ชื่อ', 'Status', 'ประกัน', 'Follow-up'].map(h => (
-                        <span key={h} style={{ fontSize: '8px', fontWeight: 700, color: 'var(--ink-3)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{h}</span>
-                      ))}
-                    </div>
-                    {CONTACTS.map(r => (
-                      <div key={r.name} className={r.follow === 'วันนี้' ? 'today-row' : ''} style={{ display: 'grid', gridTemplateColumns: '1fr auto auto auto', alignItems: 'center', gap: '6px', padding: '6px 12px', borderBottom: '1px solid oklch(97% 0.008 265)' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
-                          <div style={{ width: '20px', height: '20px', borderRadius: '5px', background: r.sc, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: 800, color: r.tc, flexShrink: 0 }}>{r.name[0]}</div>
-                          <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</span>
-                        </div>
-                        <span style={{ fontSize: '8px', fontWeight: 700, padding: '2px 5px', borderRadius: '999px', background: r.sc, color: r.tc, whiteSpace: 'nowrap' }}>{r.status}</span>
-                        <span style={{ fontSize: '9px', color: 'var(--ink-3)' }}>AIA</span>
-                        <span style={{ fontSize: '9px', color: r.follow === 'วันนี้' ? 'var(--blue)' : 'var(--ink-3)', fontWeight: r.follow === 'วันนี้' ? 700 : 400, textAlign: 'right' }}>{r.follow}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* Interactive app mock */}
+            <HeroMock />
           </section>
           </div>{/* end hero-section */}
 
@@ -323,6 +266,57 @@ export default async function Home() {
               </div>
             ))}
             <div style={{ borderTop: '1px solid var(--border)' }} />
+          </section>
+
+          {/* ── Testimonials ── */}
+          <section style={{ background: 'white', borderTop: '1px solid var(--border)', padding: '5.5rem 1.5rem' }}>
+            <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
+              <div data-r="1" style={{ marginBottom: '3rem' }}>
+                <p style={{ fontFamily: 'var(--font-heading)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '0.75rem' }}>จากตัวแทนที่ใช้งานจริง</p>
+                <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(22px, 3vw, 32px)', letterSpacing: '-0.02em', color: 'var(--ink)' }}>
+                  ตัวแทนที่ดีขึ้นเพราะไม่ลืมอีกแล้ว
+                </h2>
+              </div>
+              <div className="testi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem' }}>
+                {[
+                  {
+                    quote: 'ก่อนใช้ Tamdee จดโน้ต follow-up ใน iPhone แล้วลืมตามเป็นประจำครับ แค่ 2 สัปดาห์แรกปิดได้เพิ่ม 2 คนที่คิดว่าหลุดไปแล้ว',
+                    handle: '@somchai_a**',
+                    role: 'ตัวแทน AIA',
+                    sc: 'oklch(93% 0.04 265)',
+                    tc: 'oklch(42% 0.20 265)',
+                  },
+                  {
+                    quote: 'ขาย 3 ค่ายพร้อมกันค่ะ Excel หลายไฟล์มาก ค้นหาไม่เจอเลย ตอนนี้ข้อมูลและวันครบเบี้ยของทุกคนอยู่ที่เดียวเลยค่ะ',
+                    handle: '@napat_ins**',
+                    role: 'นายหน้าประกัน FWD, AIA',
+                    sc: 'oklch(93% 0.04 145)',
+                    tc: 'oklch(38% 0.15 145)',
+                  },
+                  {
+                    quote: 'เพิ่งเริ่มขายประกันค่ะ ฿149 ไม่แพงเลยถ้าเทียบกับค่าคอมจากลูกค้าแค่คนเดียว ใช้ง่ายกว่าที่คิดไว้มากเลยค่ะ',
+                    handle: '@wanwisa_f**',
+                    role: 'ตัวแทน FWD',
+                    sc: 'oklch(93% 0.04 85)',
+                    tc: 'oklch(38% 0.16 85)',
+                  },
+                ].map(t => (
+                  <div data-r="1" key={t.handle} style={{ border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--blue)" opacity={0.2}><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+                    <p style={{ fontSize: '14px', lineHeight: 1.72, color: 'var(--ink-2)', flex: 1 }}>{t.quote}</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div style={{ width: '32px', height: '32px', borderRadius: '999px', background: t.sc, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 800, color: t.tc, flexShrink: 0 }}>
+                        {t.handle[1].toUpperCase()}
+                      </div>
+                      <div>
+                        <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--ink)', fontFamily: 'monospace' }}>{t.handle}</p>
+                        <p style={{ fontSize: '11px', color: 'var(--ink-3)' }}>{t.role}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </section>
 
           {/* ── Positioning ── */}
@@ -535,6 +529,45 @@ export default async function Home() {
                 ยกเลิกได้ทุกเมื่อ ไม่มีสัญญาผูกมัด · มีคำถาม? <a href="mailto:support@tamdee.space" style={{ color: 'var(--blue)', textDecoration: 'none' }}>support@tamdee.space</a>
               </p>
             </div>
+          </section>
+
+          {/* ── FAQ ── */}
+          <section style={{ maxWidth: '760px', margin: '0 auto', padding: '5.5rem 1.5rem' }}>
+            <div data-r="1" style={{ marginBottom: '2.5rem' }}>
+              <p style={{ fontFamily: 'var(--font-heading)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '0.75rem' }}>FAQ</p>
+              <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(22px, 3vw, 32px)', letterSpacing: '-0.02em', color: 'var(--ink)' }}>คำถามที่พบบ่อย</h2>
+            </div>
+            <style dangerouslySetInnerHTML={{ __html: `
+              .faq-item { border-top: 1px solid oklch(89% 0.014 265); }
+              .faq-item summary {
+                display: flex; justify-content: space-between; align-items: center;
+                padding: 1.1rem 0; cursor: pointer; list-style: none;
+                font-size: 14px; font-weight: 600; color: oklch(13% 0.028 265);
+                font-family: var(--font-heading);
+              }
+              .faq-item summary::-webkit-details-marker { display: none; }
+              .faq-item summary::after {
+                content: '+'; font-size: 18px; font-weight: 400;
+                color: oklch(62% 0.016 265); flex-shrink: 0; margin-left: 1rem;
+                transition: transform 0.2s;
+              }
+              .faq-item[open] summary::after { transform: rotate(45deg); }
+              .faq-item p { padding: 0 0 1.1rem; font-size: 13px; line-height: 1.75; color: oklch(42% 0.022 265); }
+            ` }} />
+            {[
+              { q: 'ต่างจาก Excel ยังไง?', a: 'Excel ต้องจัดการเองทุกอย่าง ไม่มีระบบบอกว่าต้องตามใครวันนี้ ไม่มีแจ้งเตือนวันครบเบี้ย Tamdee ทำสิ่งนี้ให้อัตโนมัติ และค้นหาชื่อหรือเบอร์เจอได้ทันที' },
+              { q: 'ใช้ได้กับค่ายประกันไหนบ้าง?', a: 'ทุกค่าย ทุกประเภทประกัน ไม่ผูกกับบริษัทใด ไม่ว่าจะเป็น AIA, FWD, Prudential, MTL หรือนายหน้าหลายค่ายพร้อมกัน กรอกข้อมูลได้อิสระ' },
+              { q: 'ข้อมูลลูกค้าปลอดภัยไหม?', a: 'ข้อมูลเก็บบน Neon Postgres (AWS ap-southeast-1) เข้าถึงได้เฉพาะบัญชีของคุณเท่านั้น ไม่แชร์กับบริษัทประกันหรือบุคคลอื่น' },
+              { q: 'ยกเลิกได้ไหม?', a: 'ได้ทุกเมื่อ ไม่มีสัญญาผูกมัด ไม่มีค่าปรับ ยกเลิกแล้วข้อมูลยังดูได้จนหมดรอบบิล' },
+              { q: 'มี mobile app ไหม?', a: 'ตอนนี้เป็น web app ที่ responsive เต็มรูปแบบ ใช้บน mobile ได้ปกติผ่าน browser ไม่ต้องโหลดอะไรเพิ่ม' },
+              { q: 'Free tier มีข้อจำกัดอะไรบ้าง?', a: 'เก็บ contacts ได้ 20 คน ฟีเจอร์หลักครบทุกอย่าง (Tasks, Calendar, Board, Dashboard) ไม่มีโฆษณา ไม่หมดอายุ ต้องการมากกว่านั้นค่อยอัปเกรด Pro' },
+            ].map(item => (
+              <details key={item.q} className="faq-item">
+                <summary>{item.q}</summary>
+                <p>{item.a}</p>
+              </details>
+            ))}
+            <div style={{ borderTop: '1px solid oklch(89% 0.014 265)' }} />
           </section>
 
           {/* ── Final CTA ── */}
