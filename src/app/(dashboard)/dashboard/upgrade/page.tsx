@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 const FEATURES = [
-  { label: 'Contacts', free: '20 รายการ', pro: '500 รายการ', proPlus: 'ไม่จำกัด',
+  { label: 'Contacts', free: '20 รายการ', pro: '200 รายการ', proPlus: 'ไม่จำกัด',
     hint: 'จำนวน prospect/ลูกค้าที่เก็บได้ในระบบ ตัวแทนส่วนใหญ่มีลูกค้า 100-300 คน' },
   { label: 'Tasks + Calendar + Board', free: true, pro: true, proPlus: true,
     hint: 'จัดการ to-do รายวัน ดูนัดหมายแบบปฏิทิน และ Kanban board' },

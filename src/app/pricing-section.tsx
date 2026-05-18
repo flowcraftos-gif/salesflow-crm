@@ -49,7 +49,7 @@ export function PricingSection() {
             </div>
             <p style={{ fontSize: '11px', color: 'oklch(62% 0.016 265)', marginBottom: '1.25rem' }}>{pro.sub}</p>
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
-              {['Contacts 500 คน', 'ทุกอย่างใน Free', 'Import CSV', 'Policy reminder (วันครบเบี้ย)', 'ตั้งเป้าหมายรายเดือน', 'ย้อนดูย้อนหลัง 12 เดือน'].map(f => (
+              {['Contacts 200 คน', 'ทุกอย่างใน Free', 'Import CSV', 'Policy reminder (วันครบเบี้ย)', 'ตั้งเป้าหมายรายเดือน', 'ย้อนดูย้อนหลัง 12 เดือน'].map(f => (
                 <li key={f} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}><CheckIcon /><span style={{ fontSize: '12px', color: 'oklch(42% 0.022 265)' }}>{f}</span></li>
               ))}
             </ul>

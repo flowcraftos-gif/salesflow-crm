@@ -132,11 +132,12 @@ function GoalPanel({
         </label>
         <input
           type="number"
+          inputMode="numeric"
           min={0}
-          max={999}
+          max={9999999}
           value={values[key]}
           onChange={e => setValues(prev => ({ ...prev, [key]: Math.max(0, Number(e.target.value)) }))}
-          className="w-20 rounded-md border border-[oklch(90%_0.014_254)] bg-white px-2.5 py-1.5 text-right text-sm font-600 text-[oklch(18%_0.012_254)] outline-none focus:border-[oklch(52%_0.245_265)] focus:ring-2 focus:ring-[oklch(92%_0.040_265)]"
+          className="w-24 rounded-md border border-[oklch(90%_0.014_254)] bg-white px-2.5 py-1.5 text-right text-sm font-600 text-[oklch(18%_0.012_254)] outline-none focus:border-[oklch(52%_0.245_265)] focus:ring-2 focus:ring-[oklch(92%_0.040_265)] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
       </div>
     )

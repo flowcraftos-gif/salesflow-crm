@@ -4,7 +4,7 @@ import { eq, count } from 'drizzle-orm'
 
 export const CONTACT_LIMITS: Record<string, number | null> = {
   free: 20,
-  pro: 500,
+  pro: 200,
   pro_plus: null,
 }
 
