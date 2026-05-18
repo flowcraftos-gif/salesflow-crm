@@ -60,71 +60,81 @@ export function WelcomeBanner({ contactCount }: { contactCount: number }) {
   }
 
   return (
-    <div className="mx-5 mt-5 overflow-hidden rounded-xl border border-[oklch(88%_0.06_265)] bg-[oklch(97.5%_0.025_265)]">
-      <div className="flex items-start gap-5 px-5 py-4">
-        {/* Left: text + steps */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-0.5">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[oklch(52%_0.245_265)]">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-              </svg>
-            </div>
-            <h2 className="text-sm font-700 text-[oklch(18%_0.012_254)]">
-              ยินดีต้อนรับสู่ Tamdee
-            </h2>
+    <div className="mx-3 mt-4 overflow-hidden rounded-xl border border-[oklch(88%_0.06_265)] bg-[oklch(97.5%_0.025_265)] sm:mx-5 sm:mt-5">
+      <div className="px-4 py-4 sm:px-5">
+        {/* Top row: icon + title + close button */}
+        <div className="flex items-start gap-3 mb-1">
+          <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-[oklch(52%_0.245_265)]">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
           </div>
-          <p className="mb-4 text-xs text-[oklch(55%_0.020_254)]">
-            3 ขั้นตอนเริ่มต้นใช้งาน
-          </p>
-
-          {/* Steps */}
-          <div className="flex items-center gap-2 flex-wrap">
-            {steps.map((step, i) => (
-              <div key={step.label} className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5">
-                  <div
-                    className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-700 ${
-                      step.completed
-                        ? 'bg-[oklch(52%_0.175_160)] text-white'
-                        : 'border-2 border-[oklch(80%_0.04_265)] bg-white text-[oklch(65%_0.016_254)]'
-                    }`}
-                  >
-                    {step.completed ? (
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12"/>
-                      </svg>
-                    ) : (
-                      i + 1
-                    )}
-                  </div>
-                  <span
-                    className={`text-xs font-500 ${
-                      step.completed
-                        ? 'text-[oklch(42%_0.17_160)] line-through decoration-[oklch(65%_0.016_254)]'
-                        : i === steps.findIndex(s => !s.completed)
-                          ? 'text-[oklch(18%_0.012_254)] font-600'
-                          : 'text-[oklch(68%_0.016_254)]'
-                    }`}
-                  >
-                    {step.label}
-                  </span>
-                </div>
-                {i < steps.length - 1 && (
-                  <div className="h-px w-6 bg-[oklch(84%_0.025_265)] flex-shrink-0" />
-                )}
-              </div>
-            ))}
-          </div>
+          <h2 className="flex-1 text-sm font-700 text-[oklch(18%_0.012_254)] leading-tight">
+            ยินดีต้อนรับสู่ Tamdee
+          </h2>
+          {/* Close */}
+          <button
+            onClick={dismiss}
+            className="flex-shrink-0 rounded-md p-1 text-[oklch(68%_0.016_254)] transition-colors hover:bg-[oklch(88%_0.04_265)] hover:text-[oklch(30%_0.015_254)]"
+            aria-label="ปิด"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
         </div>
 
-        {/* Right: CTAs */}
-        <div className="flex flex-shrink-0 items-center gap-2 pt-0.5">
+        <p className="mb-4 text-xs text-[oklch(55%_0.020_254)] pl-9">
+          3 ขั้นตอนเริ่มต้นใช้งาน
+        </p>
+
+        {/* Steps — scrollable row on very small screens */}
+        <div className="mb-4 flex items-center gap-2 overflow-x-auto pl-9 pb-0.5">
+          {steps.map((step, i) => (
+            <div key={step.label} className="flex flex-shrink-0 items-center gap-2">
+              <div className="flex items-center gap-1.5">
+                <div
+                  className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-700 ${
+                    step.completed
+                      ? 'bg-[oklch(52%_0.175_160)] text-white'
+                      : 'border-2 border-[oklch(80%_0.04_265)] bg-white text-[oklch(65%_0.016_254)]'
+                  }`}
+                >
+                  {step.completed ? (
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  ) : (
+                    i + 1
+                  )}
+                </div>
+                <span
+                  className={`whitespace-nowrap text-xs font-500 ${
+                    step.completed
+                      ? 'text-[oklch(42%_0.17_160)] line-through decoration-[oklch(65%_0.016_254)]'
+                      : i === steps.findIndex(s => !s.completed)
+                        ? 'text-[oklch(18%_0.012_254)] font-600'
+                        : 'text-[oklch(68%_0.016_254)]'
+                  }`}
+                >
+                  {step.label}
+                </span>
+              </div>
+              {i < steps.length - 1 && (
+                <div className="h-px w-6 bg-[oklch(84%_0.025_265)] flex-shrink-0" />
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* CTAs — stacked on mobile, inline on sm+ */}
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center pl-9">
           <button
             onClick={goToAddContact}
-            className="flex items-center gap-1.5 rounded-md bg-[oklch(52%_0.245_265)] px-4 py-2 text-xs font-700 text-white transition-colors hover:bg-[oklch(46%_0.245_265)]"
+            className="flex items-center justify-center gap-1.5 rounded-md bg-[oklch(52%_0.245_265)] px-4 py-2 text-xs font-700 text-white transition-colors hover:bg-[oklch(46%_0.245_265)] sm:justify-start"
           >
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="12" y1="5" x2="12" y2="19"/>
@@ -139,18 +149,6 @@ export function WelcomeBanner({ contactCount }: { contactCount: number }) {
             ข้ามไปก่อน
           </button>
         </div>
-
-        {/* Close */}
-        <button
-          onClick={dismiss}
-          className="flex-shrink-0 rounded-md p-1 text-[oklch(68%_0.016_254)] transition-colors hover:bg-[oklch(88%_0.04_265)] hover:text-[oklch(30%_0.015_254)]"
-          aria-label="ปิด"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
       </div>
 
       {/* Progress bar */}
