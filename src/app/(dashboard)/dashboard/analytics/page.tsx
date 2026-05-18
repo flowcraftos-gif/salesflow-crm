@@ -136,12 +136,15 @@ function SourceRoiTable({ data }: { data: SourceRoiRow[] }) {
 }
 
 function ConversionFunnel({ data }: { data: FunnelRow[] }) {
+  const totalContacts = data.reduce((s, r) => s + r.count, 0)
   const maxCount = Math.max(1, ...data.map(r => r.count))
-  const activeStages = data.filter(r => r.stage !== 'Lost')
 
   return (
     <div className="rounded-lg border border-[oklch(90%_0.014_254)] bg-white p-4">
       <div className="mb-3 text-[13px] font-700 text-[oklch(18%_0.012_254)]">Conversion Funnel</div>
+      {totalContacts === 0 ? (
+        <div className="py-6 text-center text-[12px] text-[oklch(68%_0.016_254)]">ยังไม่มีข้อมูล</div>
+      ) : (
       <div className="space-y-1.5">
         {data.map((row, i) => {
           const widthPct = Math.max(10, Math.round((row.count / maxCount) * 100))
@@ -165,6 +168,7 @@ function ConversionFunnel({ data }: { data: FunnelRow[] }) {
           )
         })}
       </div>
+      )}
     </div>
   )
 }
