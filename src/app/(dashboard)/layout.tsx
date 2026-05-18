@@ -60,7 +60,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <img src="/tamdee-logo.png" alt="Tamdee" width={34} height={34} className="rounded-xl" />
           <span className="text-sm tracking-tight text-[oklch(18%_0.012_254)]" style={{ fontFamily: 'var(--font-brand)', fontWeight: 800 }}>Tamdee</span>
           {isPro ? (
-            <span className="ml-auto rounded-full bg-[oklch(93%_0.04_265)] px-2 py-0.5 text-[10px] font-700 text-[oklch(42%_0.20_265)]">Pro</span>
+            <span className="ml-auto rounded-full bg-[oklch(93%_0.04_265)] px-2 py-0.5 text-[10px] font-700 text-[oklch(42%_0.20_265)]">{tier === 'pro_plus' ? 'Pro+' : 'Pro'}</span>
           ) : (
             <Link href="/dashboard/upgrade" className="ml-auto rounded-full bg-[oklch(92%_0.010_254)] px-2 py-0.5 text-[10px] font-700 text-[oklch(55%_0.020_254)] hover:bg-[oklch(88%_0.06_265)] hover:text-[oklch(42%_0.20_265)] transition-colors">Free</Link>
           )}
