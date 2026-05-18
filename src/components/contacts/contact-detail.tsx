@@ -88,6 +88,10 @@ export function ContactDetail({
   const isOverdue = contact.nextFollowUpDate
     ? contact.nextFollowUpDate <= today
     : false
+  const isDueSoon = contact.premiumDueDate
+    ? new Date(contact.premiumDueDate) <= new Date(Date.now() + 30 * MS_PER_DAY)
+    : false
+  const hasInsurance = !!(contact.insuranceCompany || contact.policyNumber || contact.annualPremium || contact.premiumDueDate)
 
   async function handleStatusChange(s: string) {
     setStatus(s)
@@ -238,6 +242,17 @@ export function ContactDetail({
             <FieldRow icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>} label="สินค้าที่สนใจ" value={contact.interestedProduct} />
             <FieldRow icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>} label="มูลค่าประมาณการ" value={contact.estimatedValue ? `฿${Number(contact.estimatedValue).toLocaleString()} / ปี` : null} />
             <FieldRow icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>} label="Follow-up ถัดไป" value={contact.nextFollowUpDate ? new Date(contact.nextFollowUpDate).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' }) : null} red={isOverdue} />
+            {hasInsurance && (
+              <>
+                <div className="px-4 pt-3 pb-1.5 border-t border-[oklch(90%_0.014_254)]">
+                  <span className="text-[10px] font-700 uppercase tracking-[0.6px] text-[oklch(55%_0.020_254)]">ข้อมูลกรมธรรม์</span>
+                </div>
+                <FieldRow icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>} label="บริษัทประกัน" value={contact.insuranceCompany} />
+                <FieldRow icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>} label="เลขกรมธรรม์" value={contact.policyNumber} />
+                <FieldRow icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>} label="เบี้ยต่อปี" value={contact.annualPremium ? `฿${Number(contact.annualPremium).toLocaleString()} / ปี` : null} />
+                <FieldRow icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>} label="วันครบเบี้ยถัดไป" value={contact.premiumDueDate ? new Date(contact.premiumDueDate).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' }) : null} red={isDueSoon} />
+              </>
+            )}
             {contact.notes && (
               <div className="px-4 py-3">
                 <div className="text-[10px] font-600 uppercase tracking-[0.5px] text-[oklch(68%_0.016_254)] mb-1">หมายเหตุ</div>

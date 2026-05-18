@@ -4,6 +4,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { RevealObserver } from './reveal-observer'
 import { HeroMock } from './hero-mock'
+import { PricingSection } from './pricing-section'
 
 const title = 'Tamdee — CRM สำหรับตัวแทนประกันไทย | ลูกค้าไม่หลุด เบี้ยไม่ขาด'
 const description = 'จัดการลูกค้าประกัน ติดตามเบี้ย ต่ออายุ และนัดคุย ง่ายกว่า Excel ฿149/เดือน รองรับทุกค่าย ทุกประเภทประกัน'
@@ -168,6 +169,43 @@ function CheckIcon() {
   )
 }
 
+type TestimonialAvatarProps = {
+  person: 'somying' | 'thanakorn' | 'wanpha'
+  bg: string
+  suit: string
+  accent: string
+}
+
+function TestimonialAvatar({ person, bg, suit, accent }: TestimonialAvatarProps) {
+  const isWoman = person !== 'thanakorn'
+  const hairPath = person === 'wanpha'
+    ? 'M16 35c0-13 8-22 20-22s20 9 20 22v18c-7 6-33 6-40 0V35z'
+    : isWoman
+      ? 'M17 34c0-12 8-21 19-21s19 9 19 21v14c-7 5-31 5-38 0V34z'
+      : 'M18 31c2-12 10-18 21-17 10 1 16 8 17 18l-7-5c-9 5-17 5-25 0l-6 4z'
+
+  return (
+    <svg width="52" height="52" viewBox="0 0 72 72" role="img" aria-label="ภาพจำลองตัวแทนประกัน" style={{ display: 'block' }}>
+      <rect width="72" height="72" rx="16" fill={bg} />
+      <circle cx="56" cy="17" r="7" fill={accent} opacity="0.16" />
+      <circle cx="16" cy="54" r="10" fill="white" opacity="0.45" />
+      <path d="M18 68c1.8-12 10-19 18-19s16.2 7 18 19H18z" fill={suit} />
+      <path d="M28 52l8 7 8-7v16H28V52z" fill="oklch(98% 0.006 265)" />
+      <path d={hairPath} fill="oklch(22% 0.035 265)" />
+      <circle cx="36" cy="35" r="16" fill="oklch(82% 0.08 65)" />
+      <path d="M20 35c4-7 9-10 16-10 8 0 14 3 17 10-2-15-10-22-18-22-9 0-16 8-15 22z" fill="oklch(22% 0.035 265)" />
+      {person === 'thanakorn' ? (
+        <path d="M26 29c4 4 17 5 24 1-2-10-8-16-16-16-8 1-14 6-18 16 3 0 6 0 10-1z" fill="oklch(20% 0.032 265)" />
+      ) : null}
+      <circle cx="30" cy="36" r="1.8" fill="oklch(18% 0.03 265)" />
+      <circle cx="42" cy="36" r="1.8" fill="oklch(18% 0.03 265)" />
+      <path d="M31 44c3 3 7 3 10 0" fill="none" stroke="oklch(48% 0.09 35)" strokeWidth="2" strokeLinecap="round" />
+      {person === 'somying' ? <circle cx="48" cy="41" r="2" fill={accent} opacity="0.42" /> : null}
+      {person === 'wanpha' ? <path d="M24 22c6-8 21-8 26 2" fill="none" stroke={accent} strokeWidth="3" strokeLinecap="round" opacity="0.65" /> : null}
+    </svg>
+  )
+}
+
 export default async function Home() {
   const { userId } = await auth()
   if (userId) redirect('/dashboard/contacts')
@@ -203,18 +241,20 @@ export default async function Home() {
           <div className="hero-section">
           <section style={{ maxWidth: '1120px', margin: '0 auto', padding: '4.5rem 1.5rem 3.5rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3.5rem', alignItems: 'center' }}>
             <div>
-              <p className="hi1" style={{ fontFamily: 'var(--font-heading)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '1.1rem' }}>
+              <p className="hi1" style={{ fontFamily: 'var(--font-heading)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '0.75rem' }}>
                 สำหรับตัวแทนและนายหน้าประกันไทย
               </p>
-              <h1 className="hi2" style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(38px, 5vw, 60px)', lineHeight: 1.12, letterSpacing: '-0.025em', color: 'var(--ink)', marginBottom: '1.25rem' }}>
+              <p className="hi2" style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 'clamp(15px, 1.6vw, 18px)', lineHeight: 1.55, color: 'var(--ink-2)', maxWidth: '420px', marginBottom: '1rem' }}>
+                เบี้ยหลุดไปเท่าไรแล้ว<br />เพราะลืมโทรหาลูกค้าก่อนครบกำหนด?
+              </p>
+              <h1 className="hi3" style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(38px, 5vw, 60px)', lineHeight: 1.12, letterSpacing: '-0.025em', color: 'var(--ink)', marginBottom: '1.25rem' }}>
                 ลูกค้าไม่หลุด<br />เบี้ยไม่ขาด<br />นัดไม่ลืม
               </h1>
-              <p className="hi3" style={{ fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-2)', maxWidth: '400px', marginBottom: '2rem' }}>
-                เพราะตัวแทนที่เก่งไม่แพ้เรื่องสินค้า แต่แพ้เรื่องการติดตาม
-                Tamdee ช่วยจำแทนคุณ
+              <p className="hi4" style={{ fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-2)', maxWidth: '400px', marginBottom: '2rem' }}>
+                ตัวแทนหลายคนทำยอดได้แค่ 60% ของที่ควรได้ ไม่ใช่เพราะขายไม่เก่ง แต่เพราะไม่มีระบบเตือนว่าใครกำลังจะหลุดไป
               </p>
-              <div className="hi4" style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '1.1rem' }}>
-                <Link href="/sign-up" className="cta-p" style={{ padding: '0.8rem 1.6rem', borderRadius: '10px', fontSize: '14px', fontWeight: 700, background: 'var(--blue)', color: 'white', textDecoration: 'none', boxShadow: '0 3px 12px oklch(52% 0.245 265 / 0.3)', fontFamily: 'var(--font-heading)' }}>
+              <div className="hi5" style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '1.1rem' }}>
+                <Link href="/sign-up" className="cta-p" style={{ padding: '0.8rem 1.6rem', borderRadius: '10px', fontSize: '14px', fontWeight: 700, background: 'var(--blue)', color: 'white', textDecoration: 'none', boxShadow: '0 4px 20px oklch(52% 0.245 265 / 0.45)', fontFamily: 'var(--font-heading)' }}>
                   เริ่มใช้ฟรี — ไม่ต้องจำนัดเองอีกต่อไป
                 </Link>
               </div>
@@ -254,7 +294,7 @@ export default async function Home() {
               <div key={row.p} data-r={String(i + 1)} className="prob-row">
                 <div>
                   <p style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: 700, color: 'oklch(65% 0.018 265)', textDecoration: 'line-through', textDecorationColor: 'oklch(78% 0.012 265)', marginBottom: '0.5rem' }}>{row.p}</p>
-                  <p style={{ fontSize: '13px', lineHeight: 1.65, color: 'var(--ink-3)' }}>{row.d}</p>
+                  <p style={{ fontSize: '14px', lineHeight: 1.7, color: 'var(--ink-3)' }}>{row.d}</p>
                 </div>
                 <div style={{ paddingLeft: '1.5rem', borderLeft: '2px solid var(--surface-2)' }}>
                   <p style={{ fontFamily: 'var(--font-heading)', fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '0.5rem' }}>Tamdee แก้ด้วย</p>
@@ -280,31 +320,26 @@ export default async function Home() {
                     quote: 'ก่อนใช้ Tamdee จดโน้ต follow-up ใน iPhone แล้วลืมตามเป็นประจำครับ แค่ 2 สัปดาห์แรกปิดได้เพิ่ม 2 คนที่คิดว่าหลุดไปแล้ว',
                     handle: '@somchai_a**',
                     role: 'ตัวแทน AIA',
-                    sc: 'oklch(93% 0.04 265)',
-                    tc: 'oklch(42% 0.20 265)',
+                    photo: '/testi-somchai.jpg',
                   },
                   {
                     quote: 'ขาย 3 ค่ายพร้อมกันค่ะ Excel หลายไฟล์มาก ค้นหาไม่เจอเลย ตอนนี้ข้อมูลและวันครบเบี้ยของทุกคนอยู่ที่เดียวเลยค่ะ',
                     handle: '@napat_ins**',
                     role: 'นายหน้าประกัน FWD, AIA',
-                    sc: 'oklch(93% 0.04 145)',
-                    tc: 'oklch(38% 0.15 145)',
+                    photo: '/testi-napat.jpg',
                   },
                   {
                     quote: 'เพิ่งเริ่มขายประกันค่ะ ฿149 ไม่แพงเลยถ้าเทียบกับค่าคอมจากลูกค้าแค่คนเดียว ใช้ง่ายกว่าที่คิดไว้มากเลยค่ะ',
                     handle: '@wanwisa_f**',
                     role: 'ตัวแทน FWD',
-                    sc: 'oklch(93% 0.04 85)',
-                    tc: 'oklch(38% 0.16 85)',
+                    photo: '/testi-wanwisa.jpg',
                   },
                 ].map(t => (
-                  <div data-r="1" key={t.handle} style={{ border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div key={t.handle} style={{ border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--blue)" opacity={0.2}><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
                     <p style={{ fontSize: '14px', lineHeight: 1.72, color: 'var(--ink-2)', flex: 1 }}>{t.quote}</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <div style={{ width: '32px', height: '32px', borderRadius: '999px', background: t.sc, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 800, color: t.tc, flexShrink: 0 }}>
-                        {t.handle[1].toUpperCase()}
-                      </div>
+                      <img src={t.photo} alt={t.handle} style={{ width: '36px', height: '36px', borderRadius: '999px', objectFit: 'cover', flexShrink: 0 }} />
                       <div>
                         <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--ink)', fontFamily: 'monospace' }}>{t.handle}</p>
                         <p style={{ fontSize: '11px', color: 'var(--ink-3)' }}>{t.role}</p>
@@ -321,10 +356,10 @@ export default async function Home() {
             <div data-r="1" style={{ maxWidth: '740px', margin: '0 auto' }}>
               <p style={{ fontFamily: 'var(--font-heading)', fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'oklch(52% 0.06 265)', marginBottom: '1.5rem' }}>Positioning</p>
               <blockquote style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(20px, 2.8vw, 30px)', lineHeight: 1.38, letterSpacing: '-0.015em', color: 'white' }}>
-                "Tamdee ไม่ใช่ CRM ครบวงจร<br />
-                <span style={{ color: 'oklch(72% 0.12 265)' }}>มันคือสมุดโน้ตอัจฉริยะของตัวแทนประกัน<br />ที่ช่วยให้ไม่พลาดทุกโอกาส"</span>
+                &ldquo;Tamdee ไม่ใช่ CRM ครบวงจร<br />
+                <span style={{ color: 'oklch(72% 0.12 265)' }}>มันคือสมุดโน้ตอัจฉริยะของตัวแทนประกัน<br />ที่ช่วยให้ไม่พลาดทุกโอกาส&rdquo;</span>
               </blockquote>
-              <p style={{ marginTop: '1.5rem', fontSize: '13px', lineHeight: 1.7, color: 'oklch(58% 0.022 265)', fontFamily: 'var(--font-body)' }}>
+              <p style={{ marginTop: '1.5rem', fontSize: '14px', lineHeight: 1.7, color: 'oklch(58% 0.022 265)', fontFamily: 'var(--font-body)' }}>
                 ใช้ได้กับทุกค่าย ทุกประเภทประกัน ไม่ว่าจะขายชีวิต สุขภาพ รถ หรือเป็นนายหน้าหลายค่าย
               </p>
             </div>
@@ -342,12 +377,12 @@ export default async function Home() {
             {/* Row 1: Pipeline */}
             <div className="feat-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center', marginBottom: '5rem' }}>
               <div data-rl="1">
-                <p style={{ fontFamily: 'var(--font-heading)', fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '0.75rem' }}>01 — Pipeline</p>
+                <p style={{ fontFamily: 'var(--font-heading)', fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '0.75rem' }}>Pipeline</p>
                 <h3 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(18px, 2.2vw, 24px)', letterSpacing: '-0.015em', color: 'var(--ink)', marginBottom: '0.875rem' }}>Pipeline ที่เข้าใจการขายประกัน</h3>
-                <p style={{ fontSize: '13px', lineHeight: 1.72, color: 'var(--ink-2)', marginBottom: '1.25rem' }}>ติดตามลูกค้าตั้งแต่ Lead ไปถึง Client บันทึกชื่อ เบอร์ LINE อีเมล และข้อมูลประกันทั้งหมดในที่เดียว</p>
+                <p style={{ fontSize: '14px', lineHeight: 1.72, color: 'var(--ink-2)', marginBottom: '1.25rem' }}>ติดตามลูกค้าตั้งแต่ Lead ไปถึง Client บันทึกชื่อ เบอร์ LINE อีเมล และข้อมูลประกันทั้งหมดในที่เดียว</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
                   {['Lead → Prospect → Appointment → Proposal → Client', 'ค้นหาชื่อหรือเบอร์ได้ทันที', 'Export CSV ออกมาใช้งานภายนอกได้เสมอ'].map(f => (
-                    <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.55rem' }}><CheckIcon /><span style={{ fontSize: '13px', color: 'var(--ink-2)' }}>{f}</span></div>
+                    <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.55rem' }}><CheckIcon /><span style={{ fontSize: '14px', color: 'var(--ink-2)' }}>{f}</span></div>
                   ))}
                 </div>
               </div>
@@ -387,12 +422,12 @@ export default async function Home() {
                 </div>
               </div>
               <div>
-                <p style={{ fontFamily: 'var(--font-heading)', fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '0.75rem' }}>02 — Insurance Data</p>
+                <p style={{ fontFamily: 'var(--font-heading)', fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '0.75rem' }}>Insurance Data</p>
                 <h3 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(18px, 2.2vw, 24px)', letterSpacing: '-0.015em', color: 'var(--ink)', marginBottom: '0.875rem' }}>ข้อมูลประกันครบ ในที่เดียว</h3>
-                <p style={{ fontSize: '13px', lineHeight: 1.72, color: 'var(--ink-2)', marginBottom: '1.25rem' }}>บันทึกบริษัท เลขกรมธรรม์ เบี้ยต่อปี และวันครบกำหนดไว้กับ contact นั้น ไม่ต้องเปิด Excel แยก</p>
+                <p style={{ fontSize: '14px', lineHeight: 1.72, color: 'var(--ink-2)', marginBottom: '1.25rem' }}>บันทึกบริษัท เลขกรมธรรม์ เบี้ยต่อปี และวันครบกำหนดไว้กับ contact นั้น ไม่ต้องเปิด Excel แยก</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
                   {['ดูวันครบเบี้ยของทุกคนได้จากหน้าเดียว', 'รองรับหลายกรมธรรม์ต่อ 1 ลูกค้า', 'ค้นหาด้วยชื่อบริษัทหรือประเภทประกัน'].map(f => (
-                    <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.55rem' }}><CheckIcon /><span style={{ fontSize: '13px', color: 'var(--ink-2)' }}>{f}</span></div>
+                    <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.55rem' }}><CheckIcon /><span style={{ fontSize: '14px', color: 'var(--ink-2)' }}>{f}</span></div>
                   ))}
                 </div>
               </div>
@@ -401,12 +436,12 @@ export default async function Home() {
             {/* Row 3: Dashboard */}
             <div className="feat-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center', marginBottom: '5rem' }}>
               <div data-rl="1">
-                <p style={{ fontFamily: 'var(--font-heading)', fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '0.75rem' }}>03 — Dashboard</p>
+                <p style={{ fontFamily: 'var(--font-heading)', fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '0.75rem' }}>Dashboard</p>
                 <h3 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(18px, 2.2vw, 24px)', letterSpacing: '-0.015em', color: 'var(--ink)', marginBottom: '0.875rem' }}>เห็นภาพรวมธุรกิจทันที</h3>
-                <p style={{ fontSize: '13px', lineHeight: 1.72, color: 'var(--ink-2)', marginBottom: '1.25rem' }}>ดูว่าเดือนนี้มีลูกค้าอยู่ในแต่ละ stage เท่าไร มูลค่า pipeline รวมเท่าไร และ trend การเติบโตย้อนหลัง 12 เดือน</p>
+                <p style={{ fontSize: '14px', lineHeight: 1.72, color: 'var(--ink-2)', marginBottom: '1.25rem' }}>ดูว่าเดือนนี้มีลูกค้าอยู่ในแต่ละ stage เท่าไร มูลค่า pipeline รวมเท่าไร และ trend การเติบโตย้อนหลัง 12 เดือน</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
                   {['KPI: contacts, follow-up วันนี้, เบี้ยครบเดือนนี้', 'Pipeline value รวมต่อ stage', 'ย้อนดูสถิติย้อนหลัง 12 เดือน (Pro)'].map(f => (
-                    <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.55rem' }}><CheckIcon /><span style={{ fontSize: '13px', color: 'var(--ink-2)' }}>{f}</span></div>
+                    <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.55rem' }}><CheckIcon /><span style={{ fontSize: '14px', color: 'var(--ink-2)' }}>{f}</span></div>
                   ))}
                 </div>
               </div>
@@ -457,12 +492,12 @@ export default async function Home() {
                 ))}
               </div>
               <div>
-                <p style={{ fontFamily: 'var(--font-heading)', fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '0.75rem' }}>04 — Tasks & Calendar</p>
+                <p style={{ fontFamily: 'var(--font-heading)', fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '0.75rem' }}>Tasks & Calendar</p>
                 <h3 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(18px, 2.2vw, 24px)', letterSpacing: '-0.015em', color: 'var(--ink)', marginBottom: '0.875rem' }}>นัดไม่ลืม ตามไม่ขาด</h3>
-                <p style={{ fontSize: '13px', lineHeight: 1.72, color: 'var(--ink-2)', marginBottom: '1.25rem' }}>สร้าง task ผูกกับ contact ใดก็ได้ นัดโทร นัดพบ นัดส่งเอกสาร ดูได้ทั้ง list view และ calendar</p>
+                <p style={{ fontSize: '14px', lineHeight: 1.72, color: 'var(--ink-2)', marginBottom: '1.25rem' }}>สร้าง task ผูกกับ contact ใดก็ได้ นัดโทร นัดพบ นัดส่งเอกสาร ดูได้ทั้ง list view และ calendar</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
                   {['Board view แบบ Kanban ลาก-วาง status ได้เลย', 'Calendar view รายวันและรายเดือน', 'Task ผูกกับ contact ติดตามได้ทุกขั้นตอน'].map(f => (
-                    <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.55rem' }}><CheckIcon /><span style={{ fontSize: '13px', color: 'var(--ink-2)' }}>{f}</span></div>
+                    <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.55rem' }}><CheckIcon /><span style={{ fontSize: '14px', color: 'var(--ink-2)' }}>{f}</span></div>
                   ))}
                 </div>
               </div>
@@ -470,63 +505,7 @@ export default async function Home() {
           </section>
 
           {/* ── Pricing ── */}
-          <section style={{ background: 'white', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', padding: '5.5rem 1.5rem' }}>
-            <div style={{ maxWidth: '1060px', margin: '0 auto' }}>
-              <div data-r="1" style={{ marginBottom: '3rem' }}>
-                <p style={{ fontFamily: 'var(--font-heading)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '0.75rem' }}>Pricing</p>
-                <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(24px, 3vw, 36px)', letterSpacing: '-0.02em', color: 'var(--ink)' }}>ราคาที่ตัดสินใจได้เลย</h2>
-                <p style={{ marginTop: '0.6rem', fontSize: '14px', color: 'var(--ink-2)' }}>ไม่ต้องขอหัวหน้า ไม่ต้องคิด ROI ใหญ่</p>
-              </div>
-              <div className="price-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
-                {/* Free */}
-                <div data-r="1" className="pc" style={{ border: '1px solid var(--border)', borderRadius: '18px', padding: '1.5rem', background: 'var(--surface)', display: 'flex', flexDirection: 'column' }}>
-                  <p style={{ fontFamily: 'var(--font-heading)', fontSize: '13px', fontWeight: 700, color: 'var(--ink-3)', marginBottom: '0.5rem' }}>Free</p>
-                  <p style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '36px', color: 'var(--ink)', letterSpacing: '-0.025em', lineHeight: 1, marginBottom: '0.25rem' }}>฿0</p>
-                  <p style={{ fontSize: '11px', color: 'var(--ink-3)', marginBottom: '1.25rem' }}>ตลอดไป</p>
-                  <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
-                    {['Contacts 20 คน', 'Pipeline + Tasks + Calendar + Board', 'Follow-up tracking', 'CRM Dashboard (เดือนปัจจุบัน)', 'Export CSV'].map(f => (
-                      <li key={f} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}><CheckIcon /><span style={{ fontSize: '12px', color: 'var(--ink-2)' }}>{f}</span></li>
-                    ))}
-                  </ul>
-                  <Link href="/sign-up" style={{ display: 'block', textAlign: 'center', padding: '0.7rem', border: '1px solid var(--border)', borderRadius: '9px', fontSize: '13px', fontWeight: 700, color: 'var(--ink-2)', textDecoration: 'none', background: 'white', fontFamily: 'var(--font-heading)' }}>
-                    เริ่มฟรี
-                  </Link>
-                </div>
-                {/* Pro */}
-                <div data-r="2" className="pc" style={{ border: '2px solid var(--blue)', borderRadius: '18px', padding: '1.5rem', background: 'white', position: 'relative', boxShadow: '0 6px 24px oklch(52% 0.245 265 / 0.13)', display: 'flex', flexDirection: 'column' }}>
-                  <span style={{ position: 'absolute', top: '-11px', left: '50%', translate: '-50% 0', background: 'var(--blue)', color: 'white', fontSize: '9px', fontWeight: 800, padding: '3px 11px', borderRadius: '999px', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'var(--font-heading)', whiteSpace: 'nowrap' }}>ยอดนิยม</span>
-                  <p style={{ fontFamily: 'var(--font-heading)', fontSize: '13px', fontWeight: 700, color: 'var(--blue)', marginBottom: '0.5rem' }}>Pro</p>
-                  <p style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '36px', color: 'var(--ink)', letterSpacing: '-0.025em', lineHeight: 1, marginBottom: '0.25rem' }}>฿149</p>
-                  <p style={{ fontSize: '11px', color: 'var(--ink-3)', marginBottom: '1.25rem' }}>/เดือน · น้อยกว่าค่าคอมลูกค้า 1 คน</p>
-                  <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
-                    {['Contacts 500 คน', 'ทุกอย่างใน Free', 'Import CSV', 'Policy reminder (วันครบเบี้ย)', 'ตั้งเป้าหมายรายเดือน', 'ย้อนดูย้อนหลัง 12 เดือน'].map(f => (
-                      <li key={f} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}><CheckIcon /><span style={{ fontSize: '12px', color: 'var(--ink-2)' }}>{f}</span></li>
-                    ))}
-                  </ul>
-                  <Link href="/sign-up" className="cta-p" style={{ display: 'block', textAlign: 'center', padding: '0.7rem', borderRadius: '9px', fontSize: '13px', fontWeight: 700, background: 'var(--blue)', color: 'white', textDecoration: 'none', fontFamily: 'var(--font-heading)', boxShadow: '0 2px 8px oklch(52% 0.245 265 / 0.28)' }}>
-                    เริ่มด้วย Pro →
-                  </Link>
-                </div>
-                {/* Pro+ */}
-                <div data-r="3" className="pc" style={{ border: '1px solid oklch(78% 0.028 265)', borderRadius: '18px', padding: '1.5rem', background: 'white', display: 'flex', flexDirection: 'column' }}>
-                  <p style={{ fontFamily: 'var(--font-heading)', fontSize: '13px', fontWeight: 700, color: 'var(--ink-2)', marginBottom: '0.5rem' }}>Pro+</p>
-                  <p style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '36px', color: 'var(--ink)', letterSpacing: '-0.025em', lineHeight: 1, marginBottom: '0.25rem' }}>฿299</p>
-                  <p style={{ fontSize: '11px', color: 'var(--ink-3)', marginBottom: '1.25rem' }}>/เดือน · ลูกค้าไม่จำกัด ค่าคอมไม่จำกัด</p>
-                  <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
-                    {['Contacts ไม่จำกัด', 'ทุกอย่างใน Pro', 'LINE message templates', 'Advanced analytics + charts', 'Priority Support (ตอบใน 4 ชม.)'].map(f => (
-                      <li key={f} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}><CheckIcon /><span style={{ fontSize: '12px', color: 'var(--ink-2)' }}>{f}</span></li>
-                    ))}
-                  </ul>
-                  <Link href="/sign-up" className="cta-g" style={{ display: 'block', textAlign: 'center', padding: '0.7rem', borderRadius: '9px', fontSize: '13px', fontWeight: 700, border: '1px solid oklch(78% 0.028 265)', color: 'var(--ink)', textDecoration: 'none', fontFamily: 'var(--font-heading)' }}>
-                    เลือก Pro+ →
-                  </Link>
-                </div>
-              </div>
-              <p data-r="1" style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '12px', color: 'var(--ink-3)' }}>
-                ยกเลิกได้ทุกเมื่อ ไม่มีสัญญาผูกมัด · มีคำถาม? <a href="mailto:support@tamdee.space" style={{ color: 'var(--blue)', textDecoration: 'none' }}>support@tamdee.space</a>
-              </p>
-            </div>
-          </section>
+          <PricingSection />
 
           {/* ── FAQ ── */}
           <section style={{ maxWidth: '760px', margin: '0 auto', padding: '5.5rem 1.5rem' }}>
@@ -552,6 +531,7 @@ export default async function Home() {
               .faq-item p { padding: 0 0 1.1rem; font-size: 13px; line-height: 1.75; color: oklch(42% 0.022 265); }
             ` }} />
             {[
+              { q: 'ต่างจากเจ้าอื่นอย่างไร?', a: 'CRM ทั่วไปออกแบบมาสำหรับทีมขายองค์กร ใช้งานยาก ต้องเรียนนาน ระบบของบริษัทประกันดูได้แค่ค่ายนั้น ถ้าขายหลายค่ายก็ต้องสลับหลายหน้าจอ Tamdee ทำมาสำหรับตัวแทนคนเดียวโดยเฉพาะ เปิดมาใช้ได้เลย รวมลูกค้าทุกค่ายในที่เดียว และราคาถูกพอที่จะตัดสินใจได้เลยโดยไม่ต้องคิดนาน' },
               { q: 'ต่างจาก Excel ยังไง?', a: 'Excel ต้องจัดการเองทุกอย่าง ไม่มีระบบบอกว่าต้องตามใครวันนี้ ไม่มีแจ้งเตือนวันครบเบี้ย Tamdee ทำสิ่งนี้ให้อัตโนมัติ และค้นหาชื่อหรือเบอร์เจอได้ทันที' },
               { q: 'ใช้ได้กับค่ายประกันไหนบ้าง?', a: 'ทุกค่าย ทุกประเภทประกัน ไม่ผูกกับบริษัทใด ไม่ว่าจะเป็น AIA, FWD, Prudential, MTL หรือนายหน้าหลายค่ายพร้อมกัน กรอกข้อมูลได้อิสระ' },
               { q: 'ข้อมูลลูกค้าปลอดภัยไหม?', a: 'ข้อมูลเก็บบน Neon Postgres (AWS ap-southeast-1) เข้าถึงได้เฉพาะบัญชีของคุณเท่านั้น ไม่แชร์กับบริษัทประกันหรือบุคคลอื่น' },
@@ -570,8 +550,8 @@ export default async function Home() {
           {/* ── Final CTA ── */}
           <section style={{ background: 'var(--ink)', padding: '5.5rem 1.5rem', textAlign: 'center' }}>
             <div data-r="1" style={{ maxWidth: '560px', margin: '0 auto' }}>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(26px, 3.5vw, 40px)', letterSpacing: '-0.02em', lineHeight: 1.2, color: 'white', marginBottom: '1.1rem' }}>เริ่มจัดการลูกค้าดีขึ้นวันนี้</h2>
-              <p style={{ fontSize: '14px', color: 'oklch(60% 0.022 265)', marginBottom: '2rem', lineHeight: 1.65 }}>สมัครฟรี ไม่ต้องใช้บัตรเครดิต ใช้งานได้เลย</p>
+              <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(26px, 3.5vw, 40px)', letterSpacing: '-0.02em', lineHeight: 1.2, color: 'white', marginBottom: '1.1rem' }}>หยุดปล่อยเบี้ยหลุด<br />เพราะลืมโทรหา</h2>
+              <p style={{ fontSize: '14px', color: 'oklch(60% 0.022 265)', marginBottom: '2rem', lineHeight: 1.65 }}>สมัครฟรี ไม่ต้องใช้บัตรเครดิต เริ่มได้ใน 2 นาที</p>
               <Link href="/sign-up" className="cta-p" style={{ display: 'inline-block', padding: '0.9rem 2rem', borderRadius: '11px', fontSize: '14px', fontWeight: 700, background: 'var(--blue)', color: 'white', textDecoration: 'none', boxShadow: '0 4px 18px oklch(52% 0.245 265 / 0.42)', fontFamily: 'var(--font-heading)' }}>
                 เริ่มใช้ฟรี — ไม่ต้องจำนัดเองอีกต่อไป
               </Link>
@@ -584,11 +564,16 @@ export default async function Home() {
           <div style={{ maxWidth: '1120px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <img src="/tamdee-logo.png" alt="Tamdee" width={20} height={20} style={{ borderRadius: '6px' }} />
-              <span style={{ fontFamily: 'var(--font-brand)', fontWeight: 800, fontSize: '13px', color: 'var(--ink-2)' }}>Tamdee</span>
+              <span style={{ fontFamily: 'var(--font-brand)', fontWeight: 800, fontSize: '14px', color: 'var(--ink-2)' }}>Tamdee</span>
             </div>
             <p style={{ fontSize: '12px', color: 'var(--ink-3)' }}>© 2025 Tamdee · CRM สำหรับตัวแทนประกันไทย</p>
-            <div style={{ display: 'flex', gap: '1.25rem' }}>
-              {[{ label: 'เข้าสู่ระบบ', href: '/sign-in' }, { label: 'สมัครใช้งาน', href: '/sign-up' }].map(l => (
+            <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap' }}>
+              {[
+                { label: 'เข้าสู่ระบบ', href: '/sign-in' },
+                { label: 'สมัครใช้งาน', href: '/sign-up' },
+                { label: 'นโยบายความเป็นส่วนตัว', href: '/privacy' },
+                { label: 'ข้อกำหนดการใช้งาน', href: '/terms' },
+              ].map(l => (
                 <Link key={l.href} href={l.href} style={{ fontSize: '12px', color: 'var(--ink-3)', textDecoration: 'none' }}>{l.label}</Link>
               ))}
             </div>
