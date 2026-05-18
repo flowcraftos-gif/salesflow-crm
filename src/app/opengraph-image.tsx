@@ -5,11 +5,22 @@ export const alt = 'Tamdee — CRM สำหรับตัวแทนประ
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
+async function getSarabunFont(): Promise<ArrayBuffer | null> {
+  try {
+    const css = await fetch(
+      'https://fonts.googleapis.com/css2?family=Sarabun:wght@800&subset=thai',
+      { headers: { 'User-Agent': 'Mozilla/5.0' } }
+    ).then(r => r.text())
+    const url = css.match(/src: url\((.+?)\) format\('woff2'\)/)?.[1]
+    if (!url) return null
+    return await fetch(url).then(r => r.arrayBuffer())
+  } catch {
+    return null
+  }
+}
+
 export default async function Image() {
-  const fontRes = await fetch(
-    'https://fonts.gstatic.com/s/sarabun/v13/Gg8lN46dMHklGMX8_U2tUw.woff'
-  )
-  const fontData = await fontRes.arrayBuffer()
+  const fontData = await getSarabunFont()
 
   return new ImageResponse(
     (
@@ -107,7 +118,7 @@ export default async function Image() {
     ),
     {
       ...size,
-      fonts: [{ name: 'Sarabun', data: fontData, weight: 800 }],
+      fonts: fontData ? [{ name: 'Sarabun', data: fontData, weight: 800 }] : [],
     }
   )
 }
