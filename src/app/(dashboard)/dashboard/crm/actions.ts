@@ -259,7 +259,7 @@ export async function getCrmStats(month: string): Promise<CrmStats> {
 
     // 10. Premium from new clients this month
     db.select({
-      total: sql<number>`cast(coalesce(sum(cast(c.annual_premium as numeric)), 0) as float)`,
+      total: sql<number>`cast(coalesce(sum(cast(${contacts.annualPremium} as numeric)), 0) as float)`,
     })
       .from(contactStatusLog)
       .innerJoin(contacts, eq(contactStatusLog.contactId, contacts.id))
