@@ -320,19 +320,19 @@ export default async function Home() {
                     quote: 'ก่อนใช้ Tamdee จดโน้ต follow-up ใน iPhone แล้วลืมตามเป็นประจำครับ แค่ 2 สัปดาห์แรกปิดได้เพิ่ม 2 คนที่คิดว่าหลุดไปแล้ว',
                     handle: '@somchai_a**',
                     role: 'ตัวแทน AIA',
-                    photo: '/testi-somchai.jpg',
+                    photo: '/testimonial-somying.png',
                   },
                   {
                     quote: 'ขาย 3 ค่ายพร้อมกันค่ะ Excel หลายไฟล์มาก ค้นหาไม่เจอเลย ตอนนี้ข้อมูลและวันครบเบี้ยของทุกคนอยู่ที่เดียวเลยค่ะ',
                     handle: '@napat_ins**',
                     role: 'นายหน้าประกัน FWD, AIA',
-                    photo: '/testi-napat.jpg',
+                    photo: '/testimonial-thanakorn.png',
                   },
                   {
                     quote: 'เพิ่งเริ่มขายประกันค่ะ ฿149 ไม่แพงเลยถ้าเทียบกับค่าคอมจากลูกค้าแค่คนเดียว ใช้ง่ายกว่าที่คิดไว้มากเลยค่ะ',
                     handle: '@wanwisa_f**',
                     role: 'ตัวแทน FWD',
-                    photo: '/testi-wanwisa.jpg',
+                    photo: '/testimonial-wanpha.png',
                   },
                 ].map(t => (
                   <div key={t.handle} style={{ border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
