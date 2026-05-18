@@ -580,10 +580,37 @@ export function CrmDashboard({
           <div className="text-[22px] font-800 leading-none tracking-tight text-[oklch(18%_0.012_254)]">
             {stats.conversionRate.toFixed(1)}
             <span className="ml-0.5 text-[14px] font-500 text-[oklch(68%_0.016_254)]">%</span>
+            {goals.conversionRateGoal > 0 && (
+              <span className="ml-1 text-[14px] font-500 text-[oklch(68%_0.016_254)]">/ {goals.conversionRateGoal}%</span>
+            )}
           </div>
           <div className="mt-1.5 text-[11px] text-[oklch(68%_0.016_254)]">Lead ถึง Client</div>
         </div>
       </div>
+
+      {/* เบี้ยเดือนนี้ — แสดงเฉพาะถ้าตั้งเป้าไว้ */}
+      {goals.premiumGoalPerMonth > 0 && (
+        <div className="mb-5 overflow-hidden rounded-lg border border-[oklch(90%_0.014_254)] bg-white">
+          <div className="px-4 md:px-5 py-3.5 md:py-4">
+            <div className="mb-2 text-[11px] font-600 uppercase tracking-[0.5px] text-[oklch(68%_0.016_254)]">เบี้ยเดือนนี้</div>
+            <div className="text-[22px] font-800 leading-none tracking-tight text-[oklch(18%_0.012_254)]">
+              ฿{Number(stats.premiumThisMonth).toLocaleString()}
+              <span className="ml-1 text-[14px] font-500 text-[oklch(68%_0.016_254)]">/ ฿{Number(goals.premiumGoalPerMonth).toLocaleString()}</span>
+            </div>
+            <div className="mt-2 h-[4px] rounded-sm bg-[oklch(92%_0.010_254)]">
+              <div
+                className="h-full rounded-sm bg-[oklch(52%_0.175_160)]"
+                style={{ width: `${Math.min(100, Math.round((stats.premiumThisMonth / goals.premiumGoalPerMonth) * 100))}%` }}
+              />
+            </div>
+            <div className="mt-1 text-[11px] text-[oklch(68%_0.016_254)]">
+              {stats.premiumThisMonth >= goals.premiumGoalPerMonth
+                ? 'ครบเป้าแล้ว'
+                : `ขาดอีก ฿${Number(goals.premiumGoalPerMonth - stats.premiumThisMonth).toLocaleString()}`}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Follow-up + Pipeline grid */}
       <div className="grid grid-cols-1 md:grid-cols-[1fr_1.6fr] gap-4">

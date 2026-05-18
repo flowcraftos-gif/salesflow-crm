@@ -51,6 +51,7 @@ export type CrmStats = {
   newClientsThisMonth: number
   clientsGoal: number
   conversionRate: number
+  premiumThisMonth: number
   pipeline: PipelineRow[]
   followUpList: FollowUpContact[]
   sourceBreakdown: SourceRow[]
@@ -120,6 +121,7 @@ export async function getCrmStats(month: string): Promise<CrmStats> {
       newClientsThisMonth: 0,
       clientsGoal: goals.newClientsPerMonth,
       conversionRate: 0,
+      premiumThisMonth: 0,
       pipeline: [],
       followUpList: [],
       sourceBreakdown: [],
@@ -142,6 +144,7 @@ export async function getCrmStats(month: string): Promise<CrmStats> {
     sourceResult,
     valueResult,
     trendResult,
+    premiumResult,
   ] = await Promise.all([
     // 1. Appointments done: calendar events with contactId in month
     db.select({ count: sql<number>`cast(count(*) as integer)` })
@@ -253,12 +256,26 @@ export async function getCrmStats(month: string): Promise<CrmStats> {
       ))
       .groupBy(sql`date_trunc('month', created_at AT TIME ZONE 'Asia/Bangkok')`)
       .orderBy(sql`date_trunc('month', created_at AT TIME ZONE 'Asia/Bangkok')`),
+
+    // 10. Premium from new clients this month
+    db.select({
+      total: sql<number>`cast(coalesce(sum(cast(c.annual_premium as numeric)), 0) as float)`,
+    })
+      .from(contactStatusLog)
+      .innerJoin(contacts, eq(contactStatusLog.contactId, contacts.id))
+      .where(and(
+        eq(contacts.userId, userId),
+        eq(contactStatusLog.status, 'Client'),
+        gte(contactStatusLog.changedAt, start),
+        lt(contactStatusLog.changedAt, end),
+      )),
   ])
 
   const appointmentsDone = apptResult[0]?.count ?? 0
   const followUpToday    = followUpResult[0]?.count ?? 0
   const newClientsThisMonth = newClientsResult[0]?.count ?? 0
   const totalContacts    = totalContactsResult[0]?.count ?? 0
+  const premiumThisMonth = premiumResult[0]?.total ?? 0
 
   // Total clients (status = Client) for conversion rate
   const clientRow = pipelineResult.find(r => r.status === 'Client')
@@ -329,6 +346,7 @@ export async function getCrmStats(month: string): Promise<CrmStats> {
     newClientsThisMonth,
     clientsGoal: goals.newClientsPerMonth,
     conversionRate,
+    premiumThisMonth,
     pipeline,
     followUpList,
     sourceBreakdown,
