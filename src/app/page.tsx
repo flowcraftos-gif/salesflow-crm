@@ -320,13 +320,13 @@ export default async function Home() {
                     quote: 'ก่อนใช้ Tamdee จดโน้ต follow-up ใน iPhone แล้วลืมตามเป็นประจำครับ แค่ 2 สัปดาห์แรกปิดได้เพิ่ม 2 คนที่คิดว่าหลุดไปแล้ว',
                     handle: '@somchai_a**',
                     role: 'ตัวแทน AIA',
-                    photo: '/testimonial-somying.png',
+                    photo: '/testimonial-thanakorn.png',
                   },
                   {
                     quote: 'ขาย 3 ค่ายพร้อมกันค่ะ Excel หลายไฟล์มาก ค้นหาไม่เจอเลย ตอนนี้ข้อมูลและวันครบเบี้ยของทุกคนอยู่ที่เดียวเลยค่ะ',
                     handle: '@napat_ins**',
                     role: 'นายหน้าประกัน FWD, AIA',
-                    photo: '/testimonial-thanakorn.png',
+                    photo: '/testimonial-somying.png',
                   },
                   {
                     quote: 'เพิ่งเริ่มขายประกันค่ะ ฿149 ไม่แพงเลยถ้าเทียบกับค่าคอมจากลูกค้าแค่คนเดียว ใช้ง่ายกว่าที่คิดไว้มากเลยค่ะ',
