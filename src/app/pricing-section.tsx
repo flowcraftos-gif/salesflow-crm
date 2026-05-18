@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 
 function CheckIcon() {
@@ -12,10 +11,8 @@ function CheckIcon() {
 }
 
 export function PricingSection() {
-  const [annual, setAnnual] = useState(false)
-
-  const pro = annual ? { price: '฿1,490', sub: '/ปี · เทียบเท่า ฿124/เดือน', savings: 'ประหยัด ฿298' } : { price: '฿149', sub: '/เดือน · น้อยกว่าค่าคอมลูกค้า 1 คน', savings: null }
-  const proPlus = annual ? { price: '฿2,990', sub: '/ปี · เทียบเท่า ฿249/เดือน', savings: 'ประหยัด ฿598' } : { price: '฿299', sub: '/เดือน · ลูกค้าไม่จำกัด ค่าคอมไม่จำกัด', savings: null }
+  const pro = { price: '฿149', sub: '/เดือน · น้อยกว่าค่าคอมลูกค้า 1 คน', savings: null }
+  const proPlus = { price: '฿299', sub: '/เดือน · ลูกค้าไม่จำกัด ค่าคอมไม่จำกัด', savings: null }
 
   return (
     <section style={{ background: 'white', borderTop: '1px solid oklch(89% 0.014 265)', borderBottom: '1px solid oklch(89% 0.014 265)', padding: '5.5rem 1.5rem' }}>
@@ -24,39 +21,6 @@ export function PricingSection() {
           <p style={{ fontFamily: 'var(--font-heading)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'oklch(52% 0.245 265)', marginBottom: '0.75rem' }}>Pricing</p>
           <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(24px, 3vw, 36px)', letterSpacing: '-0.02em', color: 'oklch(13% 0.028 265)' }}>ราคาที่ตัดสินใจได้เลย</h2>
           <p style={{ marginTop: '0.6rem', fontSize: '14px', color: 'oklch(42% 0.022 265)' }}>ไม่ต้องขอหัวหน้า ไม่ต้องคิด ROI ใหญ่</p>
-        </div>
-
-        {/* Toggle */}
-        <div className="price-toggle" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
-          <button
-            onClick={() => setAnnual(false)}
-            style={{
-              padding: '0.4rem 1rem', borderRadius: '999px', fontSize: '12px', fontWeight: 700,
-              fontFamily: 'var(--font-heading)', cursor: 'pointer', border: 'none',
-              background: !annual ? 'oklch(52% 0.245 265)' : 'transparent',
-              color: !annual ? 'white' : 'oklch(55% 0.020 265)',
-              transition: 'background 0.18s, color 0.18s',
-            }}
-          >
-            รายเดือน
-          </button>
-          <button
-            onClick={() => setAnnual(true)}
-            style={{
-              padding: '0.4rem 1rem', borderRadius: '999px', fontSize: '12px', fontWeight: 700,
-              fontFamily: 'var(--font-heading)', cursor: 'pointer', border: 'none',
-              background: annual ? 'oklch(52% 0.245 265)' : 'transparent',
-              color: annual ? 'white' : 'oklch(55% 0.020 265)',
-              transition: 'background 0.18s, color 0.18s',
-            }}
-          >
-            รายปี
-          </button>
-          {annual && (
-            <span style={{ fontSize: '11px', fontWeight: 700, background: 'oklch(95% 0.038 160)', color: 'oklch(38% 0.17 160)', padding: '2px 8px', borderRadius: '999px' }}>
-              ประหยัด 2 เดือน
-            </span>
-          )}
         </div>
 
         <div className="price-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>

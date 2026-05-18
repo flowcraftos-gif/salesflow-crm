@@ -190,7 +190,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
               — อัปเกรด Pro เพื่อไม่จำกัด
             </p>
             <Link
-              href="/dashboard/contacts"
+              href="/dashboard/upgrade"
               className="flex-shrink-0 rounded-md bg-[oklch(52%_0.245_265)] px-3 py-1 text-[11px] font-700 text-white transition-colors hover:bg-[oklch(46%_0.245_265)]"
             >
               อัปเกรด →
