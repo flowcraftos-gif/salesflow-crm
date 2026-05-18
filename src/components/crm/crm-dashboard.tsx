@@ -158,6 +158,8 @@ function GoalPanel({
         {field('Client ใหม่/เดือน', 'newClientsPerMonth', 'คน')}
         {field('Follow-up/วัน', 'followUpsPerDay', 'คน')}
         {field('Contact ใหม่/เดือน', 'newContactsPerMonth', 'คน')}
+        {field('เบี้ยเป้า/เดือน (฿)', 'premiumGoalPerMonth', '฿')}
+        {field('Conversion rate เป้า (%)', 'conversionRateGoal', '%')}
       </div>
       <div className="mt-4 flex items-center gap-2">
         <button

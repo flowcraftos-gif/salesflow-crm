@@ -13,6 +13,8 @@ export type CrmGoals = {
   followUpsPerDay: number
   newClientsPerMonth: number
   newContactsPerMonth: number
+  premiumGoalPerMonth: number
+  conversionRateGoal: number
 }
 
 const DEFAULT_GOALS: CrmGoals = {
@@ -20,6 +22,8 @@ const DEFAULT_GOALS: CrmGoals = {
   followUpsPerDay: 5,
   newClientsPerMonth: 2,
   newContactsPerMonth: 10,
+  premiumGoalPerMonth: 0,
+  conversionRateGoal: 0,
 }
 
 export type PipelineRow = {
@@ -77,10 +81,12 @@ export async function getCrmGoals(): Promise<CrmGoals> {
     if (!user) return DEFAULT_GOALS
     const g = user.crmGoals as Partial<CrmGoals>
     return {
-      appointmentsPerMonth: g?.appointmentsPerMonth ?? DEFAULT_GOALS.appointmentsPerMonth,
-      followUpsPerDay:      g?.followUpsPerDay      ?? DEFAULT_GOALS.followUpsPerDay,
-      newClientsPerMonth:   g?.newClientsPerMonth   ?? DEFAULT_GOALS.newClientsPerMonth,
-      newContactsPerMonth:  g?.newContactsPerMonth  ?? DEFAULT_GOALS.newContactsPerMonth,
+      appointmentsPerMonth:  g?.appointmentsPerMonth  ?? DEFAULT_GOALS.appointmentsPerMonth,
+      followUpsPerDay:       g?.followUpsPerDay       ?? DEFAULT_GOALS.followUpsPerDay,
+      newClientsPerMonth:    g?.newClientsPerMonth    ?? DEFAULT_GOALS.newClientsPerMonth,
+      newContactsPerMonth:   g?.newContactsPerMonth   ?? DEFAULT_GOALS.newContactsPerMonth,
+      premiumGoalPerMonth:   g?.premiumGoalPerMonth   ?? DEFAULT_GOALS.premiumGoalPerMonth,
+      conversionRateGoal:    g?.conversionRateGoal    ?? DEFAULT_GOALS.conversionRateGoal,
     }
   } catch {
     return DEFAULT_GOALS
