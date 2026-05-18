@@ -136,6 +136,7 @@ const CSS = `
     .hero-mock { display: none !important; }
     .feat-grid { grid-template-columns: 1fr !important; gap: 2rem !important; margin-bottom: 3rem !important; }
     .price-grid { grid-template-columns: 1fr !important; }
+    .price-toggle { justify-content: center; }
     .testi-grid { grid-template-columns: 1fr !important; }
     .hero-section section { grid-template-columns: 1fr !important; padding-top: 2.5rem !important; padding-bottom: 2rem !important; }
     section[style*="5.5rem 1.5rem"] { padding-top: 3.5rem !important; padding-bottom: 3.5rem !important; }

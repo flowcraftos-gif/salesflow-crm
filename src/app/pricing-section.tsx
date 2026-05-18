@@ -27,7 +27,7 @@ export function PricingSection() {
         </div>
 
         {/* Toggle */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2.5rem' }}>
+        <div className="price-toggle" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
           <button
             onClick={() => setAnnual(false)}
             style={{
@@ -59,7 +59,7 @@ export function PricingSection() {
           )}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+        <div className="price-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
           {/* Free */}
           <div data-r="1" style={{ border: '1px solid oklch(89% 0.014 265)', borderRadius: '18px', padding: '1.5rem', background: 'oklch(98.5% 0.007 265)', display: 'flex', flexDirection: 'column', transition: 'box-shadow 0.25s, translate 0.2s' }} className="pc">
             <p style={{ fontFamily: 'var(--font-heading)', fontSize: '13px', fontWeight: 700, color: 'oklch(62% 0.016 265)', marginBottom: '0.5rem' }}>Free</p>
