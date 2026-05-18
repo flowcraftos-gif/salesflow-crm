@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { getContacts } from './actions'
 import { ContactsTable } from '@/components/contacts/contacts-table'
 import { WelcomeBanner } from '@/components/onboarding/welcome-banner'
+import { UpgradeSuccessHandler } from './upgrade-success'
 import { ensureUserExists } from '@/lib/auth'
 import { getUserTier } from '@/lib/tier'
 import { db } from '@/db'
@@ -11,9 +12,9 @@ import { eq, count } from 'drizzle-orm'
 export default async function ContactsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ filter?: string; q?: string }>
+  searchParams: Promise<{ filter?: string; q?: string; upgraded?: string; tier?: string }>
 }) {
-  const { filter, q } = await searchParams
+  const { filter, q, upgraded, tier: upgradedTier } = await searchParams
   const userId = await ensureUserExists()
   if (!userId) return null
 
@@ -27,6 +28,9 @@ export default async function ContactsPage({
 
   return (
     <>
+      {upgraded === 'true' && upgradedTier && (
+        <UpgradeSuccessHandler tier={upgradedTier} />
+      )}
       <Suspense fallback={null}>
         <WelcomeBanner contactCount={totalCount} />
       </Suspense>

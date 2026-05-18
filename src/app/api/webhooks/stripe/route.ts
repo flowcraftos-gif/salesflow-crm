@@ -83,55 +83,52 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: message }, { status: 400 })
   }
 
-  // Process async — respond 200 immediately
-  void (async () => {
-    try {
-      if (event.type === 'checkout.session.completed') {
-        const session = event.data.object as StripeSession
+  try {
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object as StripeSession
 
-        const userId = session.metadata?.userId
-        const tier = tierFromMetadata(session.metadata?.tier)
+      const userId = session.metadata?.userId
+      const tier = tierFromMetadata(session.metadata?.tier)
 
-        if (userId && tier) {
+      if (userId && tier) {
+        await db.update(users)
+          .set({ tier })
+          .where(eq(users.id, userId))
+      } else if (userId) {
+        const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
+          expand: ['line_items'],
+        })
+        const priceId = fullSession.line_items?.data[0]?.price?.id
+        const resolvedTier = tierFromPrice(priceId)
+        if (resolvedTier) {
           await db.update(users)
-            .set({ tier })
-            .where(eq(users.id, userId))
-        } else if (userId) {
-          // Fallback: resolve tier from line_item price
-          const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
-            expand: ['line_items'],
-          })
-          const priceId = fullSession.line_items?.data[0]?.price?.id
-          const resolvedTier = tierFromPrice(priceId)
-          if (resolvedTier) {
-            await db.update(users)
-              .set({ tier: resolvedTier })
-              .where(eq(users.id, userId))
-          }
-        }
-      } else if (event.type === 'customer.subscription.created' || event.type === 'customer.subscription.updated') {
-        const subscription = event.data.object as StripeSubscription
-        const userId = userIdFromSubscription(subscription)
-        const priceId = subscription.items?.data?.[0]?.price?.id
-        const tier = tierFromMetadata(subscription.metadata?.tier) ?? tierFromPrice(priceId)
-        if (userId && tier) {
-          await db.update(users)
-            .set({ tier })
-            .where(eq(users.id, userId))
-        }
-      } else if (event.type === 'customer.subscription.deleted') {
-        const subscription = event.data.object as StripeSubscription
-        const userId = userIdFromSubscription(subscription)
-        if (userId) {
-          await db.update(users)
-            .set({ tier: 'free' })
+            .set({ tier: resolvedTier })
             .where(eq(users.id, userId))
         }
       }
-    } catch (err) {
-      console.error('[stripe-webhook] processing error:', err)
+    } else if (event.type === 'customer.subscription.created' || event.type === 'customer.subscription.updated') {
+      const subscription = event.data.object as StripeSubscription
+      const userId = userIdFromSubscription(subscription)
+      const priceId = subscription.items?.data?.[0]?.price?.id
+      const tier = tierFromMetadata(subscription.metadata?.tier) ?? tierFromPrice(priceId)
+      if (userId && tier) {
+        await db.update(users)
+          .set({ tier })
+          .where(eq(users.id, userId))
+      }
+    } else if (event.type === 'customer.subscription.deleted') {
+      const subscription = event.data.object as StripeSubscription
+      const userId = userIdFromSubscription(subscription)
+      if (userId) {
+        await db.update(users)
+          .set({ tier: 'free' })
+          .where(eq(users.id, userId))
+      }
     }
-  })()
+  } catch (err) {
+    console.error('[stripe-webhook] processing error:', err)
+    return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 })
+  }
 
   return NextResponse.json({ received: true })
 }
